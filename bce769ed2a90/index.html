@@ -131,6 +131,8 @@ svg#diagram{position:relative!important;inset:auto!important;width:100%!importan
 .caption{position:relative!important;left:auto!important;top:auto!important;transform:none!important;padding:14px 16px 4px}
 .caption .eyebrow{color:#0f9b8e!important}.caption .ttl{color:#132234!important;text-shadow:none!important}
 .legend{position:relative!important;left:auto!important;bottom:auto!important;margin:2px auto 20px;display:inline-flex;background:#fff!important;border:1px solid rgba(20,40,60,.14)!important;color:#5f6f81!important}
+/* darker connector pipes so they stand out on the light client background */
+svg#diagram path[id^="pl"],svg#diagram path[id^="pr"]{stroke:rgba(18,42,64,.42)!important;stroke-width:2.8!important}
 .hbpage{position:relative;z-index:5;background:#eef2f7;max-width:1080px;margin:0 auto;padding:26px 20px 6px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
 .hbeyebrow{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#0f9b8e;margin:0 0 4px}
 .hbh1{margin:0;font-size:30px;color:#0b1f2e}
@@ -278,8 +280,9 @@ function buildDiagram(key){
   const ind=DATA[key],svg=$("diagram");svg.innerHTML="";
   const HX=600,HY=440,HW=210,HH=176;
   const isMaster=!!(ind.left&&ind.right);
-  const leftN=isMaster?ind.left:ind.nodes.slice(0,6);
-  const rightN=isMaster?ind.right:ind.nodes.slice(6);
+  const _half=Math.ceil((ind.nodes?ind.nodes.length:0)/2);
+  const leftN=isMaster?ind.left:ind.nodes.slice(0,_half);
+  const rightN=isMaster?ind.right:ind.nodes.slice(_half);
   const NW=204,NH=(leftN.length>7||rightN.length>7)?50:58;
   const lys=ys(leftN.length,104,742),rys=ys(rightN.length,104,742);
   const defs=document.createElementNS(SVGNS,"defs");
