@@ -134,6 +134,9 @@ svg#diagram{position:relative!important;inset:auto!important;width:100%!importan
 /* darker connector pipes so they stand out on the light client background */
 svg#diagram path[id^="pl"],svg#diagram path[id^="pr"]{stroke:rgba(18,42,64,.42)!important;stroke-width:2.8!important}
 .hbpage{position:relative;z-index:5;background:#eef2f7;max-width:1080px;margin:0 auto;padding:26px 20px 6px;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}
+.vbrand{display:flex;align-items:center;gap:11px;margin:0 0 8px}
+.vlogo{height:44px;max-width:210px;object-fit:contain;border-radius:8px;background:#fff;border:1px solid rgba(0,0,0,.06)}
+.vwm{font-weight:800;font-size:18px;color:#0b1f2e}
 .hbeyebrow{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#0f9b8e;margin:0 0 4px}
 .hbh1{margin:0;font-size:30px;color:#0b1f2e}
 .hbsub{color:#5f6f81;font-size:13.5px;margin:6px 0 16px}
@@ -169,6 +172,7 @@ svg#diagram path[id^="pl"],svg#diagram path[id^="pr"]{stroke:rgba(18,42,64,.42)!
 .seep{display:inline-flex;align-items:center;gap:6px;margin:14px 0 4px;background:linear-gradient(180deg,#19d3c5,#0f9086);color:#04211e;border-radius:999px;padding:10px 20px;font-size:13px;font-weight:800;text-decoration:none}
 </style><div class="hbpage">
 <span class="hook">OneOncology&#x27;s 1st New England</span>
+<div class="vbrand"><img class="vlogo" src="" onerror="this.style.display='none'" alt="Eastern Connecticut Hematology &amp; Oncology"><span class="vwm">Eastern Connecticut Hematology &amp; Oncology</span></div>
 <p class="hbeyebrow">Vorro BridgeGate &middot; Oncology</p>
 <h1 class="hbh1">Eastern Connecticut Hematology &amp; Oncology</h1>
 <p class="hbsub">,  &middot; community medical oncology / hematology practice (single main site, Norwich CT) &middot; scroll down for your live, wired-up pipeline</p>
@@ -179,12 +183,11 @@ svg#diagram path[id^="pl"],svg#diagram path[id^="pr"]{stroke:rgba(18,42,64,.42)!
 </div>
 <div class="hbfacts"><div class="hbfitem"><div class="hbfk">Location</div><div class="hbfv">, </div></div><div class="hbfitem"><div class="hbfk">Type</div><div class="hbfv">community medical oncology / hematology practice (single main site, Norwich CT)</div></div><div class="hbfitem hbfwide"><div class="hbfk">What we found</div><div class="hbfv">Eastern Connecticut Hematology &amp; Oncology (ECHO) in Norwich was OneOncology&#x27;s first New England practice when it joined in 2019, a 30-year community oncology group led by managing partner Dr. Dinesh Kapur.</div></div></div>
 <div class="painwrap"><div class="paink">Where it hurts — and what Vorro does about it</div><div class="pgrid"><div class="pcard"><div class="ph">Oral oncolytics and specialty drugs stall on prior auth</div><div class="pp"><span class="plab pain">Pain</span> Prior auth and financial-assistance chasing bounces between the EHR, payer portals, and the specialty pharmacy — patients wait days to start therapy.</div><div class="ps"><span class="plab sol">Vorro</span> BridgeGate wires the oncology EHR to the payer/prior-auth services (CoverMyMeds, Availity) and the dispensing pharmacy so PA status, benefits, and fills sync automatically — shrinking time-to-treatment.</div></div><div class="pcard"><div class="ph">Radiation oncology is a silo</div><div class="pp"><span class="plab pain">Pain</span> ARIA/MOSAIQ live apart from the medical-onc EHR and billing, forcing duplicate charting and lost charges.</div><div class="ps"><span class="plab sol">Vorro</span> A bidirectional interface keeps the rad-onc record, scheduling, and charge capture in lockstep with the EHR and practice-management billing.</div></div><div class="pcard"><div class="ph">Outside labs and pathology arrive as faxes</div><div class="pp"><span class="plab pain">Pain</span> Results come by fax or portal and get scanned in, delaying treatment decisions and tumor-board prep.</div><div class="ps"><span class="plab sol">Vorro</span> BridgeGate lands HL7/FHIR lab and pathology results structured in the EHR automatically — no scanning, no re-keying.</div></div><div class="pcard"><div class="ph">Value-based reporting is manual</div><div class="pp"><span class="plab pain">Pain</span> OCM/EOM reporting and the tumor registry require pulling data from several systems by hand.</div><div class="ps"><span class="plab sol">Vorro</span> BridgeGate aggregates EHR, billing, and registry data into clean, submission-ready extracts on a schedule.</div></div></div></div>
-<div class="vid"><video controls playsinline preload="metadata"><source src="../shared/Vorro_DataHub_vertical_v8_web.mp4"></video></div>
+<div class="vid"><video controls playsinline preload="metadata"><source src="../shared/Vorro_oncology.mp4"></video></div>
 <div class="pitch"><div class="pt">The Integration Pitch</div><h3>Why BridgeGate, why now</h3><p>Eastern Connecticut Hematology &amp; Oncology&#x27;s cancer program only works when the oncology EHR, radiation-oncology system, labs, pathology, imaging, and the payer/prior-auth side agree on the same patient. When they don&#x27;t, treatment stalls and staff reconcile it by hand. BridgeGate is the layer that keeps every one of these systems in sync so care doesn&#x27;t wait on data.</p>
   <p>The payoff is concrete: one integration layer retires the redundant interfaces and manual data movement that quietly drain the budget, streamlining operations and taking roughly 35% out of what an organization your size spends on IT.</p>
   <div class="cta"><div class="who"><b>Manish</b> &middot; Chief Revenue Officer, Vorro &nbsp;|&nbsp; for Dinesh Kapur, MD, Managing Partner, Eastern Connecticut Hematology &amp; Oncology</div>
     <a class="book" href="https://booknow.vorro.net/#/Manish" target="_blank">Meet with Manish</a></div></div>
-<a class="seep" href="#pipelineStage">&#9660; See Eastern Connecticut Hematology &amp; Oncology's live, wired-up pipeline</a>
 </div>
 <div id="bgA" class="bg"></div><div id="bgB" class="bg"></div><div class="scrim"></div>
 <div class="stage"><header><nav class="tabs" id="tabs"></nav></header>
@@ -283,7 +286,7 @@ function buildDiagram(key){
   const _half=Math.ceil((ind.nodes?ind.nodes.length:0)/2);
   const leftN=isMaster?ind.left:ind.nodes.slice(0,_half);
   const rightN=isMaster?ind.right:ind.nodes.slice(_half);
-  const NW=204,NH=(leftN.length>7||rightN.length>7)?50:58;
+  const NW=228,NH=(leftN.length>7||rightN.length>7)?96:120;
   const lys=ys(leftN.length,104,742),rys=ys(rightN.length,104,742);
   const defs=document.createElementNS(SVGNS,"defs");
   defs.innerHTML='<filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a3"/><stop offset="1" stop-color="#e3b53a"/></linearGradient>';
@@ -312,9 +315,13 @@ function buildDiagram(key){
     const g=document.createElementNS(SVGNS,"g");g.style.cursor="pointer";
     const r=document.createElementNS(SVGNS,"rect");r.setAttribute("x",x-w/2);r.setAttribute("y",y-h/2);r.setAttribute("width",w);r.setAttribute("height",h);r.setAttribute("rx",12);
     r.setAttribute("fill","rgba(10,16,30,.82)");r.setAttribute("stroke","rgba(255,255,255,.30)");r.setAttribute("stroke-width","1.2");g.appendChild(r);
-    g.appendChild(txt(x-w/2+22,y+6,"#fff","21",null,"middle",node.i));
-    var _L=(node.l||"").length,_fs=_L<=13?"14.5":_L<=17?"13":_L<=21?"12":"10.8",_lb=node.l.length>30?node.l.slice(0,29)+"\u2026":node.l;
-    g.appendChild(txt(x-w/2+44,y+5,"#eef4fb",_fs,"600","start",_lb));
+    var _top=y-h/2;
+    g.appendChild(txt(x-w/2+20,_top+24,"#fff","18",null,"middle",node.i));
+    var _lb=node.l.length>26?node.l.slice(0,25)+"\u2026":node.l;
+    g.appendChild(txt(x-w/2+40,_top+24,"#eef4fb","12.5","700","start",_lb));
+    (node.s||[]).slice(0,4).forEach(function(pair,vi){var nm=pair[0];var iu=(window.IN_USE&&window.IN_USE.has&&window.IN_USE.has(nm));var yy=_top+47+vi*17;
+      g.appendChild(txt(x-w/2+18,yy-3,iu?ind.accent:"#6f829a","9",null,"start","\u25cf"));
+      g.appendChild(txt(x-w/2+30,yy,iu?ind.accent:"#c7d3e2","11.5",iu?"800":"500","start",nm.length>27?nm.slice(0,26)+"\u2026":nm));});
     if(jumpKey)g.appendChild(txt(x+w/2-12,y+5,ind.accent,"15","800","middle","›"));
     g.addEventListener("click",()=>{if(jumpKey)show(jumpKey);else openDrawer(node);});
     svg.appendChild(g);
