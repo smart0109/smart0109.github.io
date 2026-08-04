@@ -850,7 +850,13 @@ function buildDiagram(key){
     }
   }
 
-var stageEl=document.getElementById('pipelineStage')||document.querySelector('.stage')||document.querySelector('.diagram-wrap');
+// Enforce page order 1) brief 2) live pipeline 3) connector library.
+// gen_rich_page appends the brief (.hbpage) + hbMore AFTER the base engine's
+// .stage in the DOM, so without this the diagram renders first (2,1,3). Move
+// the brief ABOVE the stage, then push the connector library to the very end.
+var hbPageEl=document.querySelector('.hbpage');
+var stageEl=document.querySelector('.stage')||document.getElementById('pipelineStage')||document.querySelector('.diagram-wrap');
+if(hbPageEl&&stageEl&&stageEl.parentNode){ stageEl.id='pipelineStage'; stageEl.parentNode.insertBefore(hbPageEl,stageEl); }
 var hbMoreEl=document.getElementById('hbMore');
   if(hbMoreEl&&stageEl&&stageEl.parentNode){ stageEl.parentNode.appendChild(hbMoreEl); }
 
