@@ -372,9 +372,9 @@ function buildDiagram(key){
   const ind=DATA[key],svg=$("diagram");svg.innerHTML="";
   const HX=600,HY=440,HW=210,HH=176;
   const isMaster=!!(ind.left&&ind.right);
-  const leftN=isMaster?ind.left:ind.nodes.slice(0,Math.ceil(ind.nodes.length/2));
-  const rightN=isMaster?ind.right:ind.nodes.slice(Math.ceil(ind.nodes.length/2));
-  const NW=230,NH=88;
+  const leftN=isMaster?ind.left:ind.nodes.slice(0,6);
+  const rightN=isMaster?ind.right:ind.nodes.slice(6);
+  const NW=204,NH=(leftN.length>7||rightN.length>7)?50:58;
   const lys=ys(leftN.length,104,742),rys=ys(rightN.length,104,742);
   const defs=document.createElementNS(SVGNS,"defs");
   defs.innerHTML='<filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a3"/><stop offset="1" stop-color="#e3b53a"/></linearGradient>';
@@ -403,9 +403,9 @@ function buildDiagram(key){
     const g=document.createElementNS(SVGNS,"g");g.style.cursor="pointer";
     const r=document.createElementNS(SVGNS,"rect");r.setAttribute("x",x-w/2);r.setAttribute("y",y-h/2);r.setAttribute("width",w);r.setAttribute("height",h);r.setAttribute("rx",12);
     r.setAttribute("fill","rgba(10,16,30,.82)");r.setAttribute("stroke","rgba(255,255,255,.30)");r.setAttribute("stroke-width","1.2");g.appendChild(r);
-    g.appendChild(txt(x-w/2+22,y-16,"#fff","21",null,"middle",node.i));
+    g.appendChild(txt(x-w/2+22,y+6,"#fff","21",null,"middle",node.i));
     var _L=(node.l||"").length,_fs=_L<=13?"14.5":_L<=17?"13":_L<=21?"12":"10.8",_lb=node.l.length>30?node.l.slice(0,29)+"\u2026":node.l;
-    g.appendChild(txt(x-w/2+44,y-15,"#eef4fb",_fs,"600","start",_lb));if(node.s&&node.s.length){var _n=node.s.map(function(z){return Array.isArray(z)?z[0]:z;}).filter(Boolean);var _mid=_n.length>2?Math.ceil(_n.length/2):_n.length;function _tr(s){return s.length>48?s.slice(0,47)+"\u2026":s;}var _l1=_tr(_n.slice(0,_mid).join("  \u00b7  ")),_l2=_tr(_n.slice(_mid).join("  \u00b7  "));g.appendChild(txt(x-w/2+22,y+8,"#9fb2c8","10.5","500","start",_l1));if(_l2)g.appendChild(txt(x-w/2+22,y+24,"#9fb2c8","10.5","500","start",_l2));}
+    g.appendChild(txt(x-w/2+44,y+5,"#eef4fb",_fs,"600","start",_lb));
     if(jumpKey)g.appendChild(txt(x+w/2-12,y+5,ind.accent,"15","800","middle","›"));
     g.addEventListener("click",()=>{if(jumpKey)show(jumpKey);else openDrawer(node);});
     svg.appendChild(g);
@@ -633,7 +633,224 @@ $("trayClear").onclick=function(){traySelected.clear();saveTraySelection();rende
   </div>
 </div>
 
-<script>var stageEl=document.getElementById('pipelineStage')||document.querySelector('.stage')||document.querySelector('.diagram-wrap');
+<script>/* === CARD-GRID RENDERER (extracted verbatim from the deployed Addison Gilbert rich page; isHC gate re-keyed to this page's slug, company literal parameterized) === */
+// ---- in-use / confidence machinery (parameterized per company) ----
+var RICH_COMPANY="MyLigo";
+var IN_USE=new Set(["OnID", "Texas HIE"]);
+var IN_USE_CONF={"OnID": "confirmed", "Texas HIE": "confirmed"};
+function confLabel(name){return IN_USE_CONF[name]==='likely'?'likely in use':'in use here';}
+function confClass(name){return IN_USE_CONF[name]==='likely'?' likely':'';}
+var CATNOTE={"MyLigo identity wallet": "MyLigo's own patient-owned identity, consent and OnID wallet \u2014 the confirmed core of the pilot.", "HIEs / networks": "Pilot is live at a Texas Health Information Exchange; Carequality/CommonWell/TEFCA are the multi-state expansion path.", "Identity partners": "OnID is the confirmed identity partner powering the live Texas HIE pilot."};
+var GENNOTE="No confirmed systems here yet \u2014 treat it as a discovery question on the call.";
+
+function openDrawer(node){
+    if((node.s||[]).some(function(it){return it[2];})){return openSubflow(node);}
+    $("dic").textContent=node.i;$("dttl").textContent=node.l;
+    $("dsub").textContent="Representative systems & modules · bi-directional via Vorro";
+    const g=$("vgrid");g.innerHTML="";g.style.display="block";g.style.gridTemplateColumns="none";
+    const hasAnyMatch=(node.s||[]).some(function(s){return IN_USE.has(s[0]);});
+    const hub=document.createElement("div");hub.className="hbconnhub";
+    hub.innerHTML='<span class="ic">'+node.i+'</span><b>'+node.l+'</b>';
+    g.appendChild(hub);
+    const wrap=document.createElement("div");wrap.className="hbconnwrap";
+    const bus=document.createElement("div");bus.className="hbconnbus"+(hasAnyMatch?" hasmatch":"");
+    wrap.appendChild(bus);
+    (node.s||[]).forEach(function(pair){var name=pair[0],dom=pair[1];
+      const row=document.createElement("div");row.className="hbconnrow"+(IN_USE.has(name)?" inuse":"");
+      const c=document.createElement("div");c.className="vcard"+(IN_USE.has(name)?(" inuse"+confClass(name)):"");
+      if(dom){const im=document.createElement("img");im.src="https://www.google.com/s2/favicons?domain="+dom+"&sz=64";im.referrerPolicy="no-referrer";
+        im.onerror=function(){this.onerror=function(){const av=document.createElement("div");av.className="av";av.textContent=name[0];im.replaceWith(av);};this.src="https://www.google.com/s2/favicons?domain="+dom+"&sz=64";};
+        c.appendChild(im);}
+      else{const av=document.createElement("div");av.className="av";av.textContent=name[0];c.appendChild(av);}
+      const s=document.createElement("span");s.textContent=name;c.appendChild(s);
+      if(IN_USE.has(name)){const b=document.createElement("span");b.className="inusebadge"+confClass(name);b.textContent=confLabel(name);c.appendChild(b);}
+      row.appendChild(c);
+      wrap.appendChild(row);
+    });
+    g.appendChild(wrap);
+    const note=document.createElement("div");note.className="hbdrawernote";
+    const noteText=CATNOTE[node.l]||GENNOTE;
+    note.innerHTML='<b>Vorro fit for '+RICH_COMPANY+':</b> '+noteText;
+    g.appendChild(note);
+    $("dtnote").textContent="Bi-directional integration via Vorro. Teal = confirmed system here; amber/dashed = a likely match from public research worth confirming on the call; dimmer lines show what BridgeGate can also plug into here.";
+    $("drawer").classList.add("open");
+  }
+
+function openSubflow(node){
+    const ind=DATA[current];
+    $("sfic").textContent=node.i;$("sfttl").textContent=node.l;
+    $("sfsub").textContent=(ind.hubMain?ind.hubMain+" module group":"Features")+" · "+(node.s||[]).length+" items · bi-directional via Vorro";
+    const g=$("sfgrid");g.innerHTML="";
+    (node.s||[]).forEach(function(it){var nm=it[0],desc=it[2]||"";
+      const c=document.createElement("div");c.className="sfcard"+(IN_USE.has(nm)?(" inuse"+confClass(nm)):"");c.style.borderLeftColor=ind.accent;
+      const a=document.createElement("div");a.className="nm";a.textContent=nm;c.appendChild(a);
+      if(desc){const b=document.createElement("div");b.className="ds";b.textContent=desc;c.appendChild(b);}
+      if(IN_USE.has(nm)){const b=document.createElement("span");b.className="inusebadge"+confClass(nm);b.style.marginLeft="0";b.style.display="inline-block";b.style.marginTop="4px";b.textContent=confLabel(nm);c.appendChild(b);}
+      g.appendChild(c);
+    });
+    $("subflow").classList.add("open");
+  }
+
+function buildDiagram(key){
+    const ind=DATA[key],svg=$("diagram");svg.innerHTML="";
+    const isHC=(key==="myligo");
+    const isMaster=!!(ind.left&&ind.right);
+    const allN=isMaster?null:ind.nodes;
+    const half=allN?Math.ceil(allN.length/2):0;
+    const leftN=isMaster?ind.left:allN.slice(0,half);
+    const rightN=isMaster?ind.right:allN.slice(half);
+    const NW=isHC?340:204,NH=isHC?350:((leftN.length>7||rightN.length>7)?50:58);
+    const _tW=isHC?92:44,_tH=isHC?78:40,_tgX=10,_tgY=10,_pX=16;
+    // Each category card's height is sized to its real content (vendor-tile
+    // rows or info lines) so boxes stay compact and visually balanced instead
+    // of a fixed tall box with wasted empty space. Columns then stack top-down
+    // with a set gap, and the canvas grows to the taller column.
+    function _perRow(){return Math.max(1,Math.floor((NW-2*_pX+_tgX)/(_tW+_tgX)));}
+    function _nodeH(n){
+      if(n.s&&n.s.length){var rows=Math.ceil(n.s.length/_perRow());return 58+rows*(_tH+_tgY)+14;}
+      if(n.info){var L=Math.min(7,wrapWords(n.info,Math.floor((NW-32)/7.8)).length);return 66+L*24+30;}
+      return 118;
+    }
+    const TOPB=isHC?190:104;
+    const VGAP=26;
+    // Uniform card height across the whole diagram so every category box is
+    // sized the same (the compact max the tallest box needs -- ~248 for a
+    // 2-row vendor grid -- not the old fixed 350). Short boxes top-align their
+    // content; no box is oversized and they all match.
+    const _uh=isHC?Math.max.apply(null,leftN.concat(rightN).map(_nodeH)):NH;
+    const leftH=leftN.map(function(){return _uh;});
+    const rightH=rightN.map(function(){return _uh;});
+    function _stack(hs){var out=[],t=TOPB;for(var i=0;i<hs.length;i++){out.push(t+hs[i]/2);t+=hs[i]+VGAP;}return out;}
+    const _lsum=leftH.reduce(function(a,b){return a+b;},0)+VGAP*Math.max(0,leftH.length-1);
+    const _rsum=rightH.reduce(function(a,b){return a+b;},0)+VGAP*Math.max(0,rightH.length-1);
+    const BOTB=isHC?(TOPB+Math.max(_lsum,_rsum)):742;
+    const viewH=isHC?(BOTB+120):860;
+    svg.setAttribute("viewBox", isHC?("0 0 1500 "+viewH):"0 0 1200 860");
+    const LX=isHC?210:150, RX=isHC?1290:1050;
+    const HX=isHC?750:600, HY=isHC?((TOPB+BOTB)/2):440, HW=isHC?230:210, HH=isHC?176:176;
+    const lys=isHC?_stack(leftH):ys(leftN.length,TOPB,BOTB), rys=isHC?_stack(rightH):ys(rightN.length,TOPB,BOTB);
+    const defs=document.createElementNS(SVGNS,"defs");
+    defs.innerHTML='<filter id="glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><filter id="cardshadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#1e2a38" flood-opacity="0.14"/></filter><linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a3"/><stop offset="1" stop-color="#e3b53a"/></linearGradient>';
+    svg.appendChild(defs);
+    function pipe(sx,sy,ex,ey,id){
+      const cx1=sx+(ex-sx)*0.42,cx2=sx+(ex-sx)*0.60;
+      const p=document.createElementNS(SVGNS,"path");
+      p.setAttribute("d","M"+sx+","+sy+" C"+cx1+","+sy+" "+cx2+","+ey+" "+ex+","+ey);p.setAttribute("id",id);
+      p.setAttribute("fill","none");p.setAttribute("stroke","rgba(20,40,60,.20)");p.setAttribute("stroke-width","2.4");p.setAttribute("stroke-linecap","round");
+      svg.appendChild(p);return id;
+    }
+    const pids=[];
+    leftN.forEach((n,i)=>{const ey=HY+(i-(leftN.length-1)/2)*((HH-44)/Math.max(1,leftN.length-1));pids.push(pipe(LX+NW/2,lys[i],HX-HW/2,ey,"pl"+i));});
+    rightN.forEach((n,i)=>{const ey=HY+(i-(rightN.length-1)/2)*((HH-44)/Math.max(1,rightN.length-1));pids.push(pipe(RX-NW/2,rys[i],HX+HW/2,ey,"pr"+i));});
+    function flow(id,color,rev,dur,delay){
+      const c=document.createElementNS(SVGNS,"circle");c.setAttribute("r","4.5");c.setAttribute("fill",color);c.setAttribute("filter","url(#glow)");
+      const m=document.createElementNS(SVGNS,"animateMotion");m.setAttribute("dur",dur+"s");m.setAttribute("repeatCount","indefinite");m.setAttribute("begin",delay+"s");m.setAttribute("calcMode","linear");
+      if(rev){m.setAttribute("keyPoints","1;0");m.setAttribute("keyTimes","0;1");}
+      const mp=document.createElementNS(SVGNS,"mpath");mp.setAttributeNS("http://www.w3.org/1999/xlink","href","#"+id);mp.setAttribute("href","#"+id);
+      m.appendChild(mp);c.appendChild(m);svg.appendChild(c);
+    }
+    pids.forEach((id,i)=>{flow(id,"#5ec2ff",false,7.5+(i%4)*0.9,(i%6)*0.7);flow(id,ind.accent,true,8.5+(i%3)*0.9,1.0+(i%5)*0.7);});
+    if(ind.leftLabel)svg.appendChild(txt(LX,72,ind.accent,"11","800","middle",ind.leftLabel,"'Segoe UI',Inter,system-ui,-apple-system,Arial,sans-serif","1.5"));
+    if(ind.rightLabel)svg.appendChild(txt(RX,72,"#639cd5","11","800","middle",ind.rightLabel,"'Segoe UI',Inter,system-ui,-apple-system,Arial,sans-serif","1.5"));
+    function wrapWords(text,maxChars){
+      const words=(text||'').split(' ');const lines=[];let cur='';
+      words.forEach(function(w){ if((cur+' '+w).trim().length>maxChars){lines.push(cur.trim());cur=w;} else{cur=(cur+' '+w).trim();} });
+      if(cur)lines.push(cur);
+      return lines;
+    }
+    function card(x,y,w,h,node,jumpKey){
+      const g=document.createElementNS(SVGNS,"g");g.style.cursor="pointer";
+      const vendors=(node.s||[]);
+      const matchedVendors=vendors.filter(function(s){return IN_USE.has(s[0]);});
+      const hasMatch=matchedVendors.length>0||(vendors.length===0&&node.info);
+      const hasConfirmed=matchedVendors.some(function(s){return IN_USE_CONF[s[0]]!=='likely';});
+      const catColor=hasConfirmed||(vendors.length===0&&node.info)?"#1b6ec2":"#c77d00";
+      const r=document.createElementNS(SVGNS,"rect");r.setAttribute("x",x-w/2);r.setAttribute("y",y-h/2);r.setAttribute("width",w);r.setAttribute("height",h);r.setAttribute("rx",14);
+      r.setAttribute("fill","#ffffff");r.setAttribute("stroke",hasMatch?catColor:"rgba(20,40,60,.16)");r.setAttribute("stroke-width",hasMatch?"2.4":"1.2");
+      r.setAttribute("filter","url(#cardshadow)");
+      g.appendChild(r);
+      const top=y-h/2,left=x-w/2;
+      g.appendChild(txt(left+30,top+34,"#12202f","28",null,"middle",node.i));
+      // Adaptive header size so long service-line names (e.g. "Forensic
+      // Competency Restoration") don't overrun the card edge.
+      var _ll=node.l.length;
+      var _lfs=_ll>26?"15":(_ll>21?"17.5":"21");
+      var _lb=_ll>36?node.l.slice(0,35)+"…":node.l;
+      g.appendChild(txt(left+56,top+34,"#16283a",_lfs,"800","start",_lb));
+      if(jumpKey)g.appendChild(txt(x+w/2-20,top+34,ind.accent,"20","800","middle","›"));
+      if(vendors.length){
+        const tileW=isHC?92:44,tileH=isHC?78:40,gapX=10,gapY=10,padX=16;
+        let tx0=left+padX,ty0=top+58;
+        const rightBound=x+w/2-padX;
+        vendors.forEach(function(v){
+          const vname=v[0],vdom=v[1];
+          if(tx0+tileW>rightBound){tx0=left+padX;ty0+=tileH+gapY;}
+          const on=IN_USE.has(vname);
+          const likely=on&&IN_USE_CONF[vname]==='likely';
+          const onColor=likely?"#c77d00":"#1b6ec2";
+          const tb=document.createElementNS(SVGNS,"rect");
+          tb.setAttribute("x",tx0);tb.setAttribute("y",ty0);tb.setAttribute("width",tileW);tb.setAttribute("height",tileH);tb.setAttribute("rx",12);
+          tb.setAttribute("fill",on?(likely?"rgba(199,125,0,.12)":"rgba(27,110,194,.13)"):"#f1f5f9");
+          tb.setAttribute("stroke",on?onColor:"rgba(20,40,60,.14)");tb.setAttribute("stroke-width",on?"2":"1");
+          if(likely)tb.setAttribute("stroke-dasharray","5,3");
+          if(on&&!likely)tb.setAttribute("filter","url(#glow)");
+          g.appendChild(tb);
+          const cx=tx0+tileW/2;
+          if(vdom){
+            const im=document.createElementNS(SVGNS,"image");im.setAttribute("x",cx-18);im.setAttribute("y",ty0+9);im.setAttribute("width",36);im.setAttribute("height",36);
+            im.setAttributeNS("http://www.w3.org/1999/xlink","href","https://www.google.com/s2/favicons?domain="+vdom+"&sz=64");im.setAttribute("href","https://www.google.com/s2/favicons?domain="+vdom+"&sz=64");
+            im.addEventListener("error",function(){
+              im.setAttributeNS("http://www.w3.org/1999/xlink","href","https://www.google.com/s2/favicons?domain="+vdom+"&sz=64");
+              im.setAttribute("href","https://www.google.com/s2/favicons?domain="+vdom+"&sz=64");
+              im.addEventListener("error",function(){
+                im.remove();
+                g.appendChild(txt(cx,ty0+32,"#41566d","19","800","middle",(vname[0]||"?")));
+              },{once:true});
+            },{once:true});
+            g.appendChild(im);
+          }else{
+            g.appendChild(txt(cx,ty0+32,"#41566d","19","800","middle",(vname[0]||"?")));
+          }
+          var vlb=vname.length>15?vname.slice(0,14)+"…":vname;
+          g.appendChild(txt(cx,ty0+tileH-10,on?"#124d87":"#5f6f81","13",on?"800":"600","middle",vlb));
+          if(on)g.appendChild(txt(tx0+tileW-12,ty0+15,onColor,"15","900","middle",likely?"~":"✓"));
+          tx0+=tileW+gapX;
+        });
+      }else if(node.info){
+        const lines=wrapWords(node.info, Math.floor((w-32)/7.8));
+        const _nl=Math.min(7,lines.length);
+        lines.slice(0,7).forEach(function(ln,i){ g.appendChild(txt(left+20,top+66+i*24,"#3a4a5b","15.5",null,"start",ln)); });
+        // Anchor the badge right below the text (not the box bottom) so short
+        // service-line cards don't show a big gap under a uniform-height box.
+        g.appendChild(txt(left+20,top+66+_nl*24+10,"#1b6ec2","13","800","start","✓ Confirmed service line"));
+      }
+      g.addEventListener("click",()=>{if(jumpKey)show(jumpKey);else if(vendors.length)openDrawer(node);});
+      svg.appendChild(g);
+    }
+    leftN.forEach((n,i)=>card(LX,lys[i],NW,leftH[i],n,n.jump));
+    rightN.forEach((n,i)=>card(RX,rys[i],NW,rightH[i],n,n.jump));
+    const hr=document.createElementNS(SVGNS,"rect");hr.setAttribute("x",HX-HW/2);hr.setAttribute("y",HY-HH/2);hr.setAttribute("width",HW);hr.setAttribute("height",HH);hr.setAttribute("rx",20);
+    hr.setAttribute("fill","rgba(10,14,26,.92)");hr.setAttribute("stroke",ind.hubMain?ind.hubMainColor:"#d62598");hr.setAttribute("stroke-width","2.5");hr.setAttribute("filter","url(#glow)");svg.appendChild(hr);
+    function hubLogo(href,cx,cy,w,ar){href=logoSrc(href);var hh=w*ar;var im=document.createElementNS(SVGNS,"image");im.setAttributeNS("http://www.w3.org/1999/xlink","href",href);im.setAttribute("href",href);im.setAttribute("x",cx-w/2);im.setAttribute("y",cy-hh/2);im.setAttribute("width",w);im.setAttribute("height",hh);im.setAttribute("preserveAspectRatio","xMidYMid meet");svg.appendChild(im);}
+    svg.appendChild(txt(HX,HY-38,"#c9d3e4","10.5","700","middle",ind.hubEyebrow||"INTEGRATION HUB",null,"2"));
+    if(ind.hubLogos){
+      if(ind.hubLogos.length>1){
+        hubLogo(ind.hubLogos[0],HX-56,HY+4,98,0.307);
+        svg.appendChild(txt(HX,HY+10,"#9fb0c6","22","700","middle","+"));
+        hubLogo(ind.hubLogos[1],HX+58,HY+5,98,0.39);
+      }else{ hubLogo(ind.hubLogos[0],HX,HY+2,156,0.307); }
+      svg.appendChild(txt(HX,HY+48,"#9fb0c6","11",null,"middle",ind.hubSub||"Any system ↔ any system"));
+    }else if(ind.hubMain){
+      svg.appendChild(txt(HX,HY-2,ind.hubMainColor,"30","800","middle",ind.hubMain,"'Segoe UI',Inter,system-ui,-apple-system,Arial,sans-serif"));
+      svg.appendChild(txt(HX,HY+26,ind.hubSecondColor,"21","800","middle",ind.hubSecond,"'Segoe UI',Inter,system-ui,-apple-system,Arial,sans-serif"));
+      svg.appendChild(txt(HX,HY+46,"#9fb0c6","10.5",null,"middle","Any system ↔ any system"));
+    }else{
+      hubLogo("assets/logos/vorro.png",HX,HY+4,146,0.39);
+      svg.appendChild(txt(HX,HY+46,"#9fb0c6","11.5",null,"middle","Any system ↔ any system"));
+    }
+  }
+
+var stageEl=document.getElementById('pipelineStage')||document.querySelector('.stage')||document.querySelector('.diagram-wrap');
 var hbMoreEl=document.getElementById('hbMore');
   if(hbMoreEl&&stageEl&&stageEl.parentNode){ stageEl.parentNode.appendChild(hbMoreEl); }
 
