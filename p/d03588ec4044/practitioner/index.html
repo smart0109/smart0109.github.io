@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Second Brain — Physician Concept Mockup</title>
+<style>
+:root{
+  --bg-base:#f7f5f2; --bg-card:#ffffff; --bg-elevated:#fbfaf8; --bg-surface:#f1efec;
+  --text-primary:#201e1d; --text-secondary:#4a4643; --text-muted:#8a847d;
+  --border:#e3ded7; --accent:#5e8c45; --accent-dim:#eaf1e4; --accent-text:#3f6630;
+  --red:#c0392b; --orange:#c9761f; --blue:#2e6da4; --purple:#7952a6; --teal:#1f8a83; --pink:#b4457a;
+  --font-display:'Georgia',serif; --font-body:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font-body);background:var(--bg-base);color:var(--text-primary);font-size:14px;line-height:1.5}
+.disclaimer{background:#3a2e1a;color:#f3e3c4;font-size:11px;font-weight:700;letter-spacing:.03em;text-align:center;padding:7px 14px;position:sticky;top:0;z-index:200}
+.topbar{background:#201e1d;color:#f3f2f2;display:flex;align-items:center;gap:14px;padding:10px 20px;position:sticky;top:27px;z-index:190}
+.topbar h1{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;margin:0}
+.topbar .sub{font-size:11px;color:rgba(243,242,242,.6)}
+.topbar .persona{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12px}
+.persona-avatar{width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px}
+.shell{display:flex;min-height:calc(100vh - 68px)}
+.rail{width:212px;background:var(--bg-base);border-right:2px solid var(--text-primary);flex-shrink:0;position:sticky;top:68px;align-self:flex-start;height:calc(100vh - 68px);overflow-y:auto}
+.rail-group{padding:14px 14px 4px;font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--text-muted);text-transform:uppercase;border-top:2px solid var(--text-primary)}
+.rail-group:first-child{border-top:none;padding-top:12px}
+.rail-tab{display:flex;align-items:center;gap:8px;padding:0 14px;min-height:42px;font-size:12px;font-weight:600;color:var(--text-secondary);border-left:3px solid transparent;border-bottom:1px solid var(--border);cursor:pointer}
+.rail-tab:hover{background:var(--bg-surface);color:var(--text-primary)}
+.rail-tab.active{background:var(--accent-dim);border-left-color:var(--accent);color:var(--text-primary);font-weight:700}
+.rail-tab .ic{font-size:14px;width:16px;text-align:center}
+.rail-tab .badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:800;border-radius:9px;padding:1px 6px}
+.main{flex:1;padding:22px 26px 60px;max-width:1180px}
+.page{display:none}
+.page.active{display:block}
+h2.page-title{font-family:var(--font-display);font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+.page-sub{font-size:12px;color:var(--text-muted);margin-bottom:18px}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;margin-bottom:14px}
+.card-header{padding:11px 16px;border-bottom:2px solid var(--text-primary);display:flex;align-items:center;gap:8px}
+.card-header h3{margin:0;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--text-primary)}
+.card-body{padding:14px 16px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr}.rail{position:static;height:auto}.shell{flex-direction:column}}
+.pill{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:2px 8px;border-radius:10px}
+.pill.urgent{background:#fbe4e1;color:var(--red)}
+.pill.high{background:#fdeedc;color:var(--orange)}
+.pill.routine{background:var(--accent-dim);color:var(--accent-text)}
+.pill.info{background:#e4edf7;color:var(--blue)}
+.pill.new{background:#e4edf7;color:var(--blue);border:1px solid #c3d7ec}
+.pill.important{background:#fbe4e1;color:var(--red);border:1px solid #f0c2bc;font-weight:800}
+.pill.testresult{background:#f1e7f7;color:var(--purple);border:1px solid #ddc7ec}
+.legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--text-muted);margin-bottom:12px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.draggable-list{}
+.queue-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);cursor:default;position:relative;background:var(--bg-card)}
+.queue-row:last-child{border-bottom:none}
+.queue-row:hover{background:var(--bg-surface)}
+.queue-row.dragging{opacity:.55;background:var(--accent-dim);box-shadow:0 4px 14px rgba(0,0,0,.12);z-index:2}
+.queue-row.drag-over{border-top:2px solid var(--accent)}
+.drag-handle{color:var(--text-muted);font-size:13px;letter-spacing:-2px;cursor:grab;flex-shrink:0;padding:6px 4px;user-select:none;touch-action:none}
+.drag-handle:active{cursor:grabbing}
+.qr-time{font-size:11px;font-weight:700;color:var(--text-muted);width:58px;flex-shrink:0}
+.qr-main{flex:1;min-width:0}
+.qr-main.clickable{cursor:pointer}
+.qr-main.clickable .qr-name{cursor:pointer}
+.qr-main.clickable:hover .qr-name{color:var(--accent-text);text-decoration:underline}
+.qr-name{font-weight:700;font-size:13px}
+.qr-meta{font-size:11px;color:var(--text-muted);margin-top:2px}
+.qr-actions{display:flex;gap:6px;flex-shrink:0}
+.btn{font-size:10px;font-weight:700;padding:6px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg-elevated);color:var(--text-secondary);cursor:pointer}
+.btn:hover{border-color:var(--text-primary)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.stat-row{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:16px}
+.stat{flex:1;padding:12px 16px;border-left:1px solid var(--border)}
+.stat:first-child{border-left:none}
+.stat .n{font-size:20px;font-weight:800;font-family:var(--font-display)}
+.stat .l{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.kanban{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.kcol{background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;padding:8px;min-height:260px}
+.kcol h4{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:2px 4px 8px}
+.kcard{background:var(--bg-card);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:8px;font-size:11px}
+.kcard .kn{font-weight:700;font-size:12px}
+.kcard .kd{color:var(--text-muted);margin-top:3px}
+.chart-hero{display:flex;gap:16px;align-items:center;padding:16px;border:1px solid var(--border);border-radius:8px;margin-bottom:14px;background:var(--bg-card)}
+.chart-avatar{width:56px;height:56px;border-radius:50%;background:var(--accent-dim);color:var(--accent-text);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0}
+.chart-name{font-family:var(--font-display);font-size:19px;font-weight:700}
+.chart-meta{font-size:11px;color:var(--text-muted);margin-top:2px}
+.tagrow{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:10px;background:var(--bg-surface);border:1px solid var(--border);color:var(--text-secondary)}
+.tag.allergy{background:#fbe4e1;color:var(--red);border-color:#f0c2bc}
+.pd-empty{display:flex;align-items:center;gap:10px;color:var(--text-muted);font-size:12px}
+.pd-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.pd-header .chart-avatar{width:42px;height:42px;font-size:15px}
+.pd-name{font-family:var(--font-display);font-size:16px;font-weight:700}
+.pd-meta{font-size:11px;color:var(--text-muted);margin-top:1px}
+.pd-grid{display:grid;grid-template-columns:120px 1fr;gap:6px 10px;font-size:12px}
+.pd-label{font-weight:700;color:var(--text-secondary);font-size:10px;text-transform:uppercase;letter-spacing:.05em;padding-top:1px}
+.pd-flag{display:inline-block;margin-top:8px}
+table.simple{width:100%;border-collapse:collapse;font-size:12px}
+table.simple th{text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);padding:6px 8px;border-bottom:2px solid var(--text-primary)}
+table.simple td{padding:8px;border-bottom:1px solid var(--border);vertical-align:top}
+.timeline-item{display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.timeline-item:last-child{border-bottom:none}
+.ti-date{font-size:10px;font-weight:700;color:var(--text-muted);width:78px;flex-shrink:0}
+.ti-body b{font-size:12px}
+.copilot-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;min-width:0}
+.copilot-layout>div{min-width:0}
+.transcript-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:14px;max-height:340px;overflow-y:auto;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+.tl-line{padding:5px 0;border-bottom:1px solid var(--border)}
+.tl-line .who{font-weight:700;font-size:10px;text-transform:uppercase;letter-spacing:.04em;margin-right:6px}
+.tl-line.dr .who{color:var(--accent-text)}
+.tl-line.pt .who{color:var(--blue)}
+.soap-box{background:var(--bg-elevated);border:1px dashed var(--border);border-radius:8px;padding:12px 14px;font-size:12px;margin-top:10px}
+.soap-box b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin:8px 0 3px}
+.soap-box b:first-child{margin-top:0}
+.action-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.action-btn{padding:11px 8px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);text-align:center;cursor:pointer;border-left:3px solid var(--accent)}
+.action-btn .ic{font-size:16px}
+.action-btn .lb{font-size:10px;font-weight:700;margin-top:3px}
+.action-btn .hn{font-size:9px;color:var(--text-muted);margin-top:1px}
+.doc-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.doc-row:last-child{border-bottom:none}
+.doc-ic{width:30px;height:30px;border-radius:6px;background:var(--bg-surface);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.doc-main{flex:1;min-width:0}
+.doc-name{font-weight:700;font-size:12px}
+.doc-meta{font-size:10px;color:var(--text-muted);margin-top:1px}
+.video-card{border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--bg-card)}
+.video-thumb{height:100px;background:linear-gradient(135deg,var(--accent-dim),var(--bg-surface));display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--accent-text)}
+.video-body{padding:10px 12px}
+.video-title{font-weight:700;font-size:12px}
+.video-meta{font-size:10px;color:var(--text-muted);margin-top:3px}
+.empty-note{font-size:11px;color:var(--text-muted);font-style:italic}
+.auto-row{display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid var(--border);font-size:12px}
+.auto-row:last-child{border-bottom:none}
+.auto-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.auto-dot.ok{background:var(--accent)}
+.auto-dot.warn{background:var(--orange)}
+.auto-dot.err{background:var(--red)}
+.kb-topic{border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:var(--bg-card)}
+.kb-topic h4{margin:0 0 4px;font-size:12px}
+.kb-topic p{margin:0;font-size:11px;color:var(--text-secondary)}
+.footer-note{margin-top:26px;padding:14px 16px;border:1px dashed var(--border);border-radius:8px;font-size:11px;color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div class="disclaimer">CONCEPT MOCKUP ONLY — every patient, chart, order, and message below is fabricated for illustration. Not real patient data. Not medical advice. Not a real EHR.</div>
+<div class="topbar">
+  <h1>Second Brain</h1>
+  <span class="sub">reimagined for a physician's daily workflow</span>
+  <div class="persona">
+    <div class="persona-avatar">DR</div>
+    <span>Dr. Rivera · Internal Medicine</span>
+  </div>
+</div>
+<div class="shell">
+  <div class="rail" id="rail"></div>
+  <div class="main" id="main">
+
+<!-- ═══════════════ TODAY / PRIORITY QUEUE ═══════════════ -->
+<div class="page active" id="page-today">
+  <h2 class="page-title">Priority Queue</h2>
+  <div class="page-sub">Tuesday, August 6 · Sorted by clinical urgency, not appointment time — this is the page that used to be "Today" for a sales pipeline. For a physician it's the triage board: what needs eyes on it first, regardless of when it's scheduled.</div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="n">2</div><div class="l">Urgent flags</div></div>
+    <div class="stat"><div class="n">8</div><div class="l">Visits today</div></div>
+    <div class="stat"><div class="n">1</div><div class="l">Inpatient round</div></div>
+    <div class="stat"><div class="n">5</div><div class="l">Refill requests</div></div>
+    <div class="stat"><div class="n">3</div><div class="l">Abnormal results pending review</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>Needs Attention Now</h3></div>
+    <div>
+      <div class="queue-row">
+        <div class="qr-time">URGENT</div>
+        <div class="qr-main">
+          <div class="qr-name">Linda Farrow <span class="pill urgent" style="margin-left:6px">Abnormal Result</span></div>
+          <div class="qr-meta">58F · breast ca surveillance, MRN 40218 · CA-125 resulted at 68 U/mL (prior 22 U/mL, 3mo ago) · patient not yet notified</div>
+        </div>
+        <div class="qr-actions"><button class="btn primary">Call Patient</button><button class="btn">Open Chart</button></div>
+      </div>
+      <div class="queue-row">
+        <div class="qr-time">URGENT</div>
+        <div class="qr-main">
+          <div class="qr-name">Dorothy Kim <span class="pill urgent" style="margin-left:6px">Inpatient</span></div>
+          <div class="qr-meta">82F · CHF exacerbation, MRN 55029 · admitted overnight via ED, BNP 1,840 · rounds due 8:00 AM, room 412</div>
+        </div>
+        <div class="qr-actions"><button class="btn primary">Start Rounds Note</button><button class="btn">Open Chart</button></div>
+      </div>
+      <div class="queue-row">
+        <div class="qr-time">HIGH</div>
+        <div class="qr-main">
+          <div class="qr-name">Tomas Reyes <span class="pill high" style="margin-left:6px">Home O2 Alert</span></div>
+          <div class="qr-meta">71M · COPD, MRN 33012 · home pulse-ox flagged SpO2 89% overnight · refill request pending (albuterol HFA, tiotropium)</div>
+        </div>
+        <div class="qr-actions"><button class="btn primary">Call Patient</button><button class="btn">Review Refill</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>Today's Schedule At a Glance</h3></div>
+    <div class="card-body" style="padding-bottom:0">
+      <div class="legend">
+        <span>&#8942;&#8942; Drag the handle to reorder</span>
+        <span><span class="pill new">New</span> first visit with this patient</span>
+        <span><span class="pill important">Important</span> needs your attention regardless of order</span>
+        <span><span class="pill testresult">Test Result</span> a result is back and unread</span>
+      </div>
+    </div>
+    <div class="draggable-list" id="scheduleList">
+      <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">8:00a</div><div class="qr-main"><div class="qr-name">Dorothy Kim — Inpatient Rounds</div><div class="qr-meta">Room 412 · CHF exacerbation, day 1</div></div><span class="pill important">Important</span></div>
+      <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">9:00a</div><div class="qr-main"><div class="qr-name">Eleanor Vance — Follow-up</div><div class="qr-meta">T2DM + HTN · A1c drawn last visit, pending review</div></div><span class="pill routine">Routine</span></div>
+      <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">9:30a</div><div class="qr-main"><div class="qr-name">Marcus Webb — Post-Op Check</div><div class="qr-meta">Left knee arthroscopy, POD 12 · wound check</div></div><span class="pill routine">Routine</span></div>
+      <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">10:15a</div><div class="qr-main"><div class="qr-name">Priya Anand — New OB Intake</div><div class="qr-meta">12wk gestation · first prenatal visit</div></div><span class="pill new">New</span></div>
+      <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">11:00a</div><div class="qr-main"><div class="qr-name">Jonah Ruiz (age 8) — Peds Follow-up</div><div class="qr-meta">Asthma, accompanied by parent · seasonal flare</div></div><span class="pill routine">Routine</span></div>
+      <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">1:30p</div><div class="qr-main"><div class="qr-name">Samuel Osei — New Patient Intake</div><div class="qr-meta">Anxiety / depression eval · referred by EAP</div></div><span class="pill new">New</span></div>
+      <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">2:15p</div><div class="qr-main"><div class="qr-name">Linda Farrow — Callback Slot Held</div><div class="qr-meta">Reserved to deliver CA-125 result + next steps</div></div><span class="pill testresult">Test Result</span></div>
+      <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">3:00p</div><div class="qr-main"><div class="qr-name">Tomas Reyes — Add-on Visit</div><div class="qr-meta">Squeezed in for O2 sat concern</div></div><span class="pill high">High</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h3>Refill Requests Awaiting Review (5)</h3></div>
+    <table class="simple"><tr><th>Patient</th><th>Medication</th><th>Last Fill</th><th>Requested</th></tr>
+      <tr><td>Tomas Reyes</td><td>Albuterol HFA, Tiotropium</td><td>34 days ago</td><td>Today, 6:12a via portal</td></tr>
+      <tr><td>Eleanor Vance</td><td>Metformin 1000mg BID</td><td>88 days ago</td><td>Yesterday, 4:40p via pharmacy fax</td></tr>
+      <tr><td>Dorothy Kim</td><td>Furosemide 40mg</td><td>N/A — inpatient adjustment pending</td><td>Care team, this AM</td></tr>
+      <tr><td>Harold Pruitt</td><td>Lisinopril 20mg</td><td>91 days ago</td><td>2 days ago via portal</td></tr>
+      <tr><td>Wanda Ellsworth</td><td>Levothyroxine 75mcg</td><td>79 days ago, TSH due for recheck</td><td>Today, 7:05a via portal</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ TODAY'S VISITS ═══════════════ -->
+<div class="page" id="page-visits">
+  <h2 class="page-title">Today's Visits</h2>
+  <div class="page-sub">Replaces "Meetings" — same idea (a day's calendar of scheduled sit-downs), but each block is a patient encounter with a room, visit type, and chief complaint instead of an attendee list and agenda. Drag the handle on any visit to move it earlier or later.</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>Morning</h3></div>
+      <div class="draggable-list" id="morningList">
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">8:00a</div><div class="qr-main clickable" onclick="showPatientDetail('Dorothy Kim')"><div class="qr-name">Dorothy Kim</div><div class="qr-meta">Room 412 (Inpatient) · CHF rounds</div></div><span class="pill important">Important</span></div>
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">9:00a</div><div class="qr-main clickable" onclick="showPatientDetail('Eleanor Vance')"><div class="qr-name">Eleanor Vance</div><div class="qr-meta">Exam 2 · Diabetes/HTN follow-up · 20 min</div></div></div>
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">9:30a</div><div class="qr-main clickable" onclick="showPatientDetail('Marcus Webb')"><div class="qr-name">Marcus Webb</div><div class="qr-meta">Exam 1 · Post-op wound check · 15 min</div></div></div>
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">10:15a</div><div class="qr-main clickable" onclick="showPatientDetail('Priya Anand')"><div class="qr-name">Priya Anand</div><div class="qr-meta">Exam 3 · New OB intake · 40 min</div></div><span class="pill new">New</span></div>
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">11:00a</div><div class="qr-main clickable" onclick="showPatientDetail('Jonah Ruiz')"><div class="qr-name">Jonah Ruiz + parent</div><div class="qr-meta">Exam 2 · Peds asthma follow-up · 20 min</div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Afternoon</h3></div>
+      <div class="draggable-list" id="afternoonList">
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">1:30p</div><div class="qr-main clickable" onclick="showPatientDetail('Samuel Osei')"><div class="qr-name">Samuel Osei</div><div class="qr-meta">Exam 1 · New patient intake · 45 min</div></div><span class="pill new">New</span></div>
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">2:15p</div><div class="qr-main clickable" onclick="showPatientDetail('Linda Farrow')"><div class="qr-name">Linda Farrow</div><div class="qr-meta">Video visit · Results review · 20 min</div></div><span class="pill testresult">Test Result</span></div>
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">3:00p</div><div class="qr-main clickable" onclick="showPatientDetail('Tomas Reyes')"><div class="qr-name">Tomas Reyes</div><div class="qr-meta">Exam 2 · Add-on: O2 sat concern · 15 min</div></div></div>
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">3:45p</div><div class="qr-main"><div class="qr-name">Chart review block</div><div class="qr-meta">No patient · labs, imaging, portal messages</div></div></div>
+        <div class="queue-row"><span class="drag-handle">&#8942;&#8942;</span><div class="qr-time">4:30p</div><div class="qr-main"><div class="qr-name">Care team huddle</div><div class="qr-meta">MA + RN · tomorrow's schedule prep</div></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Care Team On Today</h3></div>
+    <div class="card-body">
+      <span class="tag">Dr. Rivera — Attending</span>
+      <span class="tag">Nurse Callahan, RN</span>
+      <span class="tag">Priya Nair, MA</span>
+      <span class="tag">Dr. Osei (covering OB) — Telehealth</span>
+      <span class="tag">Front desk: Marisol T.</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Patient Detail</h3></div>
+    <div class="card-body" id="patientDetailBody">
+      <div class="pd-empty">&#128100; Click a patient above (Morning or Afternoon) to see their details here.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PATIENT PIPELINE ═══════════════ -->
+<div class="page" id="page-pipeline">
+  <h2 class="page-title">Patient Pipeline</h2>
+  <div class="page-sub">Replaces the sales "CRM" kanban — instead of Lead → Qualified → Proposal → Closed, this tracks a patient from referral through discharge, which is exactly the kind of "deal stage" board a practice manager or care coordinator lives in.</div>
+  <div class="kanban">
+    <div class="kcol"><h4>New Referral (4)</h4>
+      <div class="kcard"><div class="kn">Harold Pruitt</div><div class="kd">Referred by Dr. Chen (cardio) for HTN co-management · received 2 days ago</div></div>
+      <div class="kcard"><div class="kn">Nia Whitfield</div><div class="kd">Self-referred, new to area · needs PCP · records requested from prior practice</div></div>
+      <div class="kcard"><div class="kn">Otis Greenwood</div><div class="kd">ED discharge follow-up required within 7 days · fall risk</div></div>
+      <div class="kcard"><div class="kn">Bettina Cruz</div><div class="kd">Referred by school nurse · adolescent, possible eating disorder screen</div></div>
+    </div>
+    <div class="kcol"><h4>Intake Scheduled (3)</h4>
+      <div class="kcard"><div class="kn">Samuel Osei</div><div class="kd">1:30p today · anxiety/depression eval via EAP</div></div>
+      <div class="kcard"><div class="kn">Priya Anand</div><div class="kd">10:15a today · new OB, 12wk</div></div>
+      <div class="kcard"><div class="kn">Wanda Ellsworth</div><div class="kd">Next Thu · thyroid management transfer of care</div></div>
+    </div>
+    <div class="kcol"><h4>In Active Treatment (6)</h4>
+      <div class="kcard"><div class="kn">Eleanor Vance</div><div class="kd">T2DM + HTN · A1c trending down, 8.1→7.4</div></div>
+      <div class="kcard"><div class="kn">Marcus Webb</div><div class="kd">Post-op knee, POD 12 · PT started</div></div>
+      <div class="kcard"><div class="kn">Dorothy Kim</div><div class="kd">CHF exacerbation · inpatient, day 1</div></div>
+      <div class="kcard"><div class="kn">Tomas Reyes</div><div class="kd">COPD · O2 sat concern flagged today</div></div>
+      <div class="kcard"><div class="kn">Jonah Ruiz</div><div class="kd">Peds asthma · seasonal flare, step-up therapy</div></div>
+      <div class="kcard"><div class="kn">Linda Farrow</div><div class="kd">Breast ca surveillance · abnormal marker, urgent</div></div>
+    </div>
+    <div class="kcol"><h4>Follow-Up Due (5)</h4>
+      <div class="kcard"><div class="kn">Reginald Osei-Bonsu</div><div class="kd">A1c recheck overdue by 3 weeks</div></div>
+      <div class="kcard"><div class="kn">Camille Fitch</div><div class="kd">Post-partum 6wk check not yet scheduled</div></div>
+      <div class="kcard"><div class="kn">Ahmed Farouk</div><div class="kd">Colonoscopy screening reminder, age 50</div></div>
+      <div class="kcard"><div class="kn">Grace Okafor</div><div class="kd">BP recheck 2 weeks post-med change</div></div>
+      <div class="kcard"><div class="kn">Louis Bergeron</div><div class="kd">Annual wellness visit due</div></div>
+    </div>
+    <div class="kcol"><h4>Discharged / Stable (3)</h4>
+      <div class="kcard"><div class="kn">Yusuf Demir</div><div class="kd">Ankle sprain resolved, discharged from PT</div></div>
+      <div class="kcard"><div class="kn">Ruth Applegate</div><div class="kd">Pneumonia resolved, cleared on repeat imaging</div></div>
+      <div class="kcard"><div class="kn">Devon Marsh</div><div class="kd">Transferred care to new PCP, records sent</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PATIENT CHART ═══════════════ -->
+<div class="page" id="page-chart">
+  <h2 class="page-title">Patient Chart</h2>
+  <div class="page-sub">Replaces "Contact 360" — same one-screen-has-everything idea (deal history, notes, contact info), reframed as a longitudinal patient chart. Below: Eleanor Vance, opened from this morning's 9:00a follow-up.</div>
+  <div class="chart-hero">
+    <div class="chart-avatar">EV</div>
+    <div>
+      <div class="chart-name">Eleanor Vance</div>
+      <div class="chart-meta">67F · DOB 03/14/1959 · MRN 88213 · PCP: Dr. Rivera · Insurance: Meridian Health PPO, active</div>
+      <div class="tagrow">
+        <span class="tag">Type 2 Diabetes</span>
+        <span class="tag">Hypertension</span>
+        <span class="tag">Osteoarthritis, bilateral knees</span>
+        <span class="tag allergy">Allergy: Penicillin (rash)</span>
+        <span class="tag allergy">Allergy: Sulfa (hives)</span>
+      </div>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>Current Medications</h3></div>
+      <table class="simple">
+        <tr><th>Medication</th><th>Dose</th><th>Started</th></tr>
+        <tr><td>Metformin</td><td>1000mg BID</td><td>2019</td></tr>
+        <tr><td>Lisinopril</td><td>20mg QD</td><td>2020</td></tr>
+        <tr><td>Atorvastatin</td><td>40mg QHS</td><td>2021</td></tr>
+        <tr><td>Semaglutide</td><td>1mg weekly inj.</td><td>Added 4mo ago</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Recent Vitals &amp; Labs</h3></div>
+      <table class="simple">
+        <tr><th>Metric</th><th>Value</th><th>Trend</th></tr>
+        <tr><td>A1c</td><td>7.4% (drawn 3 days ago)</td><td>↓ from 8.1%</td></tr>
+        <tr><td>BP</td><td>134/82</td><td>↓ from 142/88</td></tr>
+        <tr><td>Weight</td><td>188 lb</td><td>↓ 11 lb / 4mo</td></tr>
+        <tr><td>eGFR</td><td>78</td><td>Stable</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Visit Timeline</h3></div>
+    <div class="card-body">
+      <div class="timeline-item"><div class="ti-date">Today</div><div class="ti-body"><b>Follow-up visit (in progress)</b> — reviewing A1c improvement, discussing knee pain management</div></div>
+      <div class="timeline-item"><div class="ti-date">4mo ago</div><div class="ti-body"><b>Med adjustment</b> — started semaglutide for weight + glycemic control, A1c was 8.1%</div></div>
+      <div class="timeline-item"><div class="ti-date">7mo ago</div><div class="ti-body"><b>Annual wellness visit</b> — routine labs ordered, mammogram referral placed</div></div>
+      <div class="timeline-item"><div class="ti-date">11mo ago</div><div class="ti-body"><b>Knee pain evaluation</b> — X-ray showed mild-moderate OA, referred to ortho, patient deferred injections</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Physician Notes (private)</h3></div>
+    <div class="card-body">
+      <p style="margin:0 0 8px"><b>08/06 — 9:00a follow-up.</b> Patient reports feeling "much better" on semaglutide, mild nausea first two weeks now resolved. Denies hypoglycemic episodes. Walking 20 min most days. Knee pain 4/10, worse going down stairs — declined injection last year, revisit today given improved overall health status. Plan: continue current regimen, recheck A1c in 3 months, ortho referral for knee injection discussion, routine labs today.</p>
+      <p style="margin:0;color:var(--text-muted)"><b>Prior note, 4mo ago —</b> Discussed weight-loss goals in context of knee OA. Patient motivated, started semaglutide today after discussing GI side effects and cost with pharmacy.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ AI VISIT ASSISTANT ═══════════════ -->
+<div class="page" id="page-scribe">
+  <h2 class="page-title">AI Visit Assistant</h2>
+  <div class="page-sub">Replaces "AI Transcription / Copilot" — live visit transcript on the left, AI actions on the right. Same shape as the sales version (Explain / Rebuttal / Tone / Advise / Motivate / Humor), reframed for an exam room instead of a sales call.</div>
+
+  <div style="display:flex;gap:6px;margin-bottom:12px;align-items:center">
+    <span class="pill routine">Live — Eleanor Vance, 9:00a Follow-up</span>
+    <span style="font-size:11px;color:var(--text-muted)">Recording with patient consent · auto-transcribing</span>
+  </div>
+
+  <div class="copilot-layout">
+    <div>
+      <div class="card-header" style="border:1px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0"><h3>Live Transcript</h3></div>
+      <div class="transcript-box" style="border-radius:0 0 8px 8px">
+        <div class="tl-line dr"><span class="who">Dr. Rivera</span>10:02 — So your labs came back, and your A1c is 7.4, down from 8.1 three months ago. That's a really solid move in the right direction.</div>
+        <div class="tl-line pt"><span class="who">Eleanor</span>10:02 — Oh good, I was hoping. I've been trying to walk more, and honestly the new medication seems to be helping too.</div>
+        <div class="tl-line dr"><span class="who">Dr. Rivera</span>10:03 — That's great — any nausea or stomach issues since we last adjusted the dose?</div>
+        <div class="tl-line pt"><span class="who">Eleanor</span>10:03 — First couple weeks, yeah, but it settled down. I've actually lost some weight too, which I wasn't expecting.</div>
+        <div class="tl-line dr"><span class="who">Dr. Rivera</span>10:04 — Eleven pounds since your last visit — that lines up. How's the knee been through all the extra walking?</div>
+        <div class="tl-line pt"><span class="who">Eleanor</span>10:04 — Honestly still bothers me on the stairs. I know I said no to the shot last time but I might be ready to reconsider.</div>
+        <div class="tl-line dr"><span class="who">Dr. Rivera</span>10:05 — Totally fair to revisit that. Let's get you back to ortho for the injection conversation now that you're moving more — don't want the knee to be the thing that stalls the progress you've made.</div>
+        <div class="tl-line pt"><span class="who">Eleanor</span>10:05 — That makes sense. I just don't want another needle if I don't have to.</div>
+      </div>
+      <div class="soap-box">
+        <b>Subjective</b>Pt reports improved energy, weight loss (-11 lb/4mo), resolved GI side effects from semaglutide. Persistent knee pain 4/10 w/ stairs, now open to injection.
+        <b>Objective</b>BP 134/82 (↓), A1c 7.4% (↓ from 8.1%), weight 188 lb (↓11 lb).
+        <b>Assessment</b>T2DM — improved control. HTN — improved, at goal. Knee OA — symptomatic, patient now open to intervention.
+        <b>Plan</b>Continue metformin, lisinopril, atorvastatin, semaglutide. Recheck A1c in 3 months. Ortho referral for knee injection. Routine labs today.
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-header"><h3>AI Actions</h3></div>
+        <div class="card-body">
+          <div class="action-grid">
+            <div class="action-btn" style="border-left-color:var(--blue)"><div class="ic">&#128161;</div><div class="lb">Explain</div><div class="hn">Plain-language recap for patient</div></div>
+            <div class="action-btn" style="border-left-color:var(--purple)"><div class="ic">&#128300;</div><div class="lb">Differential</div><div class="hn">Alternate causes to consider</div></div>
+            <div class="action-btn" style="border-left-color:var(--teal)"><div class="ic">&#127912;</div><div class="lb">Bedside Tone</div><div class="hn">How is this landing with the patient?</div></div>
+            <div class="action-btn" style="border-left-color:var(--green,#5e8c45)"><div class="ic">&#128172;</div><div class="lb">Next Steps</div><div class="hn">What to say / order next</div></div>
+            <div class="action-btn" style="border-left-color:var(--pink)"><div class="ic">&#128170;</div><div class="lb">Encourage</div><div class="hn">Reinforce patient's progress</div></div>
+            <div class="action-btn" style="border-left-color:var(--orange)"><div class="ic">&#128522;</div><div class="lb">Rapport</div><div class="hn">Light moment to ease a tense visit</div></div>
+          </div>
+          <div class="soap-box" style="margin-top:0">
+            <b>Bedside Tone — live read</b>
+            Patient sounds relieved and proud of her progress but is anxious about the knee injection ("another needle"). Consider naming that anxiety directly before moving to logistics — she responds well to being asked what specifically worries her rather than being reassured in general terms.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Context Panel</h3></div>
+        <div class="card-body" style="font-size:12px">
+          <div style="margin-bottom:8px"><b>Allergies:</b> Penicillin (rash), Sulfa (hives)</div>
+          <div style="margin-bottom:8px"><b>Last A1c trend:</b> 8.1% → 7.4% (3 months)</div>
+          <div style="margin-bottom:8px"><b>Open orders:</b> None pending</div>
+          <div><b>Care gaps:</b> Mammogram referral from 7mo ago — unconfirmed if completed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ CLINICAL KNOWLEDGE ═══════════════ -->
+<div class="page" id="page-knowledge">
+  <h2 class="page-title">Clinical Knowledge</h2>
+  <div class="page-sub">Replaces "Intelligence" — instead of competitor battlecards and win/loss FAQs, this is a quick-reference layer: drug interactions, protocol summaries, and a "search across everything" box that spans notes, labs, and guidelines.</div>
+
+  <div class="card">
+    <div class="card-header"><h3>Ask Across Patient Data &amp; Guidelines</h3></div>
+    <div class="card-body">
+      <input type="text" placeholder="e.g. 'semaglutide + lisinopril interaction' or 'CHF exacerbation discharge checklist'" style="width:100%;padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--bg-elevated)" disabled>
+      <div class="empty-note" style="margin-top:6px">Mockup only — in the real tool this would query a clinical reference source plus the patient's own chart.</div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="kb-topic"><h4>Drug Interaction Notes</h4><p>Semaglutide + sulfonylureas: hypoglycemia risk, dose review flagged. Lisinopril + NSAIDs: renal function monitoring recommended for chronic use.</p></div>
+    <div class="kb-topic"><h4>CHF Exacerbation Protocol</h4><p>IV diuresis, daily weights, strict I&amp;O, BNP trend, echo if not done in past year, discharge criteria: stable weight x24h, O2 sat &gt;92% RA.</p></div>
+    <div class="kb-topic"><h4>Pediatric Asthma Step-Up</h4><p>Step 3 criteria, spacer technique re-education, seasonal trigger review, action plan refresh with parent.</p></div>
+    <div class="kb-topic"><h4>New OB Intake Checklist</h4><p>Dating ultrasound, genetic screening discussion, prenatal panel, folic acid confirmation, risk stratification.</p></div>
+    <div class="kb-topic"><h4>COPD Home O2 Thresholds</h4><p>Escalation criteria for SpO2 &lt;90% sustained, when to consider ED referral vs. office titration.</p></div>
+    <div class="kb-topic"><h4>Breast Ca Surveillance</h4><p>CA-125 is not a stand-alone diagnostic marker — trend plus imaging plus oncology consult drives next step, not the number alone.</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════ ORDERS & DOCUMENTS ═══════════════ -->
+<div class="page" id="page-documents">
+  <h2 class="page-title">Orders &amp; Documents</h2>
+  <div class="page-sub">Replaces "Legal Assets" — same document-management shape (contracts, NDAs, signed docs), reframed as prescriptions, lab orders, imaging orders, and prior authorizations.</div>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-header"><h3>Prescriptions — Pending Signature</h3></div>
+      <div>
+        <div class="doc-row"><div class="doc-ic">&#128138;</div><div class="doc-main"><div class="doc-name">Metformin 1000mg BID — Eleanor Vance</div><div class="doc-meta">Refill, 90-day supply · e-scribed to Meridian Pharmacy</div></div><span class="pill routine">Ready</span></div>
+        <div class="doc-row"><div class="doc-ic">&#128138;</div><div class="doc-main"><div class="doc-name">Albuterol HFA + Tiotropium — Tomas Reyes</div><div class="doc-meta">Refill, urgent given O2 sat flag</div></div><span class="pill urgent">Urgent</span></div>
+        <div class="doc-row"><div class="doc-ic">&#128138;</div><div class="doc-main"><div class="doc-name">Prenatal Vitamin + Folic Acid — Priya Anand</div><div class="doc-meta">New Rx, first OB visit</div></div><span class="pill info">New</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>Labs &amp; Imaging Orders</h3></div>
+      <div>
+        <div class="doc-row"><div class="doc-ic">&#129514;</div><div class="doc-main"><div class="doc-name">CMP + Lipid Panel — Eleanor Vance</div><div class="doc-meta">Ordered today, routine follow-up labs</div></div><span class="pill routine">Ordered</span></div>
+        <div class="doc-row"><div class="doc-ic">&#129514;</div><div class="doc-main"><div class="doc-name">CA-125 Repeat + Pelvic Ultrasound — Linda Farrow</div><div class="doc-meta">STAT, to confirm trend before oncology referral</div></div><span class="pill urgent">STAT</span></div>
+        <div class="doc-row"><div class="doc-ic">&#129514;</div><div class="doc-main"><div class="doc-name">Chest X-ray — Tomas Reyes</div><div class="doc-meta">Rule out acute process given O2 sat drop</div></div><span class="pill high">High</span></div>
+        <div class="doc-row"><div class="doc-ic">&#129514;</div><div class="doc-main"><div class="doc-name">Dating Ultrasound — Priya Anand</div><div class="doc-meta">New OB, scheduling this week</div></div><span class="pill info">New</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Referrals &amp; Prior Authorizations</h3></div>
+    <table class="simple">
+      <tr><th>Patient</th><th>Type</th><th>To</th><th>Status</th></tr>
+      <tr><td>Eleanor Vance</td><td>Referral</td><td>Orthopedics — knee injection eval</td><td>Sent today</td></tr>
+      <tr><td>Linda Farrow</td><td>Referral</td><td>Oncology — urgent consult</td><td>Pending confirmation call</td></tr>
+      <tr><td>Marcus Webb</td><td>Prior Auth</td><td>Physical therapy, 8 sessions</td><td>Approved</td></tr>
+      <tr><td>Samuel Osei</td><td>Referral</td><td>Behavioral Health</td><td>Draft, pending today's intake</td></tr>
+      <tr><td>Bettina Cruz</td><td>Referral</td><td>Adolescent Medicine / Eating Disorder Program</td><td>Awaiting parent consent</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ PATIENT EDUCATION ═══════════════ -->
+<div class="page" id="page-education">
+  <h2 class="page-title">Patient Education</h2>
+  <div class="page-sub">Replaces "Artifacts" (the asset library of one-pagers and hiring-journey decks) — reframed as short videos and training materials assigned directly to patients after a visit.</div>
+  <div class="grid-3">
+    <div class="video-card"><div class="video-thumb">&#127909;</div><div class="video-body"><div class="video-title">Using Your Semaglutide Pen</div><div class="video-meta">4 min · assigned to Eleanor Vance today</div></div></div>
+    <div class="video-card"><div class="video-thumb">&#127909;</div><div class="video-body"><div class="video-title">Proper Inhaler + Spacer Technique</div><div class="video-meta">3 min · assigned to Jonah Ruiz's parent</div></div></div>
+    <div class="video-card"><div class="video-thumb">&#127909;</div><div class="video-body"><div class="video-title">What to Expect: First Trimester</div><div class="video-meta">6 min · assigned to Priya Anand</div></div></div>
+    <div class="video-card"><div class="video-thumb">&#127909;</div><div class="video-body"><div class="video-title">Home Oxygen Safety Basics</div><div class="video-meta">5 min · assigned to Tomas Reyes</div></div></div>
+    <div class="video-card"><div class="video-thumb">&#127909;</div><div class="video-body"><div class="video-title">Knee-Friendly Home Exercises</div><div class="video-meta">7 min · queued for Eleanor Vance's ortho follow-up</div></div></div>
+    <div class="video-card"><div class="video-thumb">&#127909;</div><div class="video-body"><div class="video-title">Talking to Your Kids About Anxiety</div><div class="video-meta">5 min · queued for Samuel Osei's intake packet</div></div></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="card-header"><h3>Assignment Log</h3></div>
+    <table class="simple">
+      <tr><th>Patient</th><th>Video</th><th>Assigned</th><th>Viewed?</th></tr>
+      <tr><td>Marcus Webb</td><td>Post-Op Knee Care Week 2-4</td><td>5 days ago</td><td>Yes, 2 days ago</td></tr>
+      <tr><td>Dorothy Kim (family)</td><td>Understanding a CHF Diagnosis</td><td>This morning</td><td>Not yet</td></tr>
+      <tr><td>Eleanor Vance</td><td>Reading Your A1c Results</td><td>4 months ago</td><td>Yes</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ CARE COORDINATION ═══════════════ -->
+<div class="page" id="page-followups">
+  <h2 class="page-title">Care Coordination</h2>
+  <div class="page-sub">Replaces "Follow-ups / Productivity" — same "don't let anything slip" board, reframed as care gaps, overdue screenings, and callbacks instead of unanswered sales emails.</div>
+  <div class="card">
+    <div class="card-header"><h3>Overdue / At Risk</h3></div>
+    <div>
+      <div class="queue-row"><div class="qr-time">21d</div><div class="qr-main"><div class="qr-name">Reginald Osei-Bonsu</div><div class="qr-meta">A1c recheck overdue · last contacted 6 days ago, no response</div></div><span class="pill high">Overdue</span></div>
+      <div class="queue-row"><div class="qr-time">14d</div><div class="qr-main"><div class="qr-name">Camille Fitch</div><div class="qr-meta">Post-partum 6wk check not scheduled · 2 reminder calls made</div></div><span class="pill high">Overdue</span></div>
+      <div class="queue-row"><div class="qr-time">7d</div><div class="qr-main"><div class="qr-name">Otis Greenwood</div><div class="qr-meta">ED discharge f/u window (7-day) closing tomorrow · not yet scheduled</div></div><span class="pill urgent">Closing Soon</span></div>
+      <div class="queue-row"><div class="qr-time">3d</div><div class="qr-main"><div class="qr-name">Eleanor Vance</div><div class="qr-meta">Mammogram referral from 7mo ago — status unconfirmed, flagged during today's visit</div></div><span class="pill high">Needs Confirmation</span></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><h3>Screening Reminders Due This Month</h3></div>
+    <table class="simple">
+      <tr><th>Patient</th><th>Screening</th><th>Last Done</th></tr>
+      <tr><td>Ahmed Farouk</td><td>Colonoscopy (turns 50 this month)</td><td>Never</td></tr>
+      <tr><td>Wanda Ellsworth</td><td>TSH recheck</td><td>14 months ago</td></tr>
+      <tr><td>Louis Bergeron</td><td>Annual wellness visit</td><td>13 months ago</td></tr>
+      <tr><td>Grace Okafor</td><td>Lipid panel</td><td>11 months ago</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ AUTOMATION STATUS ═══════════════ -->
+<div class="page" id="page-automation">
+  <h2 class="page-title">Automation Status</h2>
+  <div class="page-sub">Replaces "Automation Status" from the sales build — same idea (are the background jobs healthy?), reframed for the automated reminders a practice actually relies on.</div>
+  <div class="card">
+    <div class="card-header"><h3>Automated Jobs</h3></div>
+    <div>
+      <div class="auto-row"><div class="auto-dot ok"></div><b>Appointment reminders (SMS + email)</b>&nbsp;— last run 6:00a, 42 sent, 0 failures</div>
+      <div class="auto-row"><div class="auto-dot ok"></div><b>Refill request intake sync</b>&nbsp;— last run 15 min ago, 5 new requests pulled into queue</div>
+      <div class="auto-row"><div class="auto-dot warn"></div><b>Abnormal lab result alerting</b>&nbsp;— Linda Farrow's CA-125 flagged 40 min after result posted (target: under 15 min) — investigating lab interface delay</div>
+      <div class="auto-row"><div class="auto-dot ok"></div><b>Home device monitoring sync (O2, BP, glucose)</b>&nbsp;— last sync 5 min ago, Tomas Reyes overnight SpO2 alert delivered correctly</div>
+      <div class="auto-row"><div class="auto-dot ok"></div><b>Screening/wellness-visit reminder engine</b>&nbsp;— nightly run completed, 11 patients flagged for this month</div>
+      <div class="auto-row"><div class="auto-dot err"></div><b>Post-visit patient education video assignment</b>&nbsp;— failed for Dorothy Kim's family contact (invalid phone on file) — needs manual follow-up</div>
+    </div>
+  </div>
+  <div class="footer-note">This concept mockup mirrors the real Second Brain app's page structure one-for-one (Priority Queue ≈ Today, Today's Visits ≈ Meetings, Patient Pipeline ≈ CRM/Pipeline, Patient Chart ≈ Contact 360, AI Visit Assistant ≈ AI Transcription/Copilot, Clinical Knowledge ≈ Intelligence, Orders &amp; Documents ≈ Legal Assets, Patient Education ≈ Artifacts, Care Coordination ≈ Follow-ups, Automation Status ≈ Automation Status) so it's easy to compare side by side. Every name, chart detail, lab value, and message above is invented for this demo.</div>
+</div>
+
+  </div>
+</div>
+
+<script>
+const PAGES = [
+  {group:'Care', id:'today', ic:'&#9737;', label:'Priority Queue', badge:3},
+  {group:'Care', id:'visits', ic:'&#128197;', label:"Today's Visits"},
+  {group:'Care', id:'pipeline', ic:'&#128203;', label:'Patient Pipeline'},
+  {group:'Care', id:'chart', ic:'&#129497;', label:'Patient Chart'},
+  {group:'AI Tools', id:'scribe', ic:'&#127908;', label:'AI Visit Assistant'},
+  {group:'AI Tools', id:'knowledge', ic:'&#128218;', label:'Clinical Knowledge'},
+  {group:'Records', id:'documents', ic:'&#128196;', label:'Orders & Documents'},
+  {group:'Records', id:'education', ic:'&#127909;', label:'Patient Education'},
+  {group:'Ops', id:'followups', ic:'&#9989;', label:'Care Coordination'},
+  {group:'Ops', id:'automation', ic:'&#9881;', label:'Automation Status'},
+];
+
+function renderRail(){
+  const rail=document.getElementById('rail');
+  let html='',lastGroup=null;
+  PAGES.forEach(p=>{
+    if(p.group!==lastGroup){html+=`<div class="rail-group">${p.group}</div>`;lastGroup=p.group;}
+    html+=`<div class="rail-tab" data-page="${p.id}" onclick="showPage('${p.id}')"><span class="ic">${p.ic}</span><span>${p.label}</span>${p.badge?`<span class="badge">${p.badge}</span>`:''}</div>`;
+  });
+  rail.innerHTML=html;
+}
+
+function showPage(id){
+  document.querySelectorAll('.rail-tab').forEach(t=>t.classList.toggle('active',t.dataset.page===id));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+// Drag-and-drop reordering for any .draggable-list (Priority Queue's schedule,
+// Today's Visits' Morning/Afternoon columns). Reorders the actual DOM rows in
+// place so it works whichever page you're on -- in-memory only, per Cowork's
+// no-browser-storage rule, so a reload resets it (as expected for a mockup).
+//
+// 2026-08-06: rebuilt on pointer events (mousedown/mousemove/mouseup +
+// touchstart/touchmove/touchend) instead of native HTML5 draggable/dragstart/
+// dragover/drop. Native drag-and-drop requires the browser's own DnD session,
+// which is unreliable (or fully disabled) inside sandboxed iframes / embedded
+// previews -- exactly how this mockup is often viewed -- and has no built-in
+// touch support. Pointer-based dragging works the same everywhere a mouse or
+// touch event fires, which is why "can't drag and drop" showed up for the
+// viewer even though the same code passed automated (CDP-driven) drag tests.
+function initDragLists(){
+  document.querySelectorAll('.draggable-list').forEach(list=>{
+    let dragRow=null;
+    list.querySelectorAll('.drag-handle').forEach(handle=>{
+      handle.addEventListener('mousedown', e=>{ e.preventDefault(); beginDrag(list, handle, e.clientY); });
+      handle.addEventListener('touchstart', e=>{ if(!e.touches[0])return; e.preventDefault(); beginDrag(list, handle, e.touches[0].clientY); }, {passive:false});
+    });
+  });
+}
+
+function beginDrag(list, handle, startClientY){
+  const row = handle.closest('.queue-row');
+  if(!row) return;
+  row.classList.add('dragging');
+  function reorderTo(clientY){
+    const rows = Array.from(list.querySelectorAll('.queue-row')).filter(r=>r!==row);
+    let target=null, placeBefore=false;
+    for(const r of rows){
+      const box=r.getBoundingClientRect();
+      const mid=box.top + box.height/2;
+      if(clientY < mid){ target=r; placeBefore=true; break; }
+    }
+    if(target){ if(placeBefore) target.before(row); else target.after(row); }
+    else if(rows.length){ rows[rows.length-1].after(row); }
+  }
+  function onMouseMove(e){ reorderTo(e.clientY); }
+  function onTouchMove(e){ if(!e.touches[0])return; e.preventDefault(); reorderTo(e.touches[0].clientY); }
+  function endDrag(){
+    row.classList.remove('dragging');
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', endDrag);
+    document.removeEventListener('touchmove', onTouchMove);
+    document.removeEventListener('touchend', endDrag);
+    document.removeEventListener('touchcancel', endDrag);
+  }
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', endDrag);
+  document.addEventListener('touchmove', onTouchMove, {passive:false});
+  document.addEventListener('touchend', endDrag);
+  document.addEventListener('touchcancel', endDrag);
+  reorderTo(startClientY);
+}
+
+// Patient Detail panel (Today's Visits page): click a patient in Morning or
+// Afternoon to see chart-style details below Care Team On Today. Fabricated
+// mockup data only -- mirrors the roster used on the Patient Chart page.
+function escMock(s){const d=document.createElement('div');d.textContent=s==null?'':s;return d.innerHTML}
+const PATIENT_DETAILS = {
+  'Eleanor Vance': {age:67,sex:'F',mrn:'88213',reason:'9:00a follow-up · T2DM + HTN, A1c recheck',allergies:['Penicillin (rash)','Sulfa (hives)'],meds:['Metformin 1000mg BID','Lisinopril 20mg QD','Atorvastatin 40mg QHS','Semaglutide 1mg weekly'],vitals:'BP 134/82 · A1c 7.4% (↓ from 8.1%) · Weight 188 lb (↓11 lb)',flag:null},
+  'Marcus Webb': {age:45,sex:'M',mrn:'77410',reason:'9:30a post-op wound check · L knee arthroscopy, POD 12',allergies:[],meds:['Ibuprofen 600mg PRN','Acetaminophen PRN'],vitals:'Incision clean/dry/intact · Afebrile · PT started this week',flag:null},
+  'Priya Anand': {age:34,sex:'F',mrn:'90124',reason:'10:15a new OB intake · 12wk gestation, first prenatal visit',allergies:['NKDA'],meds:['Prenatal vitamin + folic acid (new Rx today)'],vitals:'BP 116/72 · Dating ultrasound pending · Genetic screening to discuss',flag:'New patient — first visit'},
+  'Jonah Ruiz': {age:8,sex:'M',mrn:'65211',reason:'11:00a peds follow-up · Asthma, seasonal flare, accompanied by parent',allergies:['NKDA'],meds:['Albuterol inhaler PRN','Fluticasone daily'],vitals:'SpO2 98% RA · Mild wheeze on exam · Spacer technique to re-review',flag:null},
+  'Dorothy Kim': {age:82,sex:'F',mrn:'55029',reason:'8:00a inpatient rounds · Room 412, CHF exacerbation day 1',allergies:['NKDA'],meds:['Furosemide 40mg (adjustment pending)','Metoprolol 25mg BID'],vitals:'Weight trending down w/ diuresis · Daily I&O + weights · O2 sat >92% RA',flag:'Important — inpatient, needs attention regardless of order'},
+  'Samuel Osei': {age:29,sex:'M',mrn:'91887',reason:'1:30p new patient intake · Anxiety/depression eval, referred by EAP',allergies:['NKDA'],meds:['None currently'],vitals:'PHQ-9 / GAD-7 pending intake forms',flag:'New patient — first visit'},
+  'Linda Farrow': {age:58,sex:'F',mrn:'40218',reason:'2:15p video visit · Results review, CA-125 back',allergies:['NKDA'],meds:['Anastrozole 1mg daily'],vitals:'CA-125 abnormal (trending) — imaging + oncology consult to discuss, not a stand-alone diagnostic',flag:'Test result — unread result ready to review'},
+  'Tomas Reyes': {age:71,sex:'M',mrn:'33012',reason:'3:00p add-on visit · O2 sat concern flagged today',allergies:['NKDA'],meds:['Albuterol HFA','Tiotropium'],vitals:'SpO2 90% RA (flagged) · COPD home O2 threshold review',flag:'High priority — add-on for O2 concern'},
+};
+function showPatientDetail(name){
+  const p = PATIENT_DETAILS[name];
+  const body = document.getElementById('patientDetailBody');
+  if(!body) return;
+  if(!p){ body.innerHTML = '<div class="pd-empty">No chart details for this block.</div>'; return; }
+  const initials = name.split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  body.innerHTML = `
+    <div class="pd-header">
+      <div class="chart-avatar">${escMock(initials)}</div>
+      <div>
+        <div class="pd-name">${escMock(name)}</div>
+        <div class="pd-meta">${p.age}${p.sex} · MRN ${escMock(p.mrn)}</div>
+      </div>
+    </div>
+    <div class="pd-grid">
+      <div class="pd-label">Today</div><div>${escMock(p.reason)}</div>
+      <div class="pd-label">Allergies</div><div>${escMock(p.allergies.length?p.allergies.join(', '):'NKDA')}</div>
+      <div class="pd-label">Active meds</div><div>${escMock(p.meds.join(', '))}</div>
+      <div class="pd-label">Latest vitals</div><div>${escMock(p.vitals)}</div>
+    </div>
+    ${p.flag?`<span class="pill important pd-flag">${escMock(p.flag)}</span>`:''}
+  `;
+}
+
+renderRail();
+showPage('today');
+initDragLists();
+</script>
+</body>
+</html>
