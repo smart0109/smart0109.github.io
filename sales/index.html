@@ -2,42 +2,45 @@
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Bridge to 500 &mdash; Vorro Sales Dashboard</title>
+<title>Manish Agarwal CRO Dashboard</title>
 <meta name="author" content="Manish Agarwal">
-<meta name="description" content="Vorro sales dashboard: deals by likely close month, banded high and low confidence. Created by Manish Agarwal, CRO.">
+<meta name="description" content="Vorro CRO dashboard: deals by likely close month, banded high and low confidence. Manish Agarwal, Chief Revenue Officer.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 :root{color-scheme:light;
- --ground:#EDEFF3;--surface:#FFFFFF;--surface-2:#F6F7FA;--surface-3:#EFF1F5;
- --line:#DBDFE6;--ink:#121924;--ink-2:#57616F;--ink-3:#868F9D;
- --accent:#B75C2B;--accent-3:#E9CFBD;--good:#2C6B50;
- --shadow:0 1px 2px rgba(18,25,36,.05),0 8px 24px -16px rgba(18,25,36,.28);}
+ --ground:#EEF2F7;--surface:#FFFFFF;--surface-2:#F6F9FC;--surface-3:#E7EEF6;
+ --line:#DBE4EC;--ink:#0B1F2E;--ink-2:#5B6B78;--ink-3:#8A9AA8;
+ --accent:#D62598;--accent-3:#F7D4EC;--good:#0B7D78;
+ --shadow:0 1px 2px rgba(11,31,46,.05),0 8px 24px -16px rgba(11,31,46,.30);}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;
- --ground:#0D131B;--surface:#151D27;--surface-2:#1B2531;--surface-3:#212C39;
- --line:#293440;--ink:#E8EDF3;--ink-2:#9DA9B8;--ink-3:#6E7B8B;
- --accent:#D9803F;--accent-3:#4C2E19;--good:#63B590;
- --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -18px rgba(0,0,0,.8);}}
+ --ground:#0A1025;--surface:#0E162D;--surface-2:#16203C;--surface-3:#1A2440;
+ --line:#24304F;--ink:#F4F7FB;--ink-2:#B6C2D4;--ink-3:#7D8BA3;
+ --accent:#F062B8;--accent-3:#4A1338;--good:#2FB3A8;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -18px rgba(0,0,0,.85);}}
 :root[data-theme="dark"]{color-scheme:dark;
- --ground:#0D131B;--surface:#151D27;--surface-2:#1B2531;--surface-3:#212C39;
- --line:#293440;--ink:#E8EDF3;--ink-2:#9DA9B8;--ink-3:#6E7B8B;
- --accent:#D9803F;--accent-3:#4C2E19;--good:#63B590;
- --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -18px rgba(0,0,0,.8);}
+ --ground:#0A1025;--surface:#0E162D;--surface-2:#16203C;--surface-3:#1A2440;
+ --line:#24304F;--ink:#F4F7FB;--ink-2:#B6C2D4;--ink-3:#7D8BA3;
+ --accent:#F062B8;--accent-3:#4A1338;--good:#2FB3A8;
+ --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px -18px rgba(0,0,0,.85);}
 *{box-sizing:border-box}
 body{margin:0;background:var(--ground);color:var(--ink);
  font-family:"IBM Plex Sans",ui-sans-serif,system-ui,-apple-system,sans-serif;
  font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1000px;margin:0 auto;padding:0 20px 80px}
 h1,h2{font-family:"Fraunces",Georgia,serif;margin:0;text-wrap:balance}
-h1{font-size:clamp(36px,7vw,54px);font-weight:600;line-height:1.02;letter-spacing:-.02em}
+h1{font-size:clamp(30px,5.2vw,44px);font-weight:600;line-height:1.05;letter-spacing:-.02em}
 h2{font-size:26px;font-weight:600;letter-spacing:-.01em}
 p{margin:0}
-header{padding:52px 0 26px;border-bottom:1px solid var(--line)}
+header{padding:48px 0 26px;border-bottom:1px solid var(--line)}
+.idbar{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.shot{width:78px;height:78px;border-radius:50%;object-fit:cover;flex:0 0 auto;
+ border:2px solid var(--accent);box-shadow:0 3px 14px -5px rgba(214,37,152,.55)}
 header .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
- text-transform:uppercase;color:var(--ink-3)}
-header h1{margin:12px 0 0}
-header .sub{margin-top:14px;font-size:16.5px;color:var(--ink-2);max-width:64ch;line-height:1.55}
+ text-transform:uppercase;color:var(--accent);font-weight:500}
+header h1{margin:6px 0 0}
+header .sub{margin-top:18px;font-size:16.5px;color:var(--ink-2);max-width:64ch;line-height:1.55}
 header .stamp{margin-top:18px;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-3)}
 .rule-box{margin-top:24px;background:var(--surface);border:1px solid var(--line);border-radius:10px;
  padding:16px 20px;box-shadow:var(--shadow);display:flex;gap:22px;flex-wrap:wrap;align-items:center}
@@ -68,6 +71,10 @@ header .stamp{margin-top:18px;font-family:"IBM Plex Mono",monospace;font-size:11
 .rf-hi{height:100%;background:var(--accent)}
 .rf-lo{height:100%;background:var(--accent-3)}
 .run-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink);z-index:2}
+.run-target.ext{background:var(--ink-3)}
+.goal-key{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--ink-2);
+ font-family:"IBM Plex Mono",monospace}
+.goal-key i{display:inline-block;width:2px;height:12px;margin-right:7px;transform:translateY(2px)}
 .bandrow td{background:var(--surface-3);padding:9px 14px;border-bottom:1px solid var(--line)}
 .bandrow .bl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.13em;
  text-transform:uppercase;font-weight:600}
@@ -97,24 +104,27 @@ tr.rec td.deal{font-weight:500}
 footer{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);
  font-size:12.5px;color:var(--ink-3);line-height:1.6}
 footer b{color:var(--ink-2);font-weight:500}
-@media (max-width:720px){td.deal{width:auto}td.next{display:none}.mhead .fig .big{font-size:19px}}
+@media (max-width:720px){td.deal{width:auto}td.next{display:none}.mhead .fig .big{font-size:19px}
+ .shot{width:62px;height:62px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-.run-target.ext{background:var(--ink-3)}
-.goal-key{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;font-size:12px;color:var(--ink-2);font-family:"IBM Plex Mono",monospace}
-.goal-key i{display:inline-block;width:2px;height:12px;margin-right:7px;transform:translateY(2px)}
 
 </style>
 </head><body>
 <div class="wrap">
 <header>
-  <p class="eyebrow">Vorro &middot; Sales Dashboard</p>
-  <h1>Bridge to 500</h1>
+  <div class="idbar">
+    <img class="shot" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUEBAQEAwUEBAQGBQUGCA0ICAcHCBALDAkNExAUExIQEhIUFx0ZFBYcFhISGiMaHB4fISEhFBkkJyQgJh0gISD/2wBDAQUGBggHCA8ICA8gFRIVICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCACwALADASIAAhEBAxEB/8QAHQAAAAcBAQEAAAAAAAAAAAAAAAECAwQGBwgFCf/EAEMQAAEDAgMFAwoEAwYHAQAAAAECAwQAEQUGIQcSMUFhE1GBFCIyVHGRk6Gx0QgjQkMVUsEzNHKCkqIWFyVTYrLhc//EABoBAAIDAQEAAAAAAAAAAAAAAAADAQIEBQb/xAAnEQADAAICAwACAAcBAAAAAAAAAQIDERIhBCIxE0EFFSMyM1Fhgf/aAAwDAQACEQMRAD8A3zyOJ6qx8JP2o/I4vqrHwk/apFC1NEjHkcT1Rj4aftQ8ji+qsfCT9qkUdqqBH8ji+qsfCT9qPyOJ6qx8JP2p+1C1ADHkcT1Rj4SftRGHF9UY+En7VI1oVIEfyOL6ox8JP2oeRxfVGPhJ+1P6VWcw5+yflYKTjePxWHk8WEK7R3/Qm5HjahAe/wCRxfVWPhp+1DyOL6ox8JP2rLE/iD2eOSSy0vFHLfrEM7p9lzrVqy9tNyVmeWiFheMpTMXomNJQWXFE8AAdD4GpAtHkcS/91Z+Gn7UXkcW/91Y+En7VIoUARjEieqsfCT9qSYcX1Vn4aftUoikkUARfI4nqrPw0/aiMOL6qz8NP2qUfZSTQQRDDi+qs/DT9qSYkT1Vn4aftUsikEUEEQw4vqrPw0/akmJF9WZ+Gn7VLtSSKAPQ0oxR0dVLBWo7UendQtQAVqOwoWNHagBNqQ660wwt55aW20JKlrUbBIAuST3AU4RWdba8UcwzY7jnk8nsJMxKIbJHFSnFAFI/y73hegDFNoX4gMXxjEnsJyKtcTCRdtWIJR+c+eBKSfQT3HielZJGiqd8oUsOKfX5xU8nfXc89DqPnWm7MdkScVgM4ljry2oayQiOjRToB9InkDXQOF7NMpQmk+SYBGFuawVfWseTzYh8ZW2dPF4VNcq6OJomE4y+l5LMV15IBspCTdJ7x06eyovaYhhstp6Sl1h1lW8oLum+gOnW9671dy5h+HJIh4ewxv6ns0AVnWdMqYRjENxubCbWQDZQABFZ/5jqtUujUv4cqncvsY2NbYHM0TjlLH3UrxJDRXElHQyUp4pV3rA1vzsedblXA2MYNMyJmzDcawSUS5FeS+3v/AKSDex6Hh412Xs6z1C2g5PaxyK0I76VFmXGCr9g6NSL9xBBB7q6UWrXKTj5cTx1xZbqI0dqI1fYkLjSSKXaiIuKNkjZFIIpykmpAbIpJFLoqAJ4tRijtQqoAoUKMCgAW50dCjsKAEmsB/EZIffOU8GYJHayXJCgOdt1A/wDY1v5FY9tPgtzdqOR2nRvIDMtwp793cI+tUyVxh0NwzyyKWe1lyN2MJhlAFkpSEpAsLW7qv8Vt1LCbqF+YrFZObsbj4pKhZdwlt9xhXYh6QsIb3hxsSdag4RtEz/GzP2GYUx/J98J7FrdUBryI1rg48b7ts9Lkvb4SjdpaFOMk6aCs3zO06224pBvap+ec8DK+CtvrSS6+mzSSL7yu6sQ/4v2ovKdnvYY0/DJ9B0pT7v8A7UvD+XtBOX8X1FazrFVNTLWk33AAAeeutWP8LmMusZwzBl5R/LlRUyh0U2vd+i/lVPkZkRisuVGkxPJn1AqU0DpfpVi/DiwEba8VSbns8Mc3T3jtEca6vipyuLOV5zm3zk68tRGlcaFq1nJEWojwpZpNBI2RrSTwpw0g1YBsiknjThpJoIJ9HahajqpIQpVC1CgAUKFCgAHhWW7QG0/8ycnSSlQLTcpu5Hmq30jn3gp4da1Kq9m2ExJwhD7o8+I6l5s8wQeHiL0jPv8AG9GnxmllWzMsxZKlzsValMOykRFJO+1G8wqvx864I8LcKGXMgs4WtLrkd8bpO6qY+XnFqVxJ5ctO6tOh4jCbgl6SsJbSneJJ0Arx8XzLhMSBHxTEXvIYTqtxlakkgk8CbDS9cVOlOkel63tope1GA0/jGCocILbA3k72ovpa/Wqtm3J8uaxEchwpSHY6CEqiylJDl72KxfUi/sr29pG0XJTs6FAXiIdStAVvMC9iBpqKt+TcyYXjeU4j6SQS3Ybw9K2n9Ktu4+EcYtGAQ9nWI4ThczE8aSEupSSm4BP/AMpOwaZMjbdtyOw26idHdYeUq9220p3yoeISOt6v+1TMbEbDnobS94vJ3SAeFQ/w4YClWY8w5kUz5rLTcNpZ/nX5y7eATXQ8R1W6Zy/NUwuKOlOQoGjojXQOMJNJNKNJqCBJpBpZpBqxIg0RozxoiKCD0aOiFHVSQ6KhQoAFChSqAE15uPNOPYBMbbbU4stmyUi5Psr1KK2ulRS5Joma40q/0ZMzh6MVhpaefWGyUubgVYLA1selPTMbeQ6ID2ATpLegSUNpDZHQk/K1M5jbkZZzGlC7DC5q1LjufyK4qbPUXuOnsqelRmx0dmuxHorHOuG4eOtM9FGScqT/AEZlmDJuDtvOYijJMxt0r31LUEJBJ5DXX5UxlObiM/FDhUbCX4UZKhZT26kIA42sau2O4bi7zKkuTVJQeZXe3hyrP5mIDLTTq1SQ2ACrev5yiaZvmtfS7cytroq+0pyMcUmBl3tUtq3E63ua3rYrk/HMoZWnNY2qOPL30SmW2lbxSktj0tBY8BblbrXJb2MiXj0eRIuuOmQlZQdSsb4J94r6AR32ZUZqTHWFsupC0KTwKTwrp4MfCdHF8rI7Y7RGj4Ukmn6MQRpBpRpKiBRoBKjSDRk86QTUgA0m9AmivQB6goUKFVJBQoUdABijtRUN4UAHairwsxZxyxlNgO5hxmPBKhdLSjvOr/woF1H3VkmNfiMghxxnLGX35RTwkz19kj/Qm6j7CRTJx1XSRV0l9ND2jYazjmVZMBtwGZECZiUD0kouUFXQa28D3Vi2GZpxjLylw5LZkJQdAfSH3rUNguJYjnDE84Zoxoh12S6xDACbISlKFEoSOSRvAeNK2k7NmmFLmx2SYLhsFgXLJ7ldO4+FY/KjhXa2joeJaqeKen+jJcT2lT5YU21AUk8is6CsmzTii5srtZ8kOLHoR2zcX61fZOzjGMTxFOH4O67JfdNktJWT49B1NaFk/wDDs1gsxrEcdkJxCek726B+W0e5Peep8KME433CL+RVx1bMdyfs5xKaj+O4wwplsedHYULHopQ5dBV3yNtPGz7aJPytmR9acvzlodbdVqITygAVW/kVxVbgfO7636ZgDLEdMZpoAJHAc6442yRw3tNxJlKbdl2bfsIQL/WulGNUtHMrI2+zult5p9lt9h1DrTiQpDiFBSVg8CCNCKMk2rhLJGcs2ZbT5Pg+YZkRlI3kxw5vNXvr5irp+VbDg23/AB1hSG8fweLiDX6nYxLDnttqk/KpfjZEtoV+Wd6OiiaQo1QMK2x5ExPcS7ibmGuq/TNaKAD3bwumrhDxjCcRA/h+KRJl9R2D6Vk+AN6Q5pfUMVJ/CWaTegSRcHTpSSaqWCPGhfShSSaCD2BwoUBQqpYFIeeajsLffdQ002kqW4tQSlIHEknQCl1gH4jcwyG4mF5UjOqQzJSZcpKT/aAK3UJPS4JtzsKvE8q4lW9LZZM0bf8AJWBFbGErdx+WnS0XzWQerh4/5QaxjMe3bPuP77UCS1gUVWm5CT+YR/8Aoq591qzNMcbw0p0oCRbnW+PHlCKyMaW6/LnGRMkuLddV+Y+6orWo9VHWvWZcbEhthpNgjlyT19tQ1Mtojb6k77ihpfgKRGBDTpB850pYT7Vnd+l61z6dCa9juvYpgDeAbKMDShNnZjRmuqt6S3TvXP8Al3R4UvOO1DCYWKvZWw51uTOSQ3LUUb6Gd7gjXRSzpoeF/dbWGFR8uR8OgueSqRHQyhxKQS0kIAuB3i2nX2VmeccGy7kvKEfySICpM1qS4oqu/JUF8VKPEqWoXPtrmSpu27NVU5j1ICc/5d2f4kpmXBC5khKe2jxmQXUJ47xPIc7XtpWtYRieFZiwSNjWDSkS4MpG+06jmO49xHMVznk7Jzef8840vHlDyWE5aU22dZDhWbNb3HswAD1uBwroiNGh4KwEwYzcdoWT2TQ3UkDQWHI0zPjiWlC7K4sl13b2RsSbbjJdkr3UhPAq0A7yegFyegrgrO9sezPieLx1FaZElxxJPNJV5p9wFdU7fc5JwrLDeAwllEzFQUq5KQwD56um8bJHQKrlY3H6d7pwrR4uP1dP9is1+2kVeGXUvoaabUt4EEpH6RzJPIVZygGozzqIrDrzTeoFym1t5XAe+pqSSkbwANtRWyVroRT32R1t2GhtUYIW24HWiW1pOikmxHiK9QpuL20qC46hKyDyqWkQi3YDtczvlzcbOIDFIif2J912HRfpD3mt72ebSsH2hQJTkFpcSbCKRIiuKCikK9FSSOKTYjvBGtceYnKtDdcTwKtxPhqf6VbPw9YurDdrzMNTm6jE4z0ci/pKA30/NJrmeRM/UjZi3rs7NJpBNFvXpJVWEee6KVSaF6qSHXJO3OcZm1Sc3fzYbTEcdPM3j81V1odRbvrizahLE3aZmaQk3AmlAP8Ahsj+lavGXs2Jy/CpoSCN7lSN3eWdNKcSQEdTQRcXPOumjOwSjusD2UcNIMzCWOanQ8r3hI+ppqcre3Wx7KXHVuZkbPJhbTfuIUfrRRVH0dulpvfUbJSnie62tZLizwznMiy317uHCZdKB6Sw2qyEAc9bqPKtEzBMRHyu/IUspDiEtp3dTZVgbd5sao0GAuGVJCuzSsXBAuGBySnqeZ9/AVixJLbf0bbfwqeV3ZuX9uL0dCE9hiu62+G9EAWPZnqoWsTzuOlbbisqLCjGVNeDMWOlTzyzwSlIuTVAcwxleacvzUNpQ8mandA4hJCiQfcdefsqqbfs5BiKzlCC7+a+kPTSk+ii90Nn2nzj0A76vS/JaSKy+MvZiGd8zyc3Zwm45J3kpecCWWyf7JpOiE+A49SarY1UdKccFrX6kmkNeiVV0pSlaX6EPvsiugOzY7B4FXaK9iR9yKfW7Zdr0hoAy5Dx/bCWk/8AsfqPdUJ56zp1qm9dk630emXbINzVdmSezWs34V6ZeCo5POqrLdL85uMk6uLCPebUu60hkSDF3C3HixzxDYWr2q1/qKVkvEzhm0HL+IdsGRHxBhanCbBKd8BVz3WJqPjR7fFn1JFkBVhpwA0rxnUADTXp31gy7Zsxro+kqjuqIHI2pJVe9ZRsNzuvNuzxuPOdLmJ4QREfUTq4i35az1KRYnvTWpb1YmT8LMKOk0d6qWCW4lpCnVmyWwVk9ALn6VwTiUtWI4liMtZuqS6t0nqV71dr52xD+F5Ax7EAbKZgulJ/8ikpHzNcMq3kEqF7J0Nb/FX1mfKx8EEUseiaYbVe/OnwfMrYhTG93tJzKON1DSmmCVrXJHFbq3Aem9p8gKfQdyQp0/toUr3CnILO5Ajkj9tJ+V6ultlG9I7klSf4nk/AJCFCzrLb97XsOzAv/u0pjDltrj9jbzSm7YXrup5knn/X2Vn+z3NKcVyRhkcq33MKYMZ5CtBbeJCj0tb6VeWkEISptVyqzgHcTrvH38OVZHDXTL8kzzcxY1HyvMwvGcRJMeJ275T+p5QZIQk9SpQAHXpXMeM4pLx3HZmLznO0kS3S4s8rnkOgFgOgq87Wc5ox/GWcEhqCouHFQcc/7jx0UQe4cOpvWeAADjWzDOlt/RNMhv2APs+ppKLIaBJsOZpUgguBPEk1FxR0s4Y4BopYDabd6jb+tNb0tkLsYadtBDh9J0lw+JuPlavJdeBcNPzJHZgoHBI3R7BXhrkBKrn71nqhyXZ6SJRKFpJ4V4sD87NDOlw2S4R7ATTLk5SXlKQniLedpSsIXbGH1D0uxUB1J0pDrk0h6nimxMtwqeXrzNQHOFehJa7NZCvS+lQnRYXqmRdsvjfRsv4bZMlnaLiMZsnyWThy1OjkFIWkpP8AuPvrq3e1rj3YFjbmGbUmoII7HFGFxlg8iBvpPvSR4113v6Vhr6Xr6XG9HRUL1QkzzbVKMXZFiwBsXlMs+9wE/IVx8FX3tbG1dRfiFn9hkCDBHGXOSSOiEk/UiuWt0pJUTZI43rpeKvUy5voGFHXXSpaDpXmw3g4wVjS5P1qc2etPRRi37JhTnf5WF/Sn23LRmQOHZp+gqNiZ3MBnqv8AtWr0IaWXoLNj5wQn6U6X7aF18LVs7zSvA8xiOtYEaYQ2sKOgV+kn2Xt49K1LNefRlzLDrEZzelSQUxVcSE8Cs+zkOZ1rn9+Epr80KsE8zQdmzscmeUSnlOhICEk6aCpcp/SnY6h9SllVypStSTxqWHFbt1XFR7R4bXaOke015zk1+ashhJDY50zegPSC9+Qnu1NeZjr4MqDGFvSLqvYkafM1NiEhaQrUhNqrGMSd/MT9uDLSW/E6mk5H0MhbYUtYUTvEeOtectSd0+cPCmZC98X3ifGo6XCNO+stV3o0TPQ3IUneskEe2pGCuf8AWVLv+2qoTxG9xpzCV7uKpPekikJ/1EOpejPSkjeeV31CfbIbF/bXpvIPbEcTzqPKb/IUq3AVqtb2Z4r4N5fxmVlzM2H49DP50F5LwB4KA4p8QSPGu8osxmZCYmRyCy+2l1s96VAEfI18+vmK7K2S4v8AxXZPgbpXvOR2jEXc821FI+Vq51mqjeaFFeiJ0pJBz3+JSVuqy3E3tN1923ikf0rnZ57fR2fKtX2/48nFdpn8MZVdvCo6I6rH9xXnq91wPCsqDZS2VnQAc66/jzqEYsr3RDw9Ys81/Ku/vr1m1C9qruHO3xKSn+YX+de8g2PGpntlr6Q5jyuzyvMPC6QPmKYwzyhMFl5tRHmjSjzK5bLCxf01IHzpzCVAYYwOlMn/ACa/4Uf9n/p6CmpWKsONF3sgykLUlLallzU92iQLak6ailtOLMVIhskJsLFQtypICFLN0gi2oNSw9zvxpyWnsVsgDDC+2/JmyXHHGgFBtDSlAixJJI0SAAdTzqDMxARmNyG1ZNrhXfXoTVIcbKTeytCAogKHcbcR0NeY8gLuVc6q97ZPTPUhLKo7biuJQDpVFkvdpKkSD+66pQ9l7Crf23k+EuOg6IaJ9wqnymi3GaTzCBf20nL+h+L6R3FXHGkNkBRvroaQFXFEDr4GsbZrU6G3jcmiw9W7iLZ60ThpEU7s1B60rfumXa9Wi4ISVKVYcaj4ojsoBHM1LjgqCTTGL+c0Eca6dr1ZzofsiscE9a6D/DxjBXBxvBFK81taJTY7t7zVfMJrAHEFJItWh7E8Y/hW0yNGUfy8SaVFUO4+kk+9NvGuXa6Oh9R//9k=" alt="Manish Agarwal" width="78" height="78">
+    <div>
+      <p class="eyebrow">Vorro &middot; Bridge to 500</p>
+      <h1>Manish Agarwal CRO Dashboard</h1>
+    </div>
+  </div>
   <p class="sub">Deals grouped by the month they should close, banded high and low confidence.</p>
   <div class="rule-box">
     <div class="r"><b>HIGH</b> committed by the CRO</div>
     <div class="r"><b>LOW</b> upside, not committed</div>
   </div>
-  <p class="stamp">Created by Manish Agarwal, CRO &nbsp;&middot;&nbsp; 31 Aug 2026 &nbsp;&middot;&nbsp; live Zoho pull, calendar + email verified</p>
+  <p class="stamp">Chief Revenue Officer, Vorro &nbsp;&middot;&nbsp; 31 Aug 2026 &nbsp;&middot;&nbsp; live Zoho pull, calendar + email verified</p>
 </header>
 <div class="kpis">
   <div class="kpi"><div class="k">Goal</div><div class="v accent">$225,000</div><div class="d">$56,250 a month for four months.</div></div>
