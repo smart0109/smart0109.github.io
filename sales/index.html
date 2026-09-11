@@ -4,12 +4,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Manish Agarwal CRO Dashboard</title>
 <meta name="author" content="Manish Agarwal">
-<meta name="description" content="Vorro CRO dashboard: deals by likely close month, banded high and low confidence. Manish Agarwal, Chief Revenue Officer.">
+<meta name="description" content="Vorro CRO dashboard: drag deals between confidence bands and months, edit amounts live.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
-<style>
-:root{color-scheme:light;
+<style>:root{color-scheme:light;
  --ground:#EEF2F7;--surface:#FFFFFF;--surface-2:#F6F9FC;--surface-3:#E7EEF6;
  --line:#DBE4EC;--ink:#0B1F2E;--ink-2:#5B6B78;--ink-3:#8A9AA8;
  --accent:#D62598;--accent-3:#F7D4EC;--good:#0B7D78;
@@ -107,15 +106,15 @@ footer b{color:var(--ink-2);font-weight:500}
 @media (max-width:720px){td.deal{width:auto}td.next{display:none}.mhead .fig .big{font-size:19px}
  .shot{width:62px;height:62px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-
 </style>
 </head><body>
 <div class="wrap">
+
 <header>
   <div class="idbar">
     <img class="shot" src="data:image/jpeg;base64,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" alt="Manish Agarwal" width="78" height="78">
     <div>
-      <p class="eyebrow">Vorro &middot; Bridge to 500</p>
+      <p class="eyebrow">Vorro · Bridge to 500</p>
       <h1>Manish Agarwal CRO Dashboard</h1>
     </div>
   </div>
@@ -124,93 +123,400 @@ footer b{color:var(--ink-2);font-weight:500}
     <div class="r"><b>HIGH</b> committed by the CRO</div>
     <div class="r"><b>LOW</b> upside, not committed</div>
   </div>
-  <p class="stamp">Chief Revenue Officer, Vorro &nbsp;&middot;&nbsp; 31 Aug 2026 &nbsp;&middot;&nbsp; live Zoho pull, calendar + email verified</p>
+  <p class="stamp">Chief Revenue Officer, Vorro &nbsp;·&nbsp; 31 Aug 2026 &nbsp;·&nbsp; live Zoho pull, calendar + email verified</p>
 </header>
+
+<div class="applybar">
+  <span class="lead">Live model</span>
+  <span class="dirty-msg" id="liveMsg">Edits save as you go</span>
+  <span class="sp"></span>
+  <button class="btn" id="resetBtn" type="button">Reset</button>
+</div>
+
 <div class="kpis">
-  <div class="kpi"><div class="k">Goal</div><div class="v accent">$225,000</div><div class="d">$56,250 a month for four months.</div></div>
-  <div class="kpi"><div class="k">Extension goal</div><div class="v">$450,000</div><div class="d">$112,500 a month. Twice the base goal.</div></div>
-  <div class="kpi"><div class="k">High confidence</div><div class="v good">$245,568</div><div class="d">7 deals plus the placeholder. Clears the goal by $20,568.</div></div>
-  <div class="kpi"><div class="k">Low confidence</div><div class="v accent">$498,500</div><div class="d">11 deals. The Arista licence is $300,000 of it.</div></div>
-</div>
-<div class="goal-key"><span><i style="background:var(--ink)"></i>$225,000 goal</span><span><i style="background:var(--ink-3)"></i>$450,000 extension goal</span><span>Bars show the running total across the year.</span></div>
-<div class="month">
-  <div class="mhead"><h2>September</h2><div class="spacer"></div>
-    <div class="fig hi"><div class="big">$47,970</div><div class="lbl">high</div></div>
-    <div class="fig lo"><div class="big">$62,000</div><div class="lbl">low</div></div>
-    <div class="fig run"><div class="big">$109,970</div><div class="lbl">running</div></div>
+  <div class="kpi">
+    <div class="k">Goal</div><div class="v accent">$225,000</div>
+    <div class="d">$56,250 a month for four months.</div>
   </div>
-  <div class="run-bar"><div class="rf-hi" style="width:6.45%"></div><div class="rf-lo" style="width:8.33%"></div><div class="run-target" style="left:30.24%"></div><div class="run-target ext" style="left:60.48%"></div></div>
-  <table><tbody>
-    <tr class="bandrow hi"><td colspan="5"><span class="bl">High confidence</span><span class="bn">$47,970 weighted</span></td></tr>
-    <tr><td class="deal">Boyd Beauty &mdash; Phase 3</td><td class="ev">2 mtg &middot; 4 em</td><td class="amt">$50,000</td><td class="pct">50%</td><td class="next">Existing paying customer</td></tr>
-    <tr><td class="deal">Avita Care Solutions Pilot</td><td class="ev">4 mtg &middot; 5 em</td><td class="amt">$25,000</td><td class="pct">60%</td><td class="next">MSA and SOW in redline right now</td></tr>
-    <tr class="rec"><td class="deal">Existing accounts &mdash; placeholder</td><td class="ev">run rate</td><td class="amt">$7,970</td><td class="pct">plug</td><td class="next">Placeholder for existing accounts at the current run rate</td></tr>
-    <tr class="bandrow lo"><td colspan="5"><span class="bl">Low confidence</span><span class="bn">$62,000 weighted</span></td></tr>
-    <tr><td class="deal">TriageLogic</td><td class="ev">3 mtg &middot; 3 em</td><td class="amt">$65,000</td><td class="pct">40%</td><td class="next">Demo 9 Sep &mdash; invite unanswered</td></tr>
-    <tr><td class="deal">Spencer Thomas Group</td><td class="ev">1 mtg &middot; 0 em</td><td class="amt">$50,000</td><td class="pct">50%</td><td class="next">First meeting Tue 1 Sep, 11am</td></tr>
-    <tr><td class="deal">iPill</td><td class="ev">4 mtg &middot; 14 em</td><td class="amt">$20,000</td><td class="pct">50%</td><td class="next">RFP call Wed 2 Sep &mdash; Pedranti declined, rebook</td></tr>
-    <tr><td class="deal">ASRC / CUNY</td><td class="ev">1 mtg &middot; 5 em</td><td class="amt">$10,000</td><td class="pct">10%</td><td class="next">Small and early</td></tr>
-  </tbody></table>
-</div>
-<div class="month">
-  <div class="mhead"><h2>October</h2><div class="spacer"></div>
-    <div class="fig hi"><div class="big">$124,970</div><div class="lbl">high</div></div>
-    <div class="fig lo"><div class="big">$132,000</div><div class="lbl">low</div></div>
-    <div class="fig run"><div class="big">$366,940</div><div class="lbl">running</div></div>
+  <div class="kpi">
+    <div class="k">Extension goal</div><div class="v">$450,000</div>
+    <div class="d">$112,500 a month. Twice the base goal.</div>
   </div>
-  <div class="run-bar"><div class="rf-hi" style="width:23.24%"></div><div class="rf-lo" style="width:26.07%"></div><div class="run-target" style="left:30.24%"></div><div class="run-target ext" style="left:60.48%"></div></div>
-  <table><tbody>
-    <tr class="bandrow hi"><td colspan="5"><span class="bl">High confidence</span><span class="bn">$124,970 weighted</span></td></tr>
-    <tr><td class="deal">Wayne Memorial</td><td class="ev">6 mtg &middot; 20 em</td><td class="amt">$150,000</td><td class="pct">70%</td><td class="next">MSA redline out since 20 Aug &mdash; sign it</td></tr>
-    <tr><td class="deal">Avita Care Solutions</td><td class="ev">4 mtg &middot; 5 em</td><td class="amt">$20,000</td><td class="pct">60%</td><td class="next">Follow-on to the pilot</td></tr>
-    <tr class="rec"><td class="deal">Existing accounts &mdash; placeholder</td><td class="ev">run rate</td><td class="amt">$7,970</td><td class="pct">plug</td><td class="next">Placeholder for existing accounts at the current run rate</td></tr>
-    <tr class="bandrow lo"><td colspan="5"><span class="bl">Low confidence</span><span class="bn">$132,000 weighted</span></td></tr>
-    <tr><td class="deal">SunRx / MedImpact</td><td class="ev">2 mtg &middot; 3 em</td><td class="amt">$250,000</td><td class="pct">40%</td><td class="next">Review 10 Sep &mdash; no email reply since Oct 2025</td></tr>
-    <tr><td class="deal">GoSB</td><td class="ev">1 mtg &middot; 3 em</td><td class="amt">$30,000</td><td class="pct">40%</td><td class="next">RCM pricing doc still outstanding</td></tr>
-    <tr><td class="deal">DMEscripts</td><td class="ev">1 mtg &middot; 6 em</td><td class="amt">$25,000</td><td class="pct">50%</td><td class="next">Cerner integration scoped, agreement sent</td></tr>
-    <tr><td class="deal">Koning Health</td><td class="ev">3 mtg &middot; 3 em</td><td class="amt">$25,000</td><td class="pct">30%</td><td class="next">MVP scoped; NDA and BAA unsigned</td></tr>
-  </tbody></table>
-</div>
-<div class="month">
-  <div class="mhead"><h2>November</h2><div class="spacer"></div>
-    <div class="fig hi"><div class="big">$39,658</div><div class="lbl">high</div></div>
-    <div class="fig lo"><div class="big">$3,750</div><div class="lbl">low</div></div>
-    <div class="fig run"><div class="big">$410,348</div><div class="lbl">running</div></div>
+  <div class="kpi">
+    <div class="k">High confidence</div><div class="v good" id="kpiHi">&mdash;</div>
+    <div class="d" id="kpiHiD">&mdash;</div>
   </div>
-  <div class="run-bar"><div class="rf-hi" style="width:28.57%"></div><div class="rf-lo" style="width:26.58%"></div><div class="run-target" style="left:30.24%"></div><div class="run-target ext" style="left:60.48%"></div></div>
-  <table><tbody>
-    <tr class="bandrow hi"><td colspan="5"><span class="bl">High confidence</span><span class="bn">$39,658 weighted</span></td></tr>
-    <tr><td class="deal">CareOne &mdash; expansion</td><td class="ev">1 mtg &middot; 5 em</td><td class="amt">$54,750</td><td class="pct">25%</td><td class="next">Get Kristen Riley on your calendar</td></tr>
-    <tr><td class="deal">Lunar Analytics</td><td class="ev">4 mtg &middot; 9 em</td><td class="amt">$20,000</td><td class="pct">90%</td><td class="next">E-signature lapsed 28 Aug &mdash; re-send</td></tr>
-    <tr class="rec"><td class="deal">Existing accounts &mdash; placeholder</td><td class="ev">run rate</td><td class="amt">$7,970</td><td class="pct">plug</td><td class="next">Placeholder for existing accounts at the current run rate</td></tr>
-    <tr class="bandrow lo"><td colspan="5"><span class="bl">Low confidence</span><span class="bn">$3,750 weighted</span></td></tr>
-    <tr><td class="deal">VeeHealthTek</td><td class="ev">1 mtg &middot; 12 em</td><td class="amt">$25,000</td><td class="pct">15%</td><td class="next">Quiet 39 days; nothing scoped</td></tr>
-  </tbody></table>
-</div>
-<div class="month">
-  <div class="mhead"><h2>December</h2><div class="spacer"></div>
-    <div class="fig hi"><div class="big">$32,970</div><div class="lbl">high</div></div>
-    <div class="fig lo"><div class="big">$300,750</div><div class="lbl">low</div></div>
-    <div class="fig run"><div class="big">$744,068</div><div class="lbl">running</div></div>
+  <div class="kpi">
+    <div class="k">Low confidence</div><div class="v accent" id="kpiLo">&mdash;</div>
+    <div class="d" id="kpiLoD">&mdash;</div>
   </div>
-  <div class="run-bar"><div class="rf-hi" style="width:33.0%"></div><div class="rf-lo" style="width:67.0%"></div><div class="run-target" style="left:30.24%"></div><div class="run-target ext" style="left:60.48%"></div></div>
-  <table><tbody>
-    <tr class="bandrow hi"><td colspan="5"><span class="bl">High confidence</span><span class="bn">$32,970 weighted</span></td></tr>
-    <tr><td class="deal">Arista &mdash; initial install</td><td class="ev">3 mtg &middot; 3 em</td><td class="amt">$50,000</td><td class="pct">50%</td><td class="next">Review Tue 1 Sep, 3pm &mdash; invite unanswered</td></tr>
-    <tr class="rec"><td class="deal">Existing accounts &mdash; placeholder</td><td class="ev">run rate</td><td class="amt">$7,970</td><td class="pct">plug</td><td class="next">Placeholder for existing accounts at the current run rate</td></tr>
-    <tr class="bandrow lo"><td colspan="5"><span class="bl">Low confidence</span><span class="bn">$300,750 weighted</span></td></tr>
-    <tr><td class="deal">Arista &mdash; enterprise licence</td><td class="ev">3 mtg &middot; 3 em</td><td class="amt">$750,000</td><td class="pct">40%</td><td class="next">No written proposal exists anywhere</td></tr>
-    <tr><td class="deal">Open_C</td><td class="ev">2 mtg &middot; 3 em</td><td class="amt">$7,500</td><td class="pct">10%</td><td class="next">Pen-test only</td></tr>
-  </tbody></table>
 </div>
-<div class="call">
-  <h2>The goal is covered. The extension goal is not.</h2>
-  <p>High confidence alone is <strong>$245,568</strong>, which <strong>clears the $225,000 goal by $20,568</strong> &mdash; and leaves the $450,000 extension goal <strong>$204,432 short</strong>. The running total passes $225,000 during <strong>October</strong> and does not reach $450,000 until <strong>December</strong>.</p>
-  <p>December is <strong>$300,750 of Arista licence</strong> in the low band, with only its $50,000 install committed. Take Arista out entirely and the year lands at <strong>$419,068</strong> &mdash; still comfortably past $225,000, but $30,932 short of the extension. Arista still has no written proposal, pricing or contract anywhere.</p>
-  <p>The base goal needs $56,250 a month. <strong>Only October clears that on high confidence alone</strong> ($124,970); September is $47,970 and November $39,658. For the extension goal the bar is $112,500 a month, which again only October meets.</p>
+
+<div class="goal-key">
+  <span><i style="background:var(--ink)"></i>$225,000 goal</span>
+  <span><i style="background:var(--ink-3)"></i>$450,000 extension goal</span>
+  <span>Bars show the running total across the year.</span>
 </div>
+<p class="editnote"><strong>Drag any row</strong> by its handle into another confidence band or another month.
+Type over the <strong>amount</strong> or <strong>%</strong> and every total, bar and headline updates as you type.
+The dropdowns do the same thing if you prefer them. Edits save in this browser, and <strong>Reset</strong>
+restores the original figures.</p>
+
+<div id="months"></div>
+
+<div class="call" id="summary"></div>
+
 <footer>
-  <p><b>The bands.</b> High and low are the CRO&rsquo;s call, not a formula. Most high-confidence deals sit at 60% or better on the CRM record, but TriageLogic (40%), Boyd Beauty (50%) and CareOne (25%) are committed on judgement, and Arista is held in low despite being the largest deal on the board. Meeting and email counts are shown per deal: meetings from a full sweep of 1,378 calendar events, emails counted as inbound only from the prospect&rsquo;s own domain.</p>
-  <p style="margin-top:10px"><b>What is not here.</b> A deal appears only if it has a meeting in the last 120 days or scheduled ahead, or 2+ recent inbound emails. That removed $772,500 of Zoho pipeline, mostly OnCare ($610K, no meetings, no customer email since July 2025). WISHIN and LifePoint were removed by hand. Amounts are the CRM value except Wayne, set to $150,000 by the CRO (the CRM record says $360,000; the 23%-fee-plus-AWS-partner-cash calculation gave $225,620), and six accounts priced by assumption because no figure exists anywhere: Avita, DMEscripts, Koning, CareOne, VeeHealthTek, Open_C. Percentages are the probability on each record. The $7,970 monthly line is a <strong>placeholder</strong>, not a contracted bill: MedRevIQ&rsquo;s $6,250 was a single invoice request in August, not a confirmed recurring charge, and only Therap&rsquo;s $1,720 is explicitly recurring. Treat it as an existing-account run rate until finance confirms it.</p>
+  <p><b>The bands.</b> High and low are the CRO&rsquo;s call, not a formula, and editable on the page.
+  Most high-confidence deals sit at 60% or better on the CRM record, but TriageLogic (40%), Boyd Beauty (50%) and
+  CareOne (25%) were committed on judgement, and Arista was held in low despite being the largest deal on the board.
+  Meeting and email counts come from a full sweep of 1,378 calendar events and inbound-only email counts from the
+  prospect&rsquo;s own domain.</p>
+  <p style="margin-top:10px"><b>What is not here.</b> A deal appears only if it has a meeting in the last 120 days
+  or scheduled ahead, or 2+ recent inbound emails. That removed $772,500 of Zoho pipeline, mostly OnCare
+  ($610K, no meetings, no customer email since July 2025). WISHIN and LifePoint were removed by hand. Amounts are the
+  CRM value except Wayne, set to $150,000 by the CRO (the CRM record says $360,000; the 23%-fee-plus-AWS-partner-cash
+  calculation gave $225,620), and six accounts priced by assumption because no figure exists anywhere: Avita,
+  DMEscripts, Koning, CareOne, VeeHealthTek, Open_C. The $7,970 monthly line is a <strong>placeholder</strong>, not a
+  contracted bill: MedRevIQ&rsquo;s $6,250 was a single invoice request in August, not a confirmed recurring charge,
+  and only Therap&rsquo;s $1,720 is explicitly recurring.</p>
 </footer>
-</div></body></html>
+
+</div>
+<script>
+/* Manish Agarwal CRO Dashboard.
+   Amounts are editable and every total recalculates as you type.
+   Rows drag between confidence bands and between months. */
+(function () {
+  "use strict";
+  var GOAL = 225000, EXT = 450000;
+  var MONTHS = ["September", "October", "November", "December"];
+  var BANDS = ["hi", "lo"];
+  var KEY = "cro-dashboard-v2";
+
+  var SEED = [
+    ["TriageLogic", "3 mtg · 3 em", 65000, 40, "lo", "September", "Demo 9 Sep, invite unanswered"],
+    ["Boyd Beauty — Phase 3", "2 mtg · 4 em", 50000, 50, "hi", "September", "Existing paying customer"],
+    ["Avita Care Solutions Pilot", "4 mtg · 5 em", 25000, 60, "hi", "September", "MSA and SOW in redline right now"],
+    ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "September", "Placeholder at the current run rate"],
+    ["Spencer Thomas Group", "1 mtg · 0 em", 50000, 50, "lo", "September", "First meeting Tue 1 Sep, 11am"],
+    ["iPill", "4 mtg · 14 em", 20000, 50, "lo", "September", "RFP call Wed 2 Sep, Pedranti declined, rebook"],
+    ["ASRC / CUNY", "1 mtg · 5 em", 10000, 10, "lo", "September", "Small and early"],
+    ["Wayne Memorial", "6 mtg · 20 em", 150000, 70, "hi", "October", "MSA redline out since 20 Aug, sign it"],
+    ["Avita Care Solutions", "4 mtg · 5 em", 20000, 60, "hi", "October", "Follow-on to the pilot"],
+    ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "October", "Placeholder at the current run rate"],
+    ["SunRx / MedImpact", "2 mtg · 3 em", 250000, 40, "lo", "October", "Review 10 Sep, no email reply since Oct 2025"],
+    ["GoSB", "1 mtg · 3 em", 30000, 40, "lo", "October", "RCM pricing doc still outstanding"],
+    ["DMEscripts", "1 mtg · 6 em", 25000, 50, "lo", "October", "Cerner integration scoped, agreement sent"],
+    ["Koning Health", "3 mtg · 3 em", 25000, 30, "lo", "October", "MVP scoped, NDA and BAA unsigned"],
+    ["CareOne — expansion", "1 mtg · 5 em", 54750, 25, "hi", "November", "Get Kristen Riley on your calendar"],
+    ["Lunar Analytics", "4 mtg · 9 em", 20000, 90, "hi", "November", "E-signature lapsed 28 Aug, re-send"],
+    ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "November", "Placeholder at the current run rate"],
+    ["VeeHealthTek", "1 mtg · 12 em", 25000, 15, "lo", "November", "Quiet 39 days, nothing scoped"],
+    ["Arista — initial install", "3 mtg · 3 em", 50000, 50, "hi", "December", "Review Tue 1 Sep, 3pm, invite unanswered"],
+    ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "December", "The only committed money in December"],
+    ["Arista — enterprise licence", "3 mtg · 3 em", 750000, 40, "lo", "December", "No written proposal exists anywhere"],
+    ["Open_C", "2 mtg · 3 em", 7500, 10, "lo", "December", "Pen-test only"]
+  ].map(function (r, i) {
+    return { id: i, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6] };
+  });
+
+  function clone(a) { return JSON.parse(JSON.stringify(a)); }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(deals)); } catch (e) {} }
+  function load() {
+    try {
+      var p = JSON.parse(localStorage.getItem(KEY) || "null");
+      if (!Array.isArray(p) || p.length !== SEED.length) return null;
+      return p.map(function (d, i) {
+        var s = SEED[i];
+        return {
+          id: i, name: s.name, ev: s.ev, next: s.next,
+          amount: isFinite(d.amount) ? +d.amount : s.amount,
+          pct: isFinite(d.pct) ? Math.max(0, Math.min(100, +d.pct)) : s.pct,
+          band: d.band === "lo" ? "lo" : "hi",
+          month: MONTHS.indexOf(d.month) >= 0 ? d.month : s.month,
+          order: isFinite(d.order) ? +d.order : i
+        };
+      });
+    } catch (e) { return null; }
+  }
+
+  var deals = load() || clone(SEED);
+  deals.forEach(function (d, i) { if (!isFinite(d.order)) d.order = i; });
+
+  function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+  function wt(d) { return d.amount * d.pct / 100; }
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function cell(m, b) { return deals.filter(function (d) { return d.month === m && d.band === b; })
+      .sort(function (a, c) { return a.order - c.order; }); }
+
+  function totals() {
+    var per = {}, cumH = 0, cumL = 0;
+    MONTHS.forEach(function (m) {
+      var hi = 0, lo = 0;
+      deals.forEach(function (d) {
+        if (d.month !== m) return;
+        if (d.band === "hi") hi += wt(d); else lo += wt(d);
+      });
+      hi = Math.round(hi); lo = Math.round(lo);
+      cumH += hi; cumL += lo;
+      per[m] = { hi: hi, lo: lo, cumH: cumH, cumL: cumL, run: cumH + cumL };
+    });
+    return { per: per, total: cumH + cumL, hi: cumH, lo: cumL };
+  }
+
+  /* ---------------- markup ---------------- */
+
+  function rowHTML(d) {
+    var mo = MONTHS.map(function (m) {
+      return '<option value="' + m + '"' + (m === d.month ? " selected" : "") + ">" + m.slice(0, 3) + "</option>";
+    }).join("");
+    var cf = BANDS.map(function (b) {
+      return '<option value="' + b + '"' + (b === d.band ? " selected" : "") + ">" + (b === "hi" ? "High" : "Low") + "</option>";
+    }).join("");
+    var plug = d.ev === "run rate";
+    return '<tr' + (plug ? ' class="rec"' : "") + ' data-id="' + d.id + '">' +
+      '<td class="grip" aria-hidden="true"></td>' +
+      '<td class="deal">' + esc(d.name) + '<span class="wtd" data-wt="' + d.id + '">' + money(wt(d)) + ' weighted</span></td>' +
+      '<td class="ev">' + esc(d.ev) + "</td>" +
+      '<td class="amt"><input class="f-amt" type="text" inputmode="numeric" aria-label="Amount, ' + esc(d.name) + '" value="' + money(d.amount) + '"></td>' +
+      '<td class="pct"><input class="f-pct" type="number" min="0" max="100" step="5" aria-label="Probability, ' + esc(d.name) + '" value="' + d.pct + '"><span class="pcs">%</span></td>' +
+      '<td class="conf"><select class="f-band" aria-label="Confidence, ' + esc(d.name) + '">' + cf + "</select></td>" +
+      '<td class="mo"><select class="f-month" aria-label="Month, ' + esc(d.name) + '">' + mo + "</select></td>" +
+      '<td class="next">' + esc(d.next) + "</td></tr>";
+  }
+
+  function bandHTML(m, b, t) {
+    var rows = cell(m, b);
+    var label = b === "hi" ? "High confidence" : "Low confidence";
+    var head = '<tr class="bandrow ' + b + '"><td colspan="8"><span class="bl">' + label +
+      '</span><span class="bn">' + money(b === "hi" ? t.hi : t.lo) + " weighted</span></td></tr>";
+    var body = rows.length ? rows.map(rowHTML).join("")
+      : '<tr class="drop-hint"><td colspan="8">Drop a deal here</td></tr>';
+    return '<tbody class="dz" data-month="' + m + '" data-band="' + b + '">' + head + body + "</tbody>";
+  }
+
+  function monthHTML(m, t, total) {
+    var pH = total ? t.cumH / total * 100 : 0;
+    var pL = total ? t.cumL / total * 100 : 0;
+    var gm = total ? Math.min(100, GOAL / total * 100) : 0;
+    var em = total ? Math.min(100, EXT / total * 100) : 0;
+    return '<div class="month" data-month="' + m + '">' +
+      '<div class="mhead"><h2>' + m + '</h2><div class="spacer"></div>' +
+      '<div class="fig hi"><div class="big">' + money(t.hi) + '</div><div class="lbl">high</div></div>' +
+      '<div class="fig lo"><div class="big">' + money(t.lo) + '</div><div class="lbl">low</div></div>' +
+      '<div class="fig run"><div class="big">' + money(t.run) + '</div><div class="lbl">running</div></div></div>' +
+      '<div class="run-bar"><div class="rf-hi" style="width:' + pH.toFixed(2) + '%"></div>' +
+      '<div class="rf-lo" style="width:' + pL.toFixed(2) + '%"></div>' +
+      '<div class="run-target" style="left:' + gm.toFixed(2) + '%"></div>' +
+      '<div class="run-target ext" style="left:' + em.toFixed(2) + '%"></div></div>' +
+      '<div class="tscroll"><table>' + bandHTML(m, "hi", t) + bandHTML(m, "lo", t) + "</table></div></div>";
+  }
+
+  function crossing(T, target) {
+    for (var i = 0; i < MONTHS.length; i++) if (T.per[MONTHS[i]].run >= target) return MONTHS[i];
+    return null;
+  }
+
+  function summaryHTML(T) {
+    var g = T.hi - GOAL, e = T.hi - EXT;
+    var gm = crossing(T, GOAL), em = crossing(T, EXT);
+    var big = null;
+    deals.forEach(function (d) { if (d.band === "lo" && (!big || wt(d) > wt(big))) big = d; });
+    var p1 = "High confidence is <strong>" + money(T.hi) + "</strong>, which " +
+      (g >= 0 ? "<strong>clears the " + money(GOAL) + " goal by " + money(g) + "</strong>"
+              : "is <strong>" + money(-g) + " short of the " + money(GOAL) + " goal</strong>") +
+      ". Against the " + money(EXT) + " extension goal it is " +
+      (e >= 0 ? "<strong>" + money(e) + " clear</strong>" : "<strong>" + money(-e) + " short</strong>") +
+      ", with the full forecast at " + money(T.total) + ".";
+    var p2 = "The running total " +
+      (gm ? "passes " + money(GOAL) + " during <strong>" + gm + "</strong>" : "<strong>never reaches " + money(GOAL) + "</strong>") +
+      " and " +
+      (em ? "reaches " + money(EXT) + " in <strong>" + em + "</strong>" : "<strong>never reaches " + money(EXT) + "</strong>") + ".";
+    var p3 = "";
+    if (big) {
+      var w = T.total - wt(big);
+      p3 = "The largest single upside deal is <strong>" + esc(big.name) + "</strong> at " + money(big.amount) +
+        " (" + money(wt(big)) + " weighted). Without it the year lands at <strong>" + money(w) + "</strong>, " +
+        (w >= GOAL ? "still past the goal" : money(GOAL - w) + " short of the goal") + " and " +
+        (w >= EXT ? "past the extension" : money(EXT - w) + " short of the extension") + ".";
+    }
+    return "<h2>Where this lands</h2><p>" + p1 + "</p><p>" + p2 + "</p>" + (p3 ? "<p>" + p3 + "</p>" : "");
+  }
+
+  /* --------- paint numbers only, keeps input focus --------- */
+  function paint() {
+    var T = totals(), total = T.total;
+    MONTHS.forEach(function (m) {
+      var t = T.per[m], c = document.querySelector('.month[data-month="' + m + '"]');
+      if (!c) return;
+      c.querySelector(".fig.hi .big").textContent = money(t.hi);
+      c.querySelector(".fig.lo .big").textContent = money(t.lo);
+      c.querySelector(".fig.run .big").textContent = money(t.run);
+      c.querySelector(".rf-hi").style.width = (total ? t.cumH / total * 100 : 0).toFixed(2) + "%";
+      c.querySelector(".rf-lo").style.width = (total ? t.cumL / total * 100 : 0).toFixed(2) + "%";
+      var mk = c.querySelectorAll(".run-target");
+      mk[0].style.left = (total ? Math.min(100, GOAL / total * 100) : 0).toFixed(2) + "%";
+      mk[1].style.left = (total ? Math.min(100, EXT / total * 100) : 0).toFixed(2) + "%";
+      c.querySelector(".bandrow.hi .bn").textContent = money(t.hi) + " weighted";
+      c.querySelector(".bandrow.lo .bn").textContent = money(t.lo) + " weighted";
+    });
+    deals.forEach(function (d) {
+      var s = document.querySelector('.wtd[data-wt="' + d.id + '"]');
+      if (s) s.textContent = money(wt(d)) + " weighted";
+    });
+    var g = T.hi - GOAL;
+    document.getElementById("kpiHi").textContent = money(T.hi);
+    document.getElementById("kpiHiD").textContent =
+      deals.filter(function (d) { return d.band === "hi"; }).length + " rows. " +
+      (g >= 0 ? "Clears the goal by " + money(g) + "." : money(-g) + " short of the goal.");
+    document.getElementById("kpiLo").textContent = money(T.lo);
+    document.getElementById("kpiLoD").textContent =
+      deals.filter(function (d) { return d.band === "lo"; }).length + " rows. Forecast total " + money(T.total) + ".";
+    document.getElementById("summary").innerHTML = summaryHTML(T);
+    save();
+  }
+
+  function render() {
+    var T = totals();
+    document.getElementById("months").innerHTML =
+      MONTHS.map(function (m) { return monthHTML(m, T.per[m], T.total); }).join("");
+    paint();
+  }
+
+  function byId(id) { for (var i = 0; i < deals.length; i++) if (deals[i].id === id) return deals[i]; return null; }
+  function flash(msg) {
+    var s = document.getElementById("liveMsg");
+    s.textContent = msg; s.className = "dirty-msg ok";
+    clearTimeout(flash.t);
+    flash.t = setTimeout(function () { s.textContent = "Edits save as you go"; s.className = "dirty-msg"; }, 2200);
+  }
+
+  /* ---------------- editing ---------------- */
+  document.addEventListener("input", function (e) {
+    var tr = e.target.closest && e.target.closest("tr[data-id]");
+    if (!tr) return;
+    var d = byId(+tr.getAttribute("data-id"));
+    if (!d) return;
+    if (e.target.classList.contains("f-amt")) {
+      var v = parseFloat(String(e.target.value).replace(/[^0-9.]/g, ""));
+      d.amount = isFinite(v) ? v : 0;
+      paint();
+    } else if (e.target.classList.contains("f-pct")) {
+      var p = parseFloat(e.target.value);
+      d.pct = isFinite(p) ? Math.max(0, Math.min(100, p)) : 0;
+      paint();
+    }
+  });
+  document.addEventListener("blur", function (e) {
+    if (e.target.classList && e.target.classList.contains("f-amt")) {
+      var tr = e.target.closest("tr[data-id]"), d = tr && byId(+tr.getAttribute("data-id"));
+      if (d) e.target.value = money(d.amount);
+    }
+  }, true);
+  document.addEventListener("change", function (e) {
+    var tr = e.target.closest && e.target.closest("tr[data-id]");
+    if (!tr) return;
+    var d = byId(+tr.getAttribute("data-id"));
+    if (!d) return;
+    if (e.target.classList.contains("f-band")) { d.band = e.target.value; render(); flash("Moved to " + (d.band === "hi" ? "high" : "low")); }
+    else if (e.target.classList.contains("f-month")) { d.month = e.target.value; render(); flash("Moved to " + d.month); }
+  });
+
+  /* ---------------- drag and drop (pointer events, works on touch) ---------------- */
+  var drag = null;
+
+  function zoneAt(x, y) {
+    var el = document.elementFromPoint(x, y);
+    return el && el.closest ? el.closest("tbody.dz") : null;
+  }
+  function rowAt(x, y) {
+    var el = document.elementFromPoint(x, y);
+    var tr = el && el.closest ? el.closest("tr[data-id]") : null;
+    return tr && drag && tr === drag.row ? null : tr;
+  }
+  function clearZones() {
+    Array.prototype.forEach.call(document.querySelectorAll("tbody.dz.over"),
+      function (n) { n.classList.remove("over"); });
+  }
+
+  document.addEventListener("pointerdown", function (e) {
+    if (e.button !== 0 && e.pointerType === "mouse") return;
+    var t = e.target;
+    if (t.closest("input, select, button, a")) return;
+    var row = t.closest && t.closest("tr[data-id]");
+    if (!row) return;
+    var onGrip = !!t.closest("td.grip");
+    if (e.pointerType !== "mouse" && !onGrip) return;   // touch: grip only, so the page still scrolls
+    drag = { row: row, id: +row.getAttribute("data-id"), x0: e.clientX, y0: e.clientY,
+             live: false, pid: e.pointerId };
+  });
+
+  document.addEventListener("pointermove", function (e) {
+    if (!drag) return;
+    if (!drag.live) {
+      if (Math.abs(e.clientX - drag.x0) + Math.abs(e.clientY - drag.y0) < 5) return;
+      drag.live = true;
+      drag.row.classList.add("dragging");
+      document.body.classList.add("dragging-on");
+      var g = document.createElement("div");
+      g.className = "drag-ghost";
+      g.textContent = drag.row.querySelector("td.deal").firstChild.textContent.trim();
+      document.body.appendChild(g);
+      drag.ghost = g;
+      try { drag.row.setPointerCapture(drag.pid); } catch (err) {}
+    }
+    e.preventDefault();
+    drag.ghost.style.left = e.clientX + 14 + "px";
+    drag.ghost.style.top = e.clientY + 14 + "px";
+    var dz = zoneAt(e.clientX, e.clientY);
+    clearZones();
+    if (dz) dz.classList.add("over");
+    drag.zone = dz;
+    drag.before = dz ? rowAt(e.clientX, e.clientY) : null;
+  }, { passive: false });
+
+  function endDrag(e) {
+    if (!drag) return;
+    var d = drag; drag = null;
+    d.row.classList.remove("dragging");
+    document.body.classList.remove("dragging-on");
+    if (d.ghost && d.ghost.parentNode) d.ghost.parentNode.removeChild(d.ghost);
+    clearZones();
+    if (!d.live || !d.zone) return;
+    var deal = byId(d.id);
+    if (!deal) return;
+    var m = d.zone.getAttribute("data-month"), b = d.zone.getAttribute("data-band");
+    var moved = deal.month !== m || deal.band !== b;
+    deal.month = m; deal.band = b;
+    var sibs = cell(m, b).filter(function (x) { return x.id !== deal.id; });
+    var at = sibs.length;
+    if (d.before) {
+      var oid = +d.before.getAttribute("data-id");
+      for (var i = 0; i < sibs.length; i++) if (sibs[i].id === oid) { at = i; break; }
+    }
+    sibs.splice(at, 0, deal);
+    sibs.forEach(function (x, i) { x.order = i; });
+    render();
+    flash(moved ? deal.name + " moved to " + m + ", " + (b === "hi" ? "high" : "low") : "Reordered");
+  }
+  document.addEventListener("pointerup", endDrag);
+  document.addEventListener("pointercancel", endDrag);
+
+  document.getElementById("resetBtn").addEventListener("click", function () {
+    if (!window.confirm("Reset every row back to the original figures?")) return;
+    deals = clone(SEED);
+    deals.forEach(function (d, i) { d.order = i; });
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    render();
+    flash("Reset to original figures");
+  });
+
+  render();
+})();
+
+</script>
+</body></html>
