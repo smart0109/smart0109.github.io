@@ -283,7 +283,7 @@ restores the original figures.</p>
   var GOAL = 225000, EXT = 450000;
   var MONTHS = ["September", "October", "November", "December"];
   var BANDS = ["hi", "lo"];
-  var KEY = "cro-dashboard-v2";
+  var KEY = "cro-dashboard-v3";
 
   var SEED = [
     ["TriageLogic", "3 mtg · 3 em", 65000, 40, "lo", "September", "Demo 9 Sep, invite unanswered"],
@@ -312,23 +312,28 @@ restores the original figures.</p>
     return { id: i, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6] };
   });
 
+  var nextId = SEED.length;
   function clone(a) { return JSON.parse(JSON.stringify(a)); }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(deals)); } catch (e) {} }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify({ n: nextId, d: deals })); } catch (e) {} }
   function load() {
     try {
       var p = JSON.parse(localStorage.getItem(KEY) || "null");
-      if (!Array.isArray(p) || p.length !== SEED.length) return null;
-      return p.map(function (d, i) {
-        var s = SEED[i];
+      if (!p || !Array.isArray(p.d) || !p.d.length) return null;
+      var out = p.d.map(function (d, i) {
         return {
-          id: i, name: s.name, ev: s.ev, next: s.next,
-          amount: isFinite(d.amount) ? +d.amount : s.amount,
-          pct: isFinite(d.pct) ? Math.max(0, Math.min(100, +d.pct)) : s.pct,
+          id: isFinite(d.id) ? +d.id : i,
+          name: String(d.name == null ? "New deal" : d.name),
+          ev: String(d.ev == null ? "" : d.ev),
+          next: String(d.next == null ? "" : d.next),
+          amount: isFinite(d.amount) ? +d.amount : 0,
+          pct: isFinite(d.pct) ? Math.max(0, Math.min(100, +d.pct)) : 0,
           band: d.band === "lo" ? "lo" : "hi",
-          month: MONTHS.indexOf(d.month) >= 0 ? d.month : s.month,
+          month: MONTHS.indexOf(d.month) >= 0 ? d.month : MONTHS[0],
           order: isFinite(d.order) ? +d.order : i
         };
       });
+      nextId = isFinite(p.n) ? +p.n : out.reduce(function (a, d) { return Math.max(a, d.id + 1); }, 0);
+      return out;
     } catch (e) { return null; }
   }
 
@@ -371,22 +376,24 @@ restores the original figures.</p>
     var plug = d.ev === "run rate";
     return '<tr' + (plug ? ' class="rec"' : "") + ' data-id="' + d.id + '">' +
       '<td class="grip" aria-hidden="true"></td>' +
-      '<td class="deal">' + esc(d.name) + '<span class="wtd" data-wt="' + d.id + '">' + money(wt(d)) + ' weighted</span></td>' +
-      '<td class="ev">' + esc(d.ev) + "</td>" +
+      '<td class="deal"><input class="f-name" type="text" aria-label="Deal name" value="' + esc(d.name) + '"><span class="wtd" data-wt="' + d.id + '">' + money(wt(d)) + ' weighted</span></td>' +
+      '<td class="ev"><input class="f-ev" type="text" aria-label="Evidence, ' + esc(d.name) + '" value="' + esc(d.ev) + '"></td>' +
       '<td class="amt"><input class="f-amt" type="text" inputmode="numeric" aria-label="Amount, ' + esc(d.name) + '" value="' + money(d.amount) + '"></td>' +
       '<td class="pct"><input class="f-pct" type="number" min="0" max="100" step="5" aria-label="Probability, ' + esc(d.name) + '" value="' + d.pct + '"><span class="pcs">%</span></td>' +
       '<td class="conf"><select class="f-band" aria-label="Confidence, ' + esc(d.name) + '">' + cf + "</select></td>" +
       '<td class="mo"><select class="f-month" aria-label="Month, ' + esc(d.name) + '">' + mo + "</select></td>" +
-      '<td class="next">' + esc(d.next) + "</td></tr>";
+      '<td class="next"><input class="f-next" type="text" aria-label="Next step, ' + esc(d.name) + '" value="' + esc(d.next) + '"></td>' +
+      '<td class="del"><button class="x" type="button" data-del="' + d.id + '" aria-label="Delete ' + esc(d.name) + '" title="Delete this deal">\u00d7</button></td></tr>';
   }
 
   function bandHTML(m, b, t) {
     var rows = cell(m, b);
     var label = b === "hi" ? "High confidence" : "Low confidence";
-    var head = '<tr class="bandrow ' + b + '"><td colspan="8"><span class="bl">' + label +
-      '</span><span class="bn">' + money(b === "hi" ? t.hi : t.lo) + " weighted</span></td></tr>";
+    var head = '<tr class="bandrow ' + b + '"><td colspan="9"><span class="bl">' + label +
+      '</span><span class="bn">' + money(b === "hi" ? t.hi : t.lo) + ' weighted</span>' +
+      '<button class="addbtn" type="button" data-add-month="' + m + '" data-add-band="' + b + '">+ Add a deal</button></td></tr>';
     var body = rows.length ? rows.map(rowHTML).join("")
-      : '<tr class="drop-hint"><td colspan="8">Drop a deal here</td></tr>';
+      : '<tr class="drop-hint"><td colspan="9">Drop a deal here, or add one above</td></tr>';
     return '<tbody class="dz" data-month="' + m + '" data-band="' + b + '">' + head + body + "</tbody>";
   }
 
@@ -500,6 +507,12 @@ restores the original figures.</p>
       var p = parseFloat(e.target.value);
       d.pct = isFinite(p) ? Math.max(0, Math.min(100, p)) : 0;
       paint();
+    } else if (e.target.classList.contains("f-name")) {
+      d.name = e.target.value; save();
+    } else if (e.target.classList.contains("f-ev")) {
+      d.ev = e.target.value; save();
+    } else if (e.target.classList.contains("f-next")) {
+      d.next = e.target.value; save();
     }
   });
   document.addEventListener("blur", function (e) {
@@ -516,6 +529,57 @@ restores the original figures.</p>
     if (e.target.classList.contains("f-band")) { d.band = e.target.value; render(); flash("Moved to " + (d.band === "hi" ? "high" : "low")); }
     else if (e.target.classList.contains("f-month")) { d.month = e.target.value; render(); flash("Moved to " + d.month); }
   });
+
+  /* ---------------- add and delete rows ---------------- */
+  document.addEventListener("click", function (e) {
+    var add = e.target.closest && e.target.closest("button[data-add-month]");
+    if (add) {
+      var m = add.getAttribute("data-add-month"), b = add.getAttribute("data-add-band");
+      var sibs = cell(m, b);
+      var d = {
+        id: nextId++, name: "New deal", ev: "no evidence yet", next: "",
+        amount: 0, pct: b === "hi" ? 60 : 30, band: b, month: m,
+        order: (sibs.length ? sibs[sibs.length - 1].order : 0) + 1
+      };
+      deals.push(d);
+      render(); save();
+      flash("Added a deal to " + m);
+      var el = document.querySelector('tr[data-id="' + d.id + '"] .f-name');
+      if (el) { el.focus(); el.select(); }
+      return;
+    }
+    var del = e.target.closest && e.target.closest("button[data-del]");
+    if (del) {
+      var id = +del.getAttribute("data-del"), gone = byId(id);
+      if (!gone) return;
+      var label = gone.name;
+      last = { deal: gone, at: deals.indexOf(gone) };
+      deals.splice(last.at, 1);
+      render(); save();
+      undo(label);
+      return;
+    }
+    var un = e.target.closest && e.target.closest("#undoBtn");
+    if (un && last) {
+      deals.splice(Math.min(last.at, deals.length), 0, last.deal);
+      last = null;
+      render(); save();
+      flash("Restored");
+    }
+  });
+
+  var last = null;
+  function undo(label) {
+    var s = document.getElementById("liveMsg");
+    s.className = "dirty-msg ok";
+    s.innerHTML = 'Deleted "' + esc(label) + '" <button class="undo" id="undoBtn" type="button">Undo</button>';
+    clearTimeout(flash.t);
+    flash.t = setTimeout(function () {
+      if (!last) return;
+      last = null;
+      s.textContent = "Edits save as you go"; s.className = "dirty-msg";
+    }, 12000);
+  }
 
   /* ---------------- drag and drop (pointer events, works on touch) ---------------- */
   var drag = null;
