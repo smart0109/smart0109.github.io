@@ -331,7 +331,9 @@ restores the original figures.</p>
   prospect&rsquo;s own domain.</p>
   <p style="margin-top:10px"><b>What is not here.</b> A deal appears only if it has a meeting in the last 120 days
   or scheduled ahead, or 2+ recent inbound emails. That removed $772,500 of Zoho pipeline, mostly OnCare
-  ($610K, no meetings, no customer email since July 2025). WISHIN and LifePoint were removed by hand. Amounts are the
+  ($610K, no meetings, no customer email since July 2025). WISHIN and LifePoint were removed by hand. On 22 September, at the CRO&rsquo;s direction, every open Zoho
+  deal in stages S3 to S6 was added back whether or not it passes that test: OnCare (both records), Wissenstil,
+  XYgene and Proximity Labs sit in low confidence at the CRM probability and are labeled &ldquo;CRM only&rdquo;. Amounts are the
   CRM value except Wayne, set to $150,000 by the CRO (the CRM record says $360,000; the 23%-fee-plus-AWS-partner-cash
   calculation gave $225,620), and six accounts priced by assumption because no figure exists anywhere: Avita,
   DMEscripts, Koning, CareOne, VeeHealthTek, Open_C. The $7,970 monthly line is a <strong>placeholder</strong>, not a
@@ -373,14 +375,20 @@ restores the original figures.</p>
     ["Arista — initial install", "3 mtg · 3 em", 50000, 50, "hi", "December", "Review Tue 1 Sep, 3pm, invite unanswered"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "December", "The only committed money in December"],
     ["Arista — enterprise licence", "3 mtg · 3 em", 750000, 40, "lo", "December", "No written proposal exists anywhere"],
-    ["Open_C", "2 mtg · 3 em", 7500, 10, "lo", "December", "Pen-test only"]
+    ["Open_C", "2 mtg · 3 em", 7500, 10, "lo", "December", "Pen-test only"],
+    ["OnCare Data Hub and Analytics", "Zoho S5 · CRM only", 360000, 70, "lo", "September", "No inbound from OnCare; internal email puts it near $200K ARR. Likely same deal as the Phase 1 row", 1001],
+    ["OnCare Data Hub Phase 1", "Zoho S6 · CRM only", 250000, 90, "lo", "September", "Likely duplicate of the row above; delete one", 1002],
+    ["Wissenstil Solutions", "Zoho S3 · CRM only", 20000, 40, "lo", "September", "Rashmi re-pinged 26 Aug after two months quiet, no reply", 1003],
+    ["XYgene", "Zoho S6 · CRM only", 0, 90, "lo", "September", "No amount in Zoho. Last reply from XYgene 31 Jul", 1004],
+    ["Proximity Labs", "Zoho S3 · CRM only", 30000, 30, "lo", "September", "Close date 8 May passed; runs through the XYgene thread", 1005]
   ].map(function (r, i) {
-    return { id: i, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6] };
+    return { id: r[7] != null ? r[7] : i, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6], order: i };
   });
 
   var nextId = SEED.length;
+  var removed = [];
   function clone(a) { return JSON.parse(JSON.stringify(a)); }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify({ n: nextId, d: deals })); } catch (e) {} }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify({ n: nextId, d: deals, del: removed })); } catch (e) {} }
   function load() {
     try {
       var p = JSON.parse(localStorage.getItem(KEY) || "null");
@@ -399,6 +407,22 @@ restores the original figures.</p>
         };
       });
       nextId = isFinite(p.n) ? +p.n : out.reduce(function (a, d) { return Math.max(a, d.id + 1); }, 0);
+      var have = {};
+      out.forEach(function (d) { have[d.id] = 1; });
+      if (Array.isArray(p.del)) {
+        removed = p.del.filter(function (x) { return isFinite(x); });
+      } else {
+        /* saved before deletions were tracked: any original row missing from it was deleted by hand */
+        removed = SEED.filter(function (sd) { return sd.id < 1000 && !have[sd.id]; })
+          .map(function (sd) { return sd.id; });
+      }
+      SEED.forEach(function (sd) {
+        if (!have[sd.id] && removed.indexOf(sd.id) < 0) {
+          var c = JSON.parse(JSON.stringify(sd));
+          c.order = 100000 + sd.order;
+          out.push(c);
+        }
+      });
       return out;
     } catch (e) { return null; }
   }
@@ -621,7 +645,7 @@ restores the original figures.</p>
       var m = add.getAttribute("data-add-month"), b = add.getAttribute("data-add-band");
       var sibs = cell(m, b);
       var d = {
-        id: nextId++, name: "New deal", ev: "no evidence yet", next: "",
+        id: newId(), name: "New deal", ev: "no evidence yet", next: "",
         amount: 0, pct: b === "hi" ? 60 : 30, band: b, month: m,
         order: (sibs.length ? sibs[sibs.length - 1].order : 0) + 1
       };
@@ -639,6 +663,7 @@ restores the original figures.</p>
       var label = gone.name;
       last = { deal: gone, at: deals.indexOf(gone) };
       deals.splice(last.at, 1);
+      if (removed.indexOf(id) < 0) removed.push(id);
       render(); save();
       undo(label);
       return;
@@ -646,6 +671,7 @@ restores the original figures.</p>
     var un = e.target.closest && e.target.closest("#undoBtn");
     if (un && last) {
       deals.splice(Math.min(last.at, deals.length), 0, last.deal);
+      removed = removed.filter(function (x) { return x !== last.deal.id; });
       last = null;
       render(); save();
       flash("Restored");
@@ -653,6 +679,13 @@ restores the original figures.</p>
   });
 
   var last = null;
+  function newId() {
+    var used = {};
+    deals.forEach(function (x) { used[x.id] = 1; });
+    SEED.forEach(function (x) { used[x.id] = 1; });
+    while (used[nextId] || (nextId >= 1000 && nextId < 2000)) nextId = nextId >= 1000 && nextId < 2000 ? 2000 : nextId + 1;
+    return nextId++;
+  }
   function undo(label) {
     var s = document.getElementById("liveMsg");
     s.className = "dirty-msg ok";
@@ -749,6 +782,7 @@ restores the original figures.</p>
     if (!window.confirm("Reset every row back to the original figures?")) return;
     deals = clone(SEED);
     deals.forEach(function (d, i) { d.order = i; });
+    removed = []; nextId = SEED.length;
     try { localStorage.removeItem(KEY); } catch (e) {}
     render();
     flash("Reset to original figures");
