@@ -332,10 +332,11 @@ restores the original figures.</p>
   <p style="margin-top:10px"><b>What is not here.</b> A deal appears only if it has a meeting in the last 120 days
   or scheduled ahead, or 2+ recent inbound emails. That removed $772,500 of Zoho pipeline, mostly OnCare
   ($610K, no meetings, no customer email since July 2025). WISHIN and LifePoint were removed by hand. On 22 September, at the CRO&rsquo;s direction, every open Zoho
-  deal in stages S3 to S6 was added back whether or not it passes that test: OnCare (both records), Wissenstil,
+  deal in stages S3 to S6 was added back whether or not it passes that test: OnCare (one record; the duplicate S5 record was dropped), Wissenstil,
   XYgene and Proximity Labs sit in low confidence at the CRM probability and are labeled &ldquo;CRM only&rdquo;. Amounts are the
-  CRM value except Wayne, set to $150,000 by the CRO (the CRM record says $360,000; the 23%-fee-plus-AWS-partner-cash
-  calculation gave $225,620), and six accounts priced by assumption because no figure exists anywhere: Avita,
+  CRM value except Wayne, set to $225,620 by the CRO from the 23%-fee-plus-AWS-partner-cash calculation (the CRM
+  record says $360,000), TriageLogic, set to $27,000 by the CRO for three Cerner practices at $750 a month, the seven deals
+  approved from the email and calendar scan on 22 September (only UM AI&rsquo;s $10,000 is in writing; the other six are assumed), and six accounts priced by assumption because no figure exists anywhere: Avita,
   DMEscripts, Koning, CareOne, VeeHealthTek, Open_C. The $7,970 monthly line is a <strong>placeholder</strong>, not a
   contracted bill: MedRevIQ&rsquo;s $6,250 was a single invoice request in August, not a confirmed recurring charge,
   and only Therap&rsquo;s $1,720 is explicitly recurring.</p>
@@ -354,14 +355,14 @@ restores the original figures.</p>
   var KEY = "cro-dashboard-v3";
 
   var SEED = [
-    ["TriageLogic", "3 mtg · 3 em", 65000, 40, "lo", "September", "Demo 9 Sep, invite unanswered"],
+    ["TriageLogic", "3 mtg · 3 em", 27000, 40, "lo", "September", "Priced at 3 Cerner practices x $750 a month; pushback on price"],
     ["Boyd Beauty — Phase 3", "2 mtg · 4 em", 50000, 50, "hi", "September", "Existing paying customer"],
     ["Avita Care Solutions Pilot", "4 mtg · 5 em", 25000, 60, "hi", "September", "MSA and SOW in redline right now"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "September", "Placeholder at the current run rate"],
     ["Spencer Thomas Group", "1 mtg · 0 em", 50000, 50, "lo", "September", "First meeting Tue 1 Sep, 11am"],
     ["iPill", "4 mtg · 14 em", 20000, 50, "lo", "September", "RFP call Wed 2 Sep, Pedranti declined, rebook"],
     ["ASRC / CUNY", "1 mtg · 5 em", 10000, 10, "lo", "September", "Small and early"],
-    ["Wayne Memorial", "6 mtg · 20 em", 150000, 70, "hi", "October", "MSA redline out since 20 Aug, sign it"],
+    ["Wayne Memorial", "6 mtg · 20 em", 225620, 70, "hi", "October", "MSA redline out since 20 Aug, sign it"],
     ["Avita Care Solutions", "4 mtg · 5 em", 20000, 60, "hi", "October", "Follow-on to the pilot"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "October", "Placeholder at the current run rate"],
     ["SunRx / MedImpact", "2 mtg · 3 em", 250000, 40, "lo", "October", "Review 10 Sep, no email reply since Oct 2025"],
@@ -376,11 +377,17 @@ restores the original figures.</p>
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "December", "The only committed money in December"],
     ["Arista — enterprise licence", "3 mtg · 3 em", 750000, 40, "lo", "December", "No written proposal exists anywhere"],
     ["Open_C", "2 mtg · 3 em", 7500, 10, "lo", "December", "Pen-test only"],
-    ["OnCare Data Hub and Analytics", "Zoho S5 · CRM only", 360000, 70, "lo", "September", "No inbound from OnCare; internal email puts it near $200K ARR. Likely same deal as the Phase 1 row", 1001],
-    ["OnCare Data Hub Phase 1", "Zoho S6 · CRM only", 250000, 90, "lo", "September", "Likely duplicate of the row above; delete one", 1002],
+    ["OnCare Data Hub Phase 1", "Zoho S6 · CRM only", 250000, 90, "lo", "September", "The one OnCare row kept. No inbound from OnCare; internal email puts it near $200K ARR", 1002],
     ["Wissenstil Solutions", "Zoho S3 · CRM only", 20000, 40, "lo", "September", "Rashmi re-pinged 26 Aug after two months quiet, no reply", 1003],
     ["XYgene", "Zoho S6 · CRM only", 0, 90, "lo", "September", "No amount in Zoho. Last reply from XYgene 31 Jul", 1004],
-    ["Proximity Labs", "Zoho S3 · CRM only", 30000, 30, "lo", "September", "Close date 8 May passed; runs through the XYgene thread", 1005]
+    ["Proximity Labs", "Zoho S3 · CRM only", 30000, 30, "lo", "September", "Close date 8 May passed; runs through the XYgene thread", 1005],
+    ["UM AI (UMAI / Evolve Health)", "1 mtg · 3 em", 10000, 40, "lo", "October", "About $10,000 fee in writing; they want a SOW before signing", 1006],
+    ["American Lung Association Quitline", "QBR 20 Aug · Zoho", 25000, 60, "hi", "October", "New Zoho record, close 30 Oct. Amount assumed", 1007],
+    ["MedREVIQ Workers Comp", "1 mtg · 10 em", 25000, 60, "hi", "November", "Lynette asked for a quote. Amount assumed", 1008],
+    ["Ognomy: CoverMyMeds + DMEscripts", "QBR 20 Aug · Zoho", 25000, 60, "hi", "November", "New Zoho record, close 30 Nov. Amount assumed", 1009],
+    ["Avesis: AWS migration + 11.x", "QBR 26 Aug · Zoho", 30000, 60, "hi", "November", "New Zoho record, close 18 Nov. Amount assumed", 1010],
+    ["ICE InsureTech / NIS", "2 mtg · 0 em", 30000, 30, "lo", "December", "NIS Integration Planning 15 Sep. Amount assumed", 1011],
+    ["IPEX / NWN: Catholic Health of LI", "1 mtg · 6 em", 50000, 25, "lo", "December", "Partner channel on a named account. Amount assumed", 1012]
   ].map(function (r, i) {
     return { id: r[7] != null ? r[7] : i, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6], order: i };
   });
@@ -388,7 +395,8 @@ restores the original figures.</p>
   var nextId = SEED.length;
   var removed = [];
   function clone(a) { return JSON.parse(JSON.stringify(a)); }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify({ n: nextId, d: deals, del: removed })); } catch (e) {} }
+  var DATA_V = 2;
+  function save() { try { localStorage.setItem(KEY, JSON.stringify({ v: DATA_V, n: nextId, d: deals, del: removed })); } catch (e) {} }
   function load() {
     try {
       var p = JSON.parse(localStorage.getItem(KEY) || "null");
@@ -415,6 +423,16 @@ restores the original figures.</p>
         /* saved before deletions were tracked: any original row missing from it was deleted by hand */
         removed = SEED.filter(function (sd) { return sd.id < 1000 && !have[sd.id]; })
           .map(function (sd) { return sd.id; });
+      }
+      if (!(p.v >= 2)) {
+        /* 22 Sep CRO decisions override older saved copies */
+        out = out.filter(function (d) { return d.id !== 1001; });
+        if (removed.indexOf(1001) < 0) removed.push(1001);
+        out.forEach(function (d) {
+          if (d.id === 0) { d.amount = 27000; d.next = SEED[0].next; }
+          if (d.id === 7) d.amount = 225620;
+          if (d.id === 1002) d.next = SEED.filter(function (x) { return x.id === 1002; })[0].next;
+        });
       }
       SEED.forEach(function (sd) {
         if (!have[sd.id] && removed.indexOf(sd.id) < 0) {
