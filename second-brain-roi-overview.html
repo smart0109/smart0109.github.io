@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Second Brain ROI Overview</title>
+<title>AI Associate Playbook</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -33,10 +33,11 @@ body{
   font-family:'Public Sans', -apple-system, 'Segoe UI', sans-serif;
   padding:0 20px; -webkit-font-smoothing:antialiased;
 }
-.wrap{ max-width:1080px; margin:0 auto; padding-block:36px 48px; }
+.wrap{ max-width:1220px; margin:0 auto; padding-block:36px 56px; }
 h1,h2{ font-family:'Fraunces', Georgia, serif; margin:0; color:var(--ink); text-wrap:balance; }
 .mono{ font-family:'IBM Plex Mono','Courier New',monospace; }
 
+/* masthead */
 .masthead{
   display:flex; justify-content:space-between; align-items:flex-end;
   gap:16px; padding-bottom:16px; border-bottom:2px solid var(--ink); flex-wrap:wrap;
@@ -50,19 +51,95 @@ h1,h2{ font-family:'Fraunces', Georgia, serif; margin:0; color:var(--ink); text-
 .brand-sub{font-size:11.5px; color:var(--ink-soft); margin-top:1px;}
 .doc-tag{ text-align:right; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); line-height:1.5; }
 
-.intro{ padding-top:24px; max-width:66ch; }
+.intro{ padding-top:24px; max-width:70ch; }
 .intro h1{ font-size:clamp(24px,3.6vw,32px); font-weight:500; line-height:1.2; }
+.intro h1 em{ font-style:normal; color:var(--accent); }
 .intro p.lede{ font-size:15.5px; line-height:1.6; color:var(--ink-soft); margin:12px 0 0; max-width:62ch; }
 .eyebrow{
   font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.09em;
   text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px; display:block;
 }
+section{ margin-top:50px; }
+section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
+
+/* ---------- mindmap ---------- */
+.mm-scroll{ overflow-x:auto; }
+.mm-canvas{
+  position:relative; min-width:1080px;
+  display:grid;
+  grid-template-columns: 320px minmax(240px,300px) 320px;
+  grid-template-rows: 1fr 1fr;
+  grid-template-areas: "tl hub tr" "bl hub br";
+  column-gap:60px; row-gap:44px;
+  padding:20px 6px;
+  justify-content:center;
+}
+.mm-canvas svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; }
+.mm-canvas svg path{ fill:none; stroke:var(--accent); stroke-width:2.2; opacity:.85; }
+.hub{
+  grid-area:hub; align-self:center; justify-self:center;
+  position:relative; z-index:2;
+  background:var(--ink); color:var(--paper);
+  border-radius:14px; padding:20px 22px; text-align:center;
+  box-shadow:var(--shadow); width:100%; max-width:280px;
+}
+.hub .mono{ font-size:10px; letter-spacing:.09em; text-transform:uppercase; opacity:.65; display:block; margin-bottom:6px; }
+.hub h2{ font-size:19px; font-weight:500; line-height:1.2; color:var(--paper); margin:0; }
+.hub .sub{ font-size:11.5px; color:var(--paper); opacity:.72; margin-top:6px; line-height:1.4; }
+.branch{ position:relative; z-index:2; display:flex; flex-direction:column; gap:10px; max-width:300px; }
+.branch.tl{ grid-area:tl; justify-self:end; text-align:right; }
+.branch.bl{ grid-area:bl; justify-self:end; text-align:right; }
+.branch.tr{ grid-area:tr; justify-self:start; text-align:left; }
+.branch.br{ grid-area:br; justify-self:start; text-align:left; }
+.b-head{
+  display:inline-flex; align-items:center; gap:8px; background:var(--paper-raised);
+  border:1px solid var(--line-strong); border-radius:9px; padding:9px 13px; box-shadow:var(--shadow);
+  font-weight:600; font-size:13.5px; align-self:flex-end;
+}
+.branch.tr .b-head, .branch.br .b-head{ align-self:flex-start; }
+.b-head svg{ width:15px;height:15px; stroke:var(--accent); flex:none; }
+.b-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:7px; }
+.branch.tl .b-list, .branch.bl .b-list{ align-items:flex-end; padding-right:14px; border-right:1.5px dashed var(--line); }
+.branch.tr .b-list, .branch.br .b-list{ align-items:flex-start; padding-left:14px; border-left:1.5px dashed var(--line); }
+.b-list li{ font-size:12.5px; line-height:1.45; color:var(--ink-soft); background:var(--paper-alt); border-radius:7px; padding:6px 10px; max-width:250px; }
+@media (max-width:700px){
+  .mm-canvas{ grid-template-columns:1fr; grid-template-areas:"hub" "tl" "tr" "bl" "br"; min-width:0; row-gap:26px; grid-template-rows:none; }
+  .branch{ justify-self:stretch !important; text-align:left !important; max-width:none; }
+  .branch .b-head{ align-self:flex-start !important; }
+  .b-list{ align-items:flex-start !important; padding-left:14px !important; padding-right:0 !important; border-left:1.5px dashed var(--line) !important; border-right:none !important; }
+  .mm-scroll{ overflow-x:visible; }
+}
+
+/* ---------- how it works flow ---------- */
+.flow-wrap{ overflow-x:auto; }
+.flow{ display:flex; align-items:stretch; min-width:940px; }
+.flow .step{
+  flex:1 1 0; display:flex; flex-direction:column; gap:10px; padding:20px 18px;
+  background:var(--paper-raised); border:1px solid var(--line); position:relative;
+}
+.flow .step:not(:first-child){ border-left:none; }
+.flow .step:first-child{ border-radius:12px 0 0 12px; }
+.flow .step:last-child{ border-radius:0 12px 12px 0; }
+.flow .step-num{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); letter-spacing:.06em; }
+.flow .step-icon{ width:32px; height:32px; border-radius:9px; background:var(--paper-alt); display:flex; align-items:center; justify-content:center; }
+.flow .step-icon svg{ width:17px; height:17px; stroke:var(--accent); }
+.flow .step h3{ font-family:'Public Sans',sans-serif; font-size:14.5px; font-weight:600; margin:2px 0 0; }
+.flow .step p{ font-size:12.5px; line-height:1.55; color:var(--ink-soft); margin:0; }
+.flow-arrow{ flex:0 0 auto; width:26px; display:flex; align-items:center; justify-content:center; background:var(--paper); position:relative; z-index:1; }
+.flow-arrow svg{ width:16px; height:16px; stroke:var(--line-strong); }
+@media (max-width:700px){
+  .flow-wrap{ overflow-x:visible; }
+  .flow{ flex-direction:column; min-width:0; }
+  .flow .step{ border-left:1px solid var(--line); }
+  .flow .step:not(:first-child){ border-top:none; margin-top:-1px; }
+  .flow .step:first-child{ border-radius:12px 12px 0 0; }
+  .flow .step:last-child{ border-radius:0 0 12px 12px; }
+  .flow-arrow{ width:auto; height:26px; }
+  .flow-arrow svg{ transform:rotate(90deg); }
+}
 
 /* ---------- ROI grid ---------- */
-.roi-section{ margin-top:38px; }
-.roi-grid{
-  display:grid; grid-template-columns:1fr 1fr; gap:16px;
-}
+.roi-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 @media (max-width:680px){ .roi-grid{ grid-template-columns:1fr; } }
 .roi-card{
   background:var(--paper-raised); border:1px solid var(--line); border-radius:12px;
@@ -70,38 +147,76 @@ h1,h2{ font-family:'Fraunces', Georgia, serif; margin:0; color:var(--ink); text-
 }
 .roi-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .roi-icon-title{ display:flex; align-items:center; gap:10px; }
-.roi-icon{
-  width:34px; height:34px; flex:none; border-radius:9px; background:var(--paper-alt);
-  display:flex; align-items:center; justify-content:center;
-}
+.roi-icon{ width:34px; height:34px; flex:none; border-radius:9px; background:var(--paper-alt); display:flex; align-items:center; justify-content:center; }
 .roi-icon svg{ width:18px; height:18px; stroke:var(--accent); }
 .roi-card h3{ font-family:'Public Sans',sans-serif; font-size:15.5px; font-weight:600; margin:0; color:var(--ink); }
 .role-chip{
   font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
-  color:var(--ink-faint); border:1px solid var(--line-strong); border-radius:100px; padding:3px 9px;
-  white-space:nowrap; flex:none;
+  color:var(--ink-faint); border:1px solid var(--line-strong); border-radius:100px; padding:3px 9px; white-space:nowrap; flex:none;
 }
 .role-chip.leadership{ color:var(--accent); border-color:var(--accent); }
 .roi-card p.benefit{ font-size:13.5px; line-height:1.55; color:var(--ink-soft); margin:0; }
-.roi-line{
-  display:flex; gap:8px; align-items:baseline; padding-top:8px; border-top:1px dashed var(--line); margin-top:2px;
-}
-.roi-line .roi-label{
-  font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase;
-  color:var(--accent); flex:none;
-}
+.roi-line{ display:flex; gap:8px; align-items:baseline; padding-top:8px; border-top:1px dashed var(--line); margin-top:2px; }
+.roi-line .roi-label{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--accent); flex:none; }
 .roi-line p{ font-size:13px; line-height:1.5; color:var(--ink); margin:0; font-weight:500; }
+
+/* ---------- savings calculator ---------- */
+.calc-card{
+  background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+  padding:26px 28px; box-shadow:var(--shadow);
+}
+.calc-grid{ display:grid; grid-template-columns:1fr 1fr; gap:32px; align-items:start; }
+@media (max-width:780px){ .calc-grid{ grid-template-columns:1fr; gap:22px; } }
+.calc-inputs{ display:flex; flex-direction:column; gap:18px; }
+.calc-field label{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:7px; }
+.calc-field label .val{ font-family:'IBM Plex Mono',monospace; color:var(--accent); font-size:12.5px; font-weight:500; white-space:nowrap; }
+.calc-field input[type="range"]{
+  width:100%; -webkit-appearance:none; appearance:none; height:5px; border-radius:100px;
+  background:var(--line); outline:none; margin:0; display:block;
+}
+.calc-field input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:17px; height:17px; border-radius:50%;
+  background:var(--accent); cursor:pointer; border:3px solid var(--paper-raised); box-shadow:0 0 0 1px var(--accent);
+}
+.calc-field input[type="range"]::-moz-range-thumb{
+  width:17px; height:17px; border-radius:50%; background:var(--accent); cursor:pointer; border:3px solid var(--paper-raised); box-shadow:0 0 0 1px var(--accent);
+}
+.calc-field .hint{ font-size:11px; color:var(--ink-faint); margin-top:5px; line-height:1.4; }
+.calc-stats{ display:grid; grid-template-columns:1fr 1fr; gap:14px; align-content:start; }
+.stat-tile{
+  background:var(--paper-alt); border-radius:11px; padding:16px 16px 15px; display:flex; flex-direction:column; gap:4px;
+}
+.stat-tile .stat-value{ font-family:'Fraunces',serif; font-size:25px; font-weight:600; color:var(--accent); line-height:1.1; }
+.stat-tile .stat-label{ font-size:11.5px; color:var(--ink-soft); line-height:1.35; }
+.calc-note{
+  grid-column:1 / -1; font-size:11px; color:var(--ink-faint); border-top:1px dashed var(--line); padding-top:12px; margin-top:2px; line-height:1.5;
+}
+
+/* ---------- roles ---------- */
+.roles{
+  display:grid; grid-template-columns:1fr 1fr; border:1px solid var(--line); border-radius:12px;
+  overflow:hidden; background:var(--paper-raised); box-shadow:var(--shadow);
+}
+.roles > div{ padding:22px 24px; }
+.roles .ae{ border-right:1px solid var(--line); }
+@media (max-width:680px){ .roles{ grid-template-columns:1fr; } .roles .ae{ border-right:none; border-bottom:1px solid var(--line); } }
+.role-tag{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); display:block; margin-bottom:4px; }
+.roles .cro .role-tag{ color:var(--accent); }
+.roles h3{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:600; margin:0 0 15px; color:var(--ink); }
+.roles ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
+.roles li{ display:flex; align-items:flex-start; gap:10px; font-size:13px; line-height:1.5; color:var(--ink-soft); }
+.roles li .ic{ width:26px; height:26px; flex:none; border-radius:7px; background:var(--paper-alt); display:flex; align-items:center; justify-content:center; margin-top:1px; }
+.roles li .ic svg{ width:14px; height:14px; stroke:var(--accent); }
 
 /* CTA + footer */
 .cta{
-  margin-top:40px; border-top:2px solid var(--ink); padding-top:18px;
+  margin-top:50px; border-top:2px solid var(--ink); padding-top:18px;
   display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
 }
 .cta p{ margin:0; font-size:13px; color:var(--ink-soft); max-width:56ch; }
 .cta-btn{
-  font-family:'IBM Plex Mono',monospace; font-size:12.5px;
-  background:var(--ink); color:var(--paper); border:none; border-radius:8px;
-  padding:11px 17px; white-space:nowrap; text-decoration:none; display:inline-block;
+  font-family:'IBM Plex Mono',monospace; font-size:12.5px; background:var(--ink); color:var(--paper);
+  border:none; border-radius:8px; padding:11px 17px; white-space:nowrap; text-decoration:none; display:inline-block;
 }
 footer{
   margin-top:24px; padding-top:12px; border-top:1px solid var(--line);
@@ -118,19 +233,108 @@ footer{
       <div class="brand-mark">V</div>
       <div>
         <div class="brand-name">Vorro &mdash; Second Brain</div>
-        <div class="brand-sub">AI Associate for account &amp; client-review teams</div>
+        <div class="brand-sub">AI Associate for revenue &amp; account teams</div>
       </div>
     </div>
-    <div class="doc-tag">PRODUCT OVERVIEW<br>REF&nbsp;&nbsp;SB-ROI-01</div>
+    <div class="doc-tag">PRODUCT OVERVIEW<br>REF&nbsp;&nbsp;SB-FULL-01</div>
   </div>
 
   <div class="intro">
-    <span class="eyebrow">One-page overview &middot; benefits &amp; ROI</span>
-    <h1>Where Second Brain pays for itself, call by call.</h1>
-    <p class="lede">AI Associate sits alongside your revenue team through every stage of a deal &mdash; before the call, during it, and in everything that has to happen after &mdash; and turns the parts that used to take time into things that already happened.</p>
+    <span class="eyebrow">Complete overview</span>
+    <h1>Everywhere Second Brain <em>sits in a deal</em> &mdash; and what it&rsquo;s worth there.</h1>
+    <p class="lede">AI Associate works alongside your team through every stage of a deal &mdash; before the call, during it, and in everything that has to happen after. This is the whole picture: the shape of it at a glance, how it actually runs, where it pays off, and who it&rsquo;s built for.</p>
   </div>
 
-  <div class="roi-section">
+  <!-- ============ AT A GLANCE (mindmap) ============ -->
+  <section>
+    <h2>At a Glance</h2>
+    <div class="mm-scroll">
+      <div class="mm-canvas" id="mm">
+        <svg id="mm-lines" aria-hidden="true"></svg>
+        <div class="hub" id="hub">
+          <span class="mono">Vorro</span>
+          <h2>Second Brain</h2>
+          <div class="sub">AI Associate for revenue &amp; account teams</div>
+        </div>
+        <div class="branch tl" data-branch>
+          <div class="b-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>The problem today</div>
+          <ul class="b-list">
+            <li>Notes live in one rep&rsquo;s head</li>
+            <li>Follow-ups slip under call load</li>
+            <li>Audit trail rebuilt after the fact</li>
+            <li>Coverage gaps when someone&rsquo;s out</li>
+          </ul>
+        </div>
+        <div class="branch tr" data-branch>
+          <div class="b-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg>What it does</div>
+          <ul class="b-list">
+            <li>Live call assistance</li>
+            <li>Drafts follow-ups &amp; documents</li>
+            <li>Surfaces rebuttals in real time</li>
+            <li>Updates CRM automatically</li>
+          </ul>
+        </div>
+        <div class="branch bl" data-branch>
+          <div class="b-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6z"/></svg>Why it matters</div>
+          <ul class="b-list">
+            <li>Faster time to revenue</li>
+            <li>Consistent record across every rep</li>
+            <li>Nothing sends without human sign-off</li>
+            <li>Same rigor at any scale</li>
+          </ul>
+        </div>
+        <div class="branch br" data-branch>
+          <div class="b-head"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>How it fits in</div>
+          <ul class="b-list">
+            <li>Connects to Gmail, Calendar, Drive</li>
+            <li>No new software for reps to learn</li>
+            <li>Every draft passes a review queue</li>
+            <li>Set up once, works passively after</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW IT WORKS (flow) ============ -->
+  <section>
+    <h2>How It Works</h2>
+    <div class="flow-wrap">
+      <div class="flow">
+        <div class="step">
+          <span class="step-num">01</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><path d="M8 12h8"/></svg></div>
+          <h3>Connect</h3>
+          <p>Links to the calendar, inbox, and call tools your team already uses. No new logins, no new app to open.</p>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        <div class="step">
+          <span class="step-num">02</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg></div>
+          <h3>Listen</h3>
+          <p>Joins the call, or reads the recording, and builds a structured record while your rep just talks to the customer.</p>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        <div class="step">
+          <span class="step-num">03</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></div>
+          <h3>Draft</h3>
+          <p>Follow-up email, CRM update, contract redline, reporting note &mdash; whatever the call calls for, drafted within minutes.</p>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        <div class="step">
+          <span class="step-num">04</span>
+          <div class="step-icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg></div>
+          <h3>Review &amp; Send</h3>
+          <p>Every draft sits in a queue for a human to check. Nothing sends, files, or updates a record without approval.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROI GRID ============ -->
+  <section>
+    <h2>Where It Pays Off</h2>
     <div class="roi-grid">
 
       <div class="roi-card">
@@ -230,7 +434,85 @@ footer{
       </div>
 
     </div>
-  </div>
+  </section>
+
+  <!-- ============ SAVINGS CALCULATOR ============ -->
+  <section>
+    <h2>Estimate Your Savings</h2>
+    <p style="font-size:13.5px;color:var(--ink-soft);max-width:66ch;margin:8px 0 20px;">A rough model, not a promise &mdash; plug in your own team&rsquo;s numbers to see what recovered time is worth, in dollars and in headcount capacity you don&rsquo;t have to go hire.</p>
+    <div class="calc-card">
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <div class="calc-field">
+            <label for="calcReps">Reps on the team <span class="val" id="calcRepsVal">10</span></label>
+            <input type="range" id="calcReps" min="1" max="100" value="10" step="1">
+          </div>
+          <div class="calc-field">
+            <label for="calcCost">Fully-loaded cost per rep / year <span class="val" id="calcCostVal">$130,000</span></label>
+            <input type="range" id="calcCost" min="60000" max="300000" value="130000" step="5000">
+          </div>
+          <div class="calc-field">
+            <label for="calcHours">Hours/week per rep on prep, follow-up, notes &amp; CRM <span class="val" id="calcHoursVal">8</span></label>
+            <input type="range" id="calcHours" min="1" max="25" value="8" step="0.5">
+            <div class="hint">Time spent outside actual selling &mdash; swap in what your own team reports.</div>
+          </div>
+          <div class="calc-field">
+            <label for="calcReduction">Expected time reduction from Second Brain <span class="val" id="calcReductionVal">30%</span></label>
+            <input type="range" id="calcReduction" min="10" max="60" value="30" step="5">
+            <div class="hint">Conservative-to-typical range for admin work this kind of tool takes off a rep&rsquo;s plate.</div>
+          </div>
+        </div>
+        <div class="calc-stats">
+          <div class="stat-tile">
+            <div class="stat-value" id="outHoursMonth">&mdash;</div>
+            <div class="stat-label">Hours given back, per rep / month</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-value" id="outDollarMonth">&mdash;</div>
+            <div class="stat-label">Team-wide value of time recovered / month</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-value" id="outDollarYear">&mdash;</div>
+            <div class="stat-label">Annualized, team-wide</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-value" id="outFTE">&mdash;</div>
+            <div class="stat-label">Capacity freed / year &mdash; equivalent reps&rsquo; worth of time, without adding headcount</div>
+          </div>
+          <div class="calc-note">Illustrative model built from the assumptions above (a 2,080-hour work year). Not a guarantee of results &mdash; actual savings depend on role, current workflow, and how much of the admin load Second Brain takes on for your team. Adjust every input to match your own numbers.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WHO IT'S FOR ============ -->
+  <section>
+    <h2>Who It&rsquo;s For</h2>
+    <div class="roles">
+      <div class="ae">
+        <span class="role-tag">Account Executive &middot; day to day</span>
+        <h3>Less paperwork around every call</h3>
+        <ul>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M19 11a7 7 0 0 1-14 0"/><path d="M12 18v3"/></svg></span>Skips note-taking on every call</li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></span>Starts each day knowing which accounts need attention</li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></span>Follow-ups and drafts are already written, not started from a blank page</li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></svg></span>Audit-ready documentation happens as a byproduct of the call</li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>Pulls the right asset mid-call instead of digging for it</li>
+        </ul>
+      </div>
+      <div class="cro">
+        <span class="role-tag">Leadership &middot; across the team</span>
+        <h3>Visibility without sitting in on every call</h3>
+        <ul>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.5-7.1"/><path d="M21 3v6h-6"/></svg></span>One consistent record across every rep, without chasing status</li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V13M10 20V8M16 20v-9M4 20h16"/></svg></span>Coaching signal &mdash; see where calls stall without joining each one</li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M2 21v-2a4 4 0 0 1 4-4h6a4 4 0 0 1 4 4v2"/><path d="M16 3.5a3 3 0 0 1 0 5.8"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg></span>New reps ramp on the same structure as tenured ones</li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6z"/></svg></span>Compliance risk sits at the process level, not on any one rep&rsquo;s habits</li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></svg></span>A human review queue on every draft &mdash; nothing represents the org unattended</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
   <div class="cta">
     <p>See it against one of your own calls &mdash; a 20-minute walkthrough, recorded or live, whichever&rsquo;s easier to set up.</p>
@@ -239,9 +521,112 @@ footer{
 
   <footer>
     <span>Vorro &middot; Healthcare data integration &middot; vorro.net</span>
-    <span>Second Brain / AI Associate &middot; product overview</span>
+    <span>Second Brain / AI Associate &middot; complete overview</span>
   </footer>
 
 </div>
+
+<script>
+(function(){
+  var canvas = document.getElementById('mm');
+  var svg = document.getElementById('mm-lines');
+  var hub = document.getElementById('hub');
+  var SVGNS = 'http://www.w3.org/2000/svg';
+
+  function edgePoint(rect, cx, cy, tx, ty){
+    var dx = tx - cx, dy = ty - cy;
+    if (dx === 0 && dy === 0) return {x:cx,y:cy};
+    var hw = rect.width/2, hh = rect.height/2;
+    var scale = Math.min(hw / Math.abs(dx || 1e-6), hh / Math.abs(dy || 1e-6));
+    return { x: cx + dx*scale, y: cy + dy*scale };
+  }
+
+  function draw(){
+    var box = canvas.getBoundingClientRect();
+    if (!box.width || !box.height) return;
+    svg.setAttribute('viewBox', '0 0 ' + box.width + ' ' + box.height);
+    svg.setAttribute('width', box.width);
+    svg.setAttribute('height', box.height);
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var hr = hub.getBoundingClientRect();
+    var hcx = hr.left - box.left + hr.width/2;
+    var hcy = hr.top - box.top + hr.height/2;
+    document.querySelectorAll('[data-branch] .b-head').forEach(function(b){
+      var br = b.getBoundingClientRect();
+      var bcx = br.left - box.left + br.width/2;
+      var bcy = br.top - box.top + br.height/2;
+      var s = edgePoint(hr, hcx, hcy, bcx, bcy);
+      var e = edgePoint(br, bcx, bcy, hcx, hcy);
+      var mx = (s.x + e.x)/2;
+      var path = document.createElementNS(SVGNS, 'path');
+      path.setAttribute('d', 'M ' + s.x + ' ' + s.y + ' C ' + mx + ' ' + s.y + ', ' + mx + ' ' + e.y + ', ' + e.x + ' ' + e.y);
+      svg.appendChild(path);
+    });
+  }
+
+  var raf;
+  function schedule(){ cancelAnimationFrame(raf); raf = requestAnimationFrame(draw); }
+  window.addEventListener('load', schedule);
+  window.addEventListener('resize', schedule);
+  if (document.fonts && document.fonts.ready) { document.fonts.ready.then(schedule); }
+  schedule();
+})();
+
+(function(){
+  var reps = document.getElementById('calcReps');
+  var cost = document.getElementById('calcCost');
+  var hours = document.getElementById('calcHours');
+  var reduction = document.getElementById('calcReduction');
+  if (!reps || !cost || !hours || !reduction) return;
+
+  var repsVal = document.getElementById('calcRepsVal');
+  var costVal = document.getElementById('calcCostVal');
+  var hoursVal = document.getElementById('calcHoursVal');
+  var reductionVal = document.getElementById('calcReductionVal');
+
+  var outHoursMonth = document.getElementById('outHoursMonth');
+  var outDollarMonth = document.getElementById('outDollarMonth');
+  var outDollarYear = document.getElementById('outDollarYear');
+  var outFTE = document.getElementById('outFTE');
+
+  var WORK_HOURS_PER_YEAR = 2080;
+  var WEEKS_PER_MONTH = 4.33;
+
+  function money(n){
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+
+  function recalc(){
+    var repCount = parseFloat(reps.value);
+    var loadedCost = parseFloat(cost.value);
+    var adminHours = parseFloat(hours.value);
+    var pct = parseFloat(reduction.value) / 100;
+
+    repsVal.textContent = repCount;
+    costVal.textContent = money(loadedCost);
+    hoursVal.textContent = adminHours;
+    reductionVal.textContent = Math.round(pct * 100) + '%';
+
+    var hourlyRate = loadedCost / WORK_HOURS_PER_YEAR;
+    var hoursSavedPerRepWeek = adminHours * pct;
+    var hoursSavedPerRepMonth = hoursSavedPerRepWeek * WEEKS_PER_MONTH;
+    var dollarPerRepMonth = hoursSavedPerRepMonth * hourlyRate;
+    var teamDollarMonth = dollarPerRepMonth * repCount;
+    var teamDollarYear = teamDollarMonth * 12;
+    var hoursSavedTeamYear = hoursSavedPerRepWeek * 52 * repCount;
+    var fteFreed = hoursSavedTeamYear / WORK_HOURS_PER_YEAR;
+
+    outHoursMonth.textContent = hoursSavedPerRepMonth.toFixed(1);
+    outDollarMonth.textContent = money(teamDollarMonth);
+    outDollarYear.textContent = money(teamDollarYear);
+    outFTE.textContent = fteFreed.toFixed(1);
+  }
+
+  [reps, cost, hours, reduction].forEach(function(el){
+    el.addEventListener('input', recalc);
+  });
+  recalc();
+})();
+</script>
 </body>
 </html>
