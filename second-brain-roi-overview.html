@@ -4,63 +4,73 @@
 <meta charset="utf-8">
 <title>AI Associate Playbook</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 :root{
-  --paper:#F2F5F4; --paper-alt:#E7ECEA; --paper-raised:#FFFFFF;
-  --ink:#142524; --ink-soft:#4B615F; --ink-faint:#7C9491;
-  --accent:#C1440E; --line:#C8D2CF; --line-strong:#9FB0AC;
-  --shadow: 0 1px 2px rgba(20,37,36,.06), 0 8px 24px -12px rgba(20,37,36,.18);
+  --paper:#FFFFFF; --paper-alt:#EDEDED; --paper-raised:#FFFFFF;
+  --ink:#2C2C2C; --ink-soft:#5C5C5C; --ink-faint:#8C8C8C;
+  --accent:#AC4197; --accent-dark:#823260; --accent-deep:#522346;
+  --line:#E2E2E2; --line-strong:#C9C9C9;
+  --btn-grad: linear-gradient(180deg,#C158AC,#823260);
+  --hub-bg:#522346; --hub-ink:#FFFFFF;
+  --shadow: 0 1px 2px rgba(44,44,44,.06), 0 8px 24px -12px rgba(44,44,44,.2);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0F1917; --paper-alt:#16211F; --paper-raised:#182422;
-    --ink:#EDF3F1; --ink-soft:#A9BDB9; --ink-faint:#6D8683;
-    --accent:#E2703A; --line:#24312F; --line-strong:#324540;
-    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    --paper:#181014; --paper-alt:#211719; --paper-raised:#241A1F;
+    --ink:#F5EFF3; --ink-soft:#C9BDC6; --ink-faint:#8C7C89;
+    --accent:#D766B8; --accent-dark:#C158AC; --accent-deep:#823260;
+    --line:rgba(255,255,255,.14); --line-strong:rgba(255,255,255,.26);
+    --btn-grad: linear-gradient(180deg,#D766B8,#823260);
+    --hub-bg:#522346; --hub-ink:#FFFFFF;
+    --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 30px -10px rgba(0,0,0,.55);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0F1917; --paper-alt:#16211F; --paper-raised:#182422;
-  --ink:#EDF3F1; --ink-soft:#A9BDB9; --ink-faint:#6D8683;
-  --accent:#E2703A; --line:#24312F; --line-strong:#324540;
-  --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+  --paper:#181014; --paper-alt:#211719; --paper-raised:#241A1F;
+  --ink:#F5EFF3; --ink-soft:#C9BDC6; --ink-faint:#8C7C89;
+  --accent:#D766B8; --accent-dark:#C158AC; --accent-deep:#823260;
+  --line:rgba(255,255,255,.14); --line-strong:rgba(255,255,255,.26);
+  --btn-grad: linear-gradient(180deg,#D766B8,#823260);
+  --hub-bg:#522346; --hub-ink:#FFFFFF;
+  --shadow: 0 1px 2px rgba(0,0,0,.35), 0 10px 30px -10px rgba(0,0,0,.55);
 }
 
 *{box-sizing:border-box;}
 body{
   margin:0; background:var(--paper); color:var(--ink);
-  font-family:'Public Sans', -apple-system, 'Segoe UI', sans-serif;
+  font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
   padding:0 20px; -webkit-font-smoothing:antialiased;
 }
 .wrap{ max-width:1220px; margin:0 auto; padding-block:36px 56px; }
-h1,h2{ font-family:'Fraunces', Georgia, serif; margin:0; color:var(--ink); text-wrap:balance; }
-.mono{ font-family:'IBM Plex Mono','Courier New',monospace; }
+h1,h2{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-weight:700; margin:0; color:var(--ink); text-wrap:balance; }
+.mono{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; }
 
 /* masthead */
 .masthead{
   display:flex; justify-content:space-between; align-items:flex-end;
   gap:16px; padding-bottom:16px; border-bottom:2px solid var(--ink); flex-wrap:wrap;
 }
-.brand{ display:flex; align-items:center; gap:10px; }
-.brand-mark{
-  width:28px;height:28px;flex:none;border-radius:7px;background:var(--ink);color:var(--paper);
-  display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-weight:600;font-size:14px;
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand-wordmark{
+  font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-weight:700; font-size:21px;
+  letter-spacing:.02em; color:var(--accent); line-height:1;
 }
-.brand-name{font-weight:700; font-size:15px;}
+.brand-divider{ width:1px; height:26px; background:var(--line-strong); flex:none; }
+.brand-name{font-weight:600; font-size:14px; color:var(--ink);}
 .brand-sub{font-size:11.5px; color:var(--ink-soft); margin-top:1px;}
-.doc-tag{ text-align:right; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--ink-faint); line-height:1.5; }
+.doc-tag{ text-align:right; font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:11px; color:var(--ink-faint); line-height:1.5; }
 
 .intro{ padding-top:24px; max-width:70ch; }
-.intro h1{ font-size:clamp(24px,3.6vw,32px); font-weight:500; line-height:1.2; }
+.intro h1{ font-size:clamp(24px,3.6vw,32px); font-weight:700; line-height:1.2; }
 .intro h1 em{ font-style:normal; color:var(--accent); }
 .intro p.lede{ font-size:15.5px; line-height:1.6; color:var(--ink-soft); margin:12px 0 0; max-width:62ch; }
 .eyebrow{
-  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.09em;
-  text-transform:uppercase; color:var(--ink-faint); margin-bottom:8px; display:block;
+  font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:11px; font-weight:800; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--accent); margin-bottom:8px; display:block;
 }
 section{ margin-top:50px; }
-section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
+section > h2{ font-size:19px; font-weight:700; margin-bottom:16px; }
 
 /* ---------- mindmap ---------- */
 .mm-scroll{ overflow-x:auto; }
@@ -79,13 +89,13 @@ section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
 .hub{
   grid-area:hub; align-self:center; justify-self:center;
   position:relative; z-index:2;
-  background:var(--ink); color:var(--paper);
+  background:var(--hub-bg); color:var(--hub-ink);
   border-radius:14px; padding:20px 22px; text-align:center;
   box-shadow:var(--shadow); width:100%; max-width:280px;
 }
 .hub .mono{ font-size:10px; letter-spacing:.09em; text-transform:uppercase; opacity:.65; display:block; margin-bottom:6px; }
-.hub h2{ font-size:19px; font-weight:500; line-height:1.2; color:var(--paper); margin:0; }
-.hub .sub{ font-size:11.5px; color:var(--paper); opacity:.72; margin-top:6px; line-height:1.4; }
+.hub h2{ font-size:19px; font-weight:700; line-height:1.2; color:var(--hub-ink); margin:0; }
+.hub .sub{ font-size:11.5px; color:var(--hub-ink); opacity:.72; margin-top:6px; line-height:1.4; }
 .branch{ position:relative; z-index:2; display:flex; flex-direction:column; gap:10px; max-width:300px; }
 .branch.tl{ grid-area:tl; justify-self:end; text-align:right; }
 .branch.bl{ grid-area:bl; justify-self:end; text-align:right; }
@@ -120,10 +130,10 @@ section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
 .flow .step:not(:first-child){ border-left:none; }
 .flow .step:first-child{ border-radius:12px 0 0 12px; }
 .flow .step:last-child{ border-radius:0 12px 12px 0; }
-.flow .step-num{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--accent); letter-spacing:.06em; }
+.flow .step-num{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:11px; color:var(--accent); letter-spacing:.06em; }
 .flow .step-icon{ width:32px; height:32px; border-radius:9px; background:var(--paper-alt); display:flex; align-items:center; justify-content:center; }
 .flow .step-icon svg{ width:17px; height:17px; stroke:var(--accent); }
-.flow .step h3{ font-family:'Public Sans',sans-serif; font-size:14.5px; font-weight:600; margin:2px 0 0; }
+.flow .step h3{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:14.5px; font-weight:600; margin:2px 0 0; }
 .flow .step p{ font-size:12.5px; line-height:1.55; color:var(--ink-soft); margin:0; }
 .flow-arrow{ flex:0 0 auto; width:26px; display:flex; align-items:center; justify-content:center; background:var(--paper); position:relative; z-index:1; }
 .flow-arrow svg{ width:16px; height:16px; stroke:var(--line-strong); }
@@ -149,15 +159,15 @@ section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
 .roi-icon-title{ display:flex; align-items:center; gap:10px; }
 .roi-icon{ width:34px; height:34px; flex:none; border-radius:9px; background:var(--paper-alt); display:flex; align-items:center; justify-content:center; }
 .roi-icon svg{ width:18px; height:18px; stroke:var(--accent); }
-.roi-card h3{ font-family:'Public Sans',sans-serif; font-size:15.5px; font-weight:600; margin:0; color:var(--ink); }
+.roi-card h3{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:15.5px; font-weight:600; margin:0; color:var(--ink); }
 .role-chip{
-  font-family:'IBM Plex Mono',monospace; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+  font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
   color:var(--ink-faint); border:1px solid var(--line-strong); border-radius:100px; padding:3px 9px; white-space:nowrap; flex:none;
 }
 .role-chip.leadership{ color:var(--accent); border-color:var(--accent); }
 .roi-card p.benefit{ font-size:13.5px; line-height:1.55; color:var(--ink-soft); margin:0; }
 .roi-line{ display:flex; gap:8px; align-items:baseline; padding-top:8px; border-top:1px dashed var(--line); margin-top:2px; }
-.roi-line .roi-label{ font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--accent); flex:none; }
+.roi-line .roi-label{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--accent); flex:none; }
 .roi-line p{ font-size:13px; line-height:1.5; color:var(--ink); margin:0; font-weight:500; }
 
 /* ---------- savings calculator ---------- */
@@ -169,7 +179,7 @@ section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
 @media (max-width:780px){ .calc-grid{ grid-template-columns:1fr; gap:22px; } }
 .calc-inputs{ display:flex; flex-direction:column; gap:18px; }
 .calc-field label{ display:flex; justify-content:space-between; align-items:baseline; gap:10px; font-size:12.5px; font-weight:600; color:var(--ink); margin-bottom:7px; }
-.calc-field label .val{ font-family:'IBM Plex Mono',monospace; color:var(--accent); font-size:12.5px; font-weight:500; white-space:nowrap; }
+.calc-field label .val{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; color:var(--accent); font-size:12.5px; font-weight:500; white-space:nowrap; }
 .calc-field input[type="range"]{
   width:100%; -webkit-appearance:none; appearance:none; height:5px; border-radius:100px;
   background:var(--line); outline:none; margin:0; display:block;
@@ -186,7 +196,7 @@ section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
 .stat-tile{
   background:var(--paper-alt); border-radius:11px; padding:16px 16px 15px; display:flex; flex-direction:column; gap:4px;
 }
-.stat-tile .stat-value{ font-family:'Fraunces',serif; font-size:25px; font-weight:600; color:var(--accent); line-height:1.1; }
+.stat-tile .stat-value{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:25px; font-weight:600; color:var(--accent); line-height:1.1; }
 .stat-tile .stat-label{ font-size:11.5px; color:var(--ink-soft); line-height:1.35; }
 .calc-note{
   grid-column:1 / -1; font-size:11px; color:var(--ink-faint); border-top:1px dashed var(--line); padding-top:12px; margin-top:2px; line-height:1.5;
@@ -200,9 +210,9 @@ section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
 .roles > div{ padding:22px 24px; }
 .roles .ae{ border-right:1px solid var(--line); }
 @media (max-width:680px){ .roles{ grid-template-columns:1fr; } .roles .ae{ border-right:none; border-bottom:1px solid var(--line); } }
-.role-tag{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); display:block; margin-bottom:4px; }
+.role-tag{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); display:block; margin-bottom:4px; }
 .roles .cro .role-tag{ color:var(--accent); }
-.roles h3{ font-family:'Public Sans',sans-serif; font-size:15px; font-weight:600; margin:0 0 15px; color:var(--ink); }
+.roles h3{ font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:15px; font-weight:600; margin:0 0 15px; color:var(--ink); }
 .roles ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:12px; }
 .roles li{ display:flex; align-items:flex-start; gap:10px; font-size:13px; line-height:1.5; color:var(--ink-soft); }
 .roles li .ic{ width:26px; height:26px; flex:none; border-radius:7px; background:var(--paper-alt); display:flex; align-items:center; justify-content:center; margin-top:1px; }
@@ -210,18 +220,20 @@ section > h2{ font-size:19px; font-weight:500; margin-bottom:16px; }
 
 /* CTA + footer */
 .cta{
-  margin-top:50px; border-top:2px solid var(--ink); padding-top:18px;
+  margin-top:50px; background:var(--paper-raised); border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:14px; padding:20px 24px; box-shadow:var(--shadow);
   display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
 }
 .cta p{ margin:0; font-size:13px; color:var(--ink-soft); max-width:56ch; }
 .cta-btn{
-  font-family:'IBM Plex Mono',monospace; font-size:12.5px; background:var(--ink); color:var(--paper);
-  border:none; border-radius:8px; padding:11px 17px; white-space:nowrap; text-decoration:none; display:inline-block;
+  font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:12.5px; font-weight:800; background:var(--btn-grad); color:#fff;
+  border:none; border-radius:999px; padding:11px 19px; white-space:nowrap; text-decoration:none; display:inline-block;
+  box-shadow:0 8px 22px rgba(18,77,135,.35);
 }
 footer{
   margin-top:24px; padding-top:12px; border-top:1px solid var(--line);
   display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
-  font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--ink-faint);
+  font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:10.5px; color:var(--ink-faint);
 }
 </style>
 </head>
@@ -230,18 +242,19 @@ footer{
 
   <div class="masthead">
     <div class="brand">
-      <div class="brand-mark">V</div>
+      <div class="brand-wordmark">VORRO</div>
+      <div class="brand-divider"></div>
       <div>
-        <div class="brand-name">Vorro &mdash; Second Brain</div>
-        <div class="brand-sub">AI Associate for revenue &amp; account teams</div>
+        <div class="brand-name">AI Associate</div>
+        <div class="brand-sub">for revenue &amp; account teams</div>
       </div>
     </div>
-    <div class="doc-tag">PRODUCT OVERVIEW<br>REF&nbsp;&nbsp;SB-FULL-01</div>
+    <div class="doc-tag">PRODUCT OVERVIEW<br>REF&nbsp;&nbsp;AA-FULL-01</div>
   </div>
 
   <div class="intro">
     <span class="eyebrow">Complete overview</span>
-    <h1>Everywhere Second Brain <em>sits in a deal</em> &mdash; and what it&rsquo;s worth there.</h1>
+    <h1>Everywhere AI Associate <em>sits in a deal</em> &mdash; and what it&rsquo;s worth there.</h1>
     <p class="lede">AI Associate works alongside your team through every stage of a deal &mdash; before the call, during it, and in everything that has to happen after. This is the whole picture: the shape of it at a glance, how it actually runs, where it pays off, and who it&rsquo;s built for.</p>
   </div>
 
@@ -253,7 +266,7 @@ footer{
         <svg id="mm-lines" aria-hidden="true"></svg>
         <div class="hub" id="hub">
           <span class="mono">Vorro</span>
-          <h2>Second Brain</h2>
+          <h2>AI Associate</h2>
           <div class="sub">AI Associate for revenue &amp; account teams</div>
         </div>
         <div class="branch tl" data-branch>
@@ -457,7 +470,7 @@ footer{
             <div class="hint">Time spent outside actual selling &mdash; swap in what your own team reports.</div>
           </div>
           <div class="calc-field">
-            <label for="calcReduction">Expected time reduction from Second Brain <span class="val" id="calcReductionVal">30%</span></label>
+            <label for="calcReduction">Expected time reduction from AI Associate <span class="val" id="calcReductionVal">30%</span></label>
             <input type="range" id="calcReduction" min="10" max="60" value="30" step="5">
             <div class="hint">Conservative-to-typical range for admin work this kind of tool takes off a rep&rsquo;s plate.</div>
           </div>
@@ -479,7 +492,7 @@ footer{
             <div class="stat-value" id="outFTE">&mdash;</div>
             <div class="stat-label">Capacity freed / year &mdash; equivalent reps&rsquo; worth of time, without adding headcount</div>
           </div>
-          <div class="calc-note">Illustrative model built from the assumptions above (a 2,080-hour work year). Not a guarantee of results &mdash; actual savings depend on role, current workflow, and how much of the admin load Second Brain takes on for your team. Adjust every input to match your own numbers.</div>
+          <div class="calc-note">Illustrative model built from the assumptions above (a 2,080-hour work year). Not a guarantee of results &mdash; actual savings depend on role, current workflow, and how much of the admin load AI Associate takes on for your team. Adjust every input to match your own numbers.</div>
         </div>
       </div>
     </div>
@@ -521,7 +534,7 @@ footer{
 
   <footer>
     <span>Vorro &middot; Healthcare data integration &middot; vorro.net</span>
-    <span>Second Brain / AI Associate &middot; complete overview</span>
+    <span>AI Associate &middot; complete overview</span>
   </footer>
 
 </div>
