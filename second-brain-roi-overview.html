@@ -225,6 +225,8 @@ section > h2{ font-size:19px; font-weight:700; margin-bottom:16px; }
   display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;
 }
 .cta p{ margin:0; font-size:13px; color:var(--ink-soft); max-width:56ch; }
+.cta-actions{ display:flex; align-items:center; gap:14px; flex:none; }
+.cta-qr{ flex:none; width:68px; height:68px; border-radius:8px; border:1px solid var(--line); background:#fff; padding:4px; }
 .cta-btn{
   font-family:'Poppins',-apple-system,'Segoe UI',Arial,sans-serif; font-size:12.5px; font-weight:800; background:var(--btn-grad); color:#fff;
   border:none; border-radius:999px; padding:11px 19px; white-space:nowrap; text-decoration:none; display:inline-block;
@@ -529,7 +531,10 @@ footer{
 
   <div class="cta">
     <p>See it against one of your own calls &mdash; a 20-minute walkthrough, recorded or live, whichever&rsquo;s easier to set up.</p>
-    <a class="cta-btn" href="https://vorro.net">Talk to Vorro &rarr;</a>
+    <div class="cta-actions">
+      <img class="cta-qr" src="data:image/png;base64,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" alt="QR code to book time with Manish" width="68" height="68">
+      <a class="cta-btn" href="https://booknow.vorro.net/#/Manish">Meet with Manish &rarr;</a>
+    </div>
   </div>
 
   <footer>
