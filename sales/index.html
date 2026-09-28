@@ -199,7 +199,14 @@ body.dragging-on tr[data-id]{cursor:grabbing}
 td.grip{touch-action:none}
 
 /* ---- editable text cells, add and delete ---- */
-td.deal input.f-name, td.ev input.f-ev, td.next input.f-next{
+td.deal textarea.f-name{display:block; width:100%; margin:-4px -6px 0; padding:4px 6px;
+  font-family:inherit; font-size:inherit; font-weight:600; line-height:1.35; color:var(--ink);
+  background:transparent; border:1px solid transparent; border-radius:6px;
+  resize:none; overflow:hidden; white-space:pre-wrap; word-break:break-word}
+td.deal textarea.f-name:hover{border-color:var(--line)}
+td.deal textarea.f-name:focus{background:var(--surface); border-color:var(--accent); outline:none}
+tr.rec td.deal textarea.f-name{font-weight:500; color:var(--ink-2)}
+td.ev input.f-ev, td.next input.f-next{
   font-family:inherit; font-size:inherit; font-weight:inherit; color:inherit;
   background:transparent; border:1px solid transparent; border-radius:6px;
   padding:4px 6px; width:100%; margin:-4px -6px; display:block}
@@ -263,6 +270,26 @@ td.amt input:hover{border-color:var(--ink-3)}
   td.del .x{opacity:1}
   .bandrow .addbtn{padding:5px 10px}
 }
+
+/* ---- last conversation note, under the deal name ---- */
+td.deal textarea.f-last{display:block; width:100%; margin:5px -6px 0; padding:4px 6px;
+  font-family:"IBM Plex Sans",sans-serif; font-size:12px; font-weight:400; line-height:1.45;
+  color:var(--ink-2); background:transparent; border:1px solid transparent; border-radius:6px;
+  resize:none; overflow:hidden; white-space:pre-wrap; word-break:break-word}
+td.deal textarea.f-last::placeholder{color:var(--ink-3); font-style:italic}
+td.deal textarea.f-last:hover{border-color:var(--line)}
+td.deal textarea.f-last:focus{background:var(--surface); border-color:var(--accent); outline:none}
+tr.rec td.deal textarea.f-last{color:var(--ink-3)}
+td.next textarea.f-next{display:block; width:100%; margin:-4px -6px; padding:4px 6px;
+  font-family:"IBM Plex Sans",sans-serif; font-size:13.5px; line-height:1.45; color:var(--ink-2);
+  background:transparent; border:1px solid transparent; border-radius:6px;
+  resize:none; overflow:hidden; white-space:pre-wrap; word-break:break-word}
+td.next textarea.f-next:hover{border-color:var(--line)}
+td.next textarea.f-next:focus{background:var(--surface); border-color:var(--accent); outline:none}
+td.deal{width:22%} td.ev{width:14%} td.amt{width:13%} td.pct{width:7%}
+td.conf{width:10%} td.mo{width:9%} td.next{width:16%}
+td.next input.f-next{white-space:normal}
+@media (max-width:860px){ td.deal textarea.f-last{font-size:12.5px; margin-top:6px} }
 </style>
 </head><body>
 <div class="wrap">
@@ -354,48 +381,85 @@ restores the original figures.</p>
   var BANDS = ["hi", "lo"];
   var KEY = "cro-dashboard-v3";
 
+  var LAST = {
+    0: "18 Sep call, Ravi Raheja accepted, Copeland never did. MSA and SOW out since 22 Sep; Manish chasing signature 28 Sep.",
+    1: "25 Sep BoydAI call, 8 people, Dr Boyd never accepted the invite. 27 Sep Vorro sent the 50 patient list for Monday.",
+    2: "15 Sep kick off. 25 Sep their AP asked for a voided check for ACH. eCW integration call booked 30 Sep.",
+    3: "Run rate line, no customer conversation behind it.",
+    4: "1 Sep scope call, all four of their people accepted. Nothing sent to them since; last inbound was 15 Apr.",
+    5: "4 Sep RFP call, 9 attendees including their consultant. 21 Sep Pedranti: still working through our requirements.",
+    6: "11 Aug intro with Tavis Ezell at CUNY. Rashmi followed up 3 Sep and got nothing back.",
+    7: "17 Sep met Nitin. He answered a side referral within hours on 28 Sep but not the MSA, SOW or the 24 Sep proposal questions.",
+    8: "Same account as the pilot. 25 Sep AP onboarding; eCW integration call 30 Sep.",
+    9: "Run rate line, no customer conversation behind it.",
+    10: "10 Sep use case review. Kotaru of MedImpact no showed and asked to add more leaders. Baker sent the overview 11 Sep, silent since.",
+    11: "29 Jul intro with Larrian Martin. Dark since 9 Aug through three follow ups, the last on 22 Sep.",
+    12: "4 Aug call with CEO John Brady. On 5 Aug he asked to reconnect and sent four Fulcrum contacts. No Vorro reply since.",
+    13: "26 Aug call with Koning and Innoteleradiology. Rashmi sent the NDA and BAA on 27 Aug; unsigned a month later.",
+    14: "24 Aug call with Kristen Riley. Since then only a 7 Sep dunning notice for $11,500 unpaid. No expansion talk.",
+    15: "31 Jul call with Spencer Schaefer. 4 Sep Rashmi offered MSA slots with legal; stuck in their engineering risk review.",
+    16: "Run rate line, no customer conversation behind it.",
+    17: "23 Jul demo, their CTO never responded. Praja chased the MSA 27 Aug. Last word from the customer was 10 Jul.",
+    18: "1 Jul call with Chris Bellmare. On 19 Aug he handed it to the AI Governance team. No separate install thread exists.",
+    19: "Run rate line, no customer conversation behind it.",
+    20: "1 Sep review, 11 people, 6 accepted. NDA fully signed 17 Sep. 23 Sep Corbin: I am the point of contact for the project.",
+    21: "24 Aug technical call with Aaron Seagle. 24 Sep he sent the mutual NDA through OpenSign. Waiting on Vorro to sign.",
+    1002: "No customer contact at all. Last message from an OnCare address was 11 Feb. Everything recent is internal AWS sizing.",
+    1003: "22 Jun technical brief, Palliyil did not respond. Rashmi re opened the 270/271 POC on 26 Aug. Last customer word 17 Jun.",
+    1004: "31 Jul collaboration call with Tucker Marcheso. Second Vorro chase on 14 Aug went unanswered.",
+    1005: "Not a standalone account. No meetings, no contacts, no domain of its own. It only appears inside the XYgene PCC thread.",
+    1006: "31 Aug meeting. 9 Sep Pablo sent a technical question list. 25 Sep Rashmi offered to send the pilot SOW.",
+    1007: "20 Aug quarterly review, Younker and Anderson accepted. 15 Sep Younker parked the AI intro with their Salesforce contractor.",
+    1008: "2 Sep call with Petersen and Russo. 23 Sep confirming an October dinner, looking at 6 and 7 Oct.",
+    1009: "20 Aug quarterly review, all three accepted. 17 Sep Chandhok: full system refactor, only small pieces viable now.",
+    1010: "26 Aug quarterly review. 17 Sep Waskiel pushed the next discussion to early November.",
+    1011: "17 Sep NIS integration planning. Baker followed up on the GTM items 22 Sep and has had no reply.",
+    1012: "2 Sep one to one with Orton, 8 Sep NWN leadership call. 16 Sep Baker chasing the reseller signature. Catholic Health last touched 28 Aug."
+  };
+
   var SEED = [
-    ["TriageLogic", "3 mtg · 3 em", 27000, 40, "lo", "September", "Priced at 3 Cerner practices x $750 a month; pushback on price"],
+    ["TriageLogic", "3 mtg · 3 em", 27000, 40, "lo", "September", "MSA and SOW sent 22 Sep at 3 Cerner practices, chase the signature"],
     ["Boyd Beauty — Phase 3", "2 mtg · 4 em", 50000, 50, "hi", "September", "Existing paying customer"],
-    ["Avita Care Solutions Pilot", "4 mtg · 5 em", 25000, 60, "hi", "September", "MSA and SOW in redline right now"],
+    ["Avita Care Solutions Pilot", "4 mtg · 5 em", 25000, 60, "hi", "September", "POC signed and invoiced; eCW integration call 30 Sep"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "September", "Placeholder at the current run rate"],
-    ["Spencer Thomas Group", "1 mtg · 0 em", 50000, 50, "lo", "September", "First meeting Tue 1 Sep, 11am"],
-    ["iPill", "4 mtg · 14 em", 20000, 50, "lo", "September", "RFP call Wed 2 Sep, Pedranti declined, rebook"],
+    ["Spencer Thomas Group", "1 mtg · 0 em", 50000, 50, "lo", "September", "Scope and pricing still sitting inside Vorro, send it"],
+    ["iPill", "4 mtg · 14 em", 20000, 50, "lo", "September", "No decision date; the November timeline is at risk"],
     ["ASRC / CUNY", "1 mtg · 5 em", 10000, 10, "lo", "September", "Small and early"],
-    ["Wayne Memorial", "6 mtg · 20 em", 225620, 70, "hi", "October", "MSA redline out since 20 Aug, sign it"],
-    ["Avita Care Solutions", "4 mtg · 5 em", 20000, 60, "hi", "October", "Follow-on to the pilot"],
+    ["Wayne Memorial", "6 mtg · 20 em", 225620, 70, "hi", "October", "MSA, SOW and proposal questions all unanswered"],
+    ["Avita Care Solutions", "4 mtg · 5 em", 20000, 60, "hi", "October", "Follow-on to the pilot; eCW integration call 30 Sep"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "October", "Placeholder at the current run rate"],
-    ["SunRx / MedImpact", "2 mtg · 3 em", 250000, 40, "lo", "October", "Review 10 Sep, no email reply since Oct 2025"],
-    ["GoSB", "1 mtg · 3 em", 30000, 40, "lo", "October", "RCM pricing doc still outstanding"],
-    ["DMEscripts", "1 mtg · 6 em", 25000, 50, "lo", "October", "Cerner integration scoped, agreement sent"],
-    ["Koning Health", "3 mtg · 3 em", 25000, 30, "lo", "October", "MVP scoped, NDA and BAA unsigned"],
-    ["CareOne — expansion", "1 mtg · 5 em", 54750, 25, "hi", "November", "Get Kristen Riley on your calendar"],
-    ["Lunar Analytics", "4 mtg · 9 em", 20000, 90, "hi", "November", "E-signature lapsed 28 Aug, re-send"],
+    ["SunRx / MedImpact", "2 mtg · 3 em", 250000, 40, "lo", "October", "Get Kotaru's wider group on a date"],
+    ["GoSB", "1 mtg · 3 em", 30000, 40, "lo", "October", "Three unanswered follow-ups, treat as dead unless revived"],
+    ["DMEscripts", "1 mtg · 6 em", 25000, 50, "lo", "October", "Their CEO asked to reconnect on 5 Aug and nobody replied"],
+    ["Koning Health", "3 mtg · 3 em", 25000, 30, "lo", "October", "NDA and BAA sent 27 Aug, still unsigned"],
+    ["CareOne — expansion", "1 mtg · 5 em", 54750, 25, "hi", "November", "Chase the $11,500 unpaid, then book Kristen Riley"],
+    ["Lunar Analytics", "4 mtg · 9 em", 20000, 90, "hi", "November", "MSA stuck in their engineering risk review"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "November", "Placeholder at the current run rate"],
     ["VeeHealthTek", "1 mtg · 12 em", 25000, 15, "lo", "November", "Quiet 39 days, nothing scoped"],
-    ["Arista — initial install", "3 mtg · 3 em", 50000, 50, "hi", "December", "Review Tue 1 Sep, 3pm, invite unanswered"],
+    ["Arista — initial install", "3 mtg · 3 em", 50000, 50, "hi", "December", "No separate install track, folded into the enterprise deal"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "December", "The only committed money in December"],
-    ["Arista — enterprise licence", "3 mtg · 3 em", 750000, 40, "lo", "December", "No written proposal exists anywhere"],
-    ["Open_C", "2 mtg · 3 em", 7500, 10, "lo", "December", "Pen-test only"],
-    ["OnCare Data Hub Phase 1", "Zoho S6 · CRM only", 250000, 90, "lo", "September", "The one OnCare row kept. No inbound from OnCare; internal email puts it near $200K ARR", 1002],
-    ["Wissenstil Solutions", "Zoho S3 · CRM only", 20000, 40, "lo", "September", "Rashmi re-pinged 26 Aug after two months quiet, no reply", 1003],
-    ["XYgene", "Zoho S6 · CRM only", 0, 90, "lo", "September", "No amount in Zoho. Last reply from XYgene 31 Jul", 1004],
-    ["Proximity Labs", "Zoho S3 · CRM only", 30000, 30, "lo", "September", "Close date 8 May passed; runs through the XYgene thread", 1005],
+    ["Arista — enterprise licence", "3 mtg · 3 em", 750000, 40, "lo", "December", "NDA signed 17 Sep; Arista reviewing, no next meeting booked"],
+    ["Open_C", "2 mtg · 3 em", 7500, 10, "lo", "December", "Aaron Seagle sent the NDA 24 Sep, Vorro needs to sign it"],
+    ["OnCare Data Hub Phase 1", "Zoho S6 only", 250000, 90, "lo", "September", "The one OnCare row kept. No inbound from OnCare; internal email puts it near $200K ARR", 1002],
+    ["Wissenstil Solutions", "Zoho S3 only", 20000, 40, "lo", "September", "Rashmi re-pinged 26 Aug after two months quiet, no reply", 1003],
+    ["XYgene", "Zoho S6 only", 0, 90, "lo", "September", "No amount in Zoho. Last reply from XYgene 31 Jul", 1004],
+    ["Proximity Labs", "Zoho S3 only", 30000, 30, "lo", "September", "Close date 8 May passed; runs through the XYgene thread", 1005],
     ["UM AI (UMAI / Evolve Health)", "1 mtg · 3 em", 10000, 40, "lo", "October", "About $10,000 fee in writing; they want a SOW before signing", 1006],
-    ["American Lung Association Quitline", "QBR 20 Aug · Zoho", 25000, 60, "hi", "October", "New Zoho record, close 30 Oct. Amount assumed", 1007],
+    ["American Lung Association Quitline", "QBR 20 Aug", 25000, 60, "hi", "October", "New Zoho record, close 30 Oct. Amount assumed", 1007],
     ["MedREVIQ Workers Comp", "1 mtg · 10 em", 25000, 60, "hi", "November", "Lynette asked for a quote. Amount assumed", 1008],
-    ["Ognomy: CoverMyMeds + DMEscripts", "QBR 20 Aug · Zoho", 25000, 60, "hi", "November", "New Zoho record, close 30 Nov. Amount assumed", 1009],
-    ["Avesis: AWS migration + 11.x", "QBR 26 Aug · Zoho", 30000, 60, "hi", "November", "New Zoho record, close 18 Nov. Amount assumed", 1010],
+    ["Ognomy: CoverMyMeds + DMEscripts", "QBR 20 Aug", 25000, 60, "hi", "November", "New Zoho record, close 30 Nov. Amount assumed", 1009],
+    ["Avesis: AWS migration + 11.x", "QBR 26 Aug", 30000, 60, "hi", "November", "New Zoho record, close 18 Nov. Amount assumed", 1010],
     ["ICE InsureTech / NIS", "2 mtg · 0 em", 30000, 30, "lo", "December", "NIS Integration Planning 15 Sep. Amount assumed", 1011],
     ["IPEX / NWN: Catholic Health of LI", "1 mtg · 6 em", 50000, 25, "lo", "December", "Partner channel on a named account. Amount assumed", 1012]
   ].map(function (r, i) {
-    return { id: r[7] != null ? r[7] : i, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6], order: i };
+    var _id = r[7] != null ? r[7] : i;
+    return { id: _id, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6], last: LAST[_id] || "", order: i };
   });
 
   var nextId = SEED.length;
   var removed = [];
   function clone(a) { return JSON.parse(JSON.stringify(a)); }
-  var DATA_V = 2;
+  var DATA_V = 3;
   function save() { try { localStorage.setItem(KEY, JSON.stringify({ v: DATA_V, n: nextId, d: deals, del: removed })); } catch (e) {} }
   function load() {
     try {
@@ -407,6 +471,7 @@ restores the original figures.</p>
           name: String(d.name == null ? "New deal" : d.name),
           ev: String(d.ev == null ? "" : d.ev),
           next: String(d.next == null ? "" : d.next),
+          last: String(d.last == null ? "" : d.last),
           amount: isFinite(d.amount) ? +d.amount : 0,
           pct: isFinite(d.pct) ? Math.max(0, Math.min(100, +d.pct)) : 0,
           band: d.band === "lo" ? "lo" : "hi",
@@ -423,6 +488,30 @@ restores the original figures.</p>
         /* saved before deletions were tracked: any original row missing from it was deleted by hand */
         removed = SEED.filter(function (sd) { return sd.id < 1000 && !have[sd.id]; })
           .map(function (sd) { return sd.id; });
+      }
+      if (!(p.v >= 3)) {
+        /* 28 Sep: last-conversation notes, and next steps that the sweep proved stale */
+        var NEXTFIX = {
+          0: "MSA and SOW sent 22 Sep at 3 Cerner practices, chase the signature",
+          13: "NDA and BAA sent 27 Aug, still unsigned",
+          14: "Chase the $11,500 unpaid, then book Kristen Riley",
+          15: "MSA stuck in their engineering risk review",
+          2: "POC signed and invoiced; eCW integration call 30 Sep",
+          4: "Scope and pricing still sitting inside Vorro, send it",
+          5: "No decision date; the November timeline is at risk",
+          7: "MSA, SOW and proposal questions all unanswered",
+          8: "Follow-on to the pilot; eCW integration call 30 Sep",
+          10: "Get Kotaru's wider group on a date",
+          11: "Three unanswered follow-ups, treat as dead unless revived",
+          12: "Their CEO asked to reconnect on 5 Aug and nobody replied",
+          18: "No separate install track, folded into the enterprise deal",
+          20: "NDA signed 17 Sep; Arista reviewing, no next meeting booked",
+          21: "Aaron Seagle sent the NDA 24 Sep, Vorro needs to sign it"
+        };
+        out.forEach(function (d) {
+          if (LAST[d.id]) d.last = LAST[d.id];
+          if (NEXTFIX[d.id]) d.next = NEXTFIX[d.id];
+        });
       }
       if (!(p.v >= 2)) {
         /* 22 Sep CRO decisions override older saved copies */
@@ -484,13 +573,14 @@ restores the original figures.</p>
     var plug = d.ev === "run rate";
     return '<tr' + (plug ? ' class="rec"' : "") + ' data-id="' + d.id + '">' +
       '<td class="grip" aria-hidden="true"></td>' +
-      '<td class="deal"><input class="f-name" type="text" aria-label="Deal name" value="' + esc(d.name) + '"><span class="wtd" data-wt="' + d.id + '">' + money(wt(d)) + ' weighted</span></td>' +
+      '<td class="deal"><textarea class="f-name" rows="1" aria-label="Deal name">' + esc(d.name) + '</textarea><span class="wtd" data-wt="' + d.id + '">' + money(wt(d)) + ' weighted</span>' +
+      '<textarea class="f-last" rows="1" aria-label="Last conversation, ' + esc(d.name) + '" placeholder="Last conversation">' + esc(d.last || "") + '</textarea></td>' +
       '<td class="ev"><input class="f-ev" type="text" aria-label="Evidence, ' + esc(d.name) + '" value="' + esc(d.ev) + '"></td>' +
       '<td class="amt" data-l="Amount"><input class="f-amt" type="text" inputmode="numeric" aria-label="Amount, ' + esc(d.name) + '" value="' + money(d.amount) + '"></td>' +
       '<td class="pct" data-l="Probability"><input class="f-pct" type="number" min="0" max="100" step="5" aria-label="Probability, ' + esc(d.name) + '" value="' + d.pct + '"><span class="pcs">%</span></td>' +
       '<td class="conf" data-l="Confidence"><select class="f-band" aria-label="Confidence, ' + esc(d.name) + '">' + cf + "</select></td>" +
       '<td class="mo" data-l="Month"><select class="f-month" aria-label="Month, ' + esc(d.name) + '">' + mo + "</select></td>" +
-      '<td class="next"><input class="f-next" type="text" aria-label="Next step, ' + esc(d.name) + '" value="' + esc(d.next) + '"></td>' +
+      '<td class="next"><textarea class="f-next" rows="1" aria-label="Next step, ' + esc(d.name) + '">' + esc(d.next) + '</textarea></td>' +
       '<td class="del"><button class="x" type="button" data-del="' + d.id + '" aria-label="Delete ' + esc(d.name) + '" title="Delete this deal">\u00d7</button></td></tr>';
   }
 
@@ -598,11 +688,17 @@ restores the original figures.</p>
     save();
   }
 
+  function fitNotes() {
+    var n = document.querySelectorAll("textarea.f-last, textarea.f-next, textarea.f-name");
+    for (var i = 0; i < n.length; i++) { n[i].style.height = "auto"; n[i].style.height = n[i].scrollHeight + "px"; }
+  }
+
   function render() {
     var T = totals();
     document.getElementById("months").innerHTML =
       MONTHS.map(function (m) { return monthHTML(m, T.per[m], T.total); }).join("");
     paint();
+    fitNotes();
   }
 
   function byId(id) { for (var i = 0; i < deals.length; i++) if (deals[i].id === id) return deals[i]; return null; }
@@ -627,11 +723,19 @@ restores the original figures.</p>
       d.pct = isFinite(p) ? Math.max(0, Math.min(100, p)) : 0;
       paint();
     } else if (e.target.classList.contains("f-name")) {
-      d.name = e.target.value; save();
+      d.name = e.target.value;
+      e.target.style.height = "auto"; e.target.style.height = e.target.scrollHeight + "px";
+      save();
     } else if (e.target.classList.contains("f-ev")) {
       d.ev = e.target.value; save();
     } else if (e.target.classList.contains("f-next")) {
-      d.next = e.target.value; save();
+      d.next = e.target.value;
+      e.target.style.height = "auto"; e.target.style.height = e.target.scrollHeight + "px";
+      save();
+    } else if (e.target.classList.contains("f-last")) {
+      d.last = e.target.value;
+      e.target.style.height = "auto"; e.target.style.height = e.target.scrollHeight + "px";
+      save();
     }
   });
   document.addEventListener("blur", function (e) {
@@ -663,7 +767,7 @@ restores the original figures.</p>
       var m = add.getAttribute("data-add-month"), b = add.getAttribute("data-add-band");
       var sibs = cell(m, b);
       var d = {
-        id: newId(), name: "New deal", ev: "no evidence yet", next: "",
+        id: newId(), name: "New deal", ev: "no evidence yet", next: "", last: "",
         amount: 0, pct: b === "hi" ? 60 : 30, band: b, month: m,
         order: (sibs.length ? sibs[sibs.length - 1].order : 0) + 1
       };
@@ -805,6 +909,10 @@ restores the original figures.</p>
     render();
     flash("Reset to original figures");
   });
+
+  window.addEventListener("resize", function () { clearTimeout(fitNotes.t); fitNotes.t = setTimeout(fitNotes, 120); });
+  window.addEventListener("load", fitNotes);
+  try { if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitNotes); } catch (e) {}
 
   render();
 })();
