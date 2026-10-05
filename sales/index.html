@@ -307,7 +307,7 @@ td.next input.f-next{white-space:normal}
     <div class="r"><b>HIGH</b> committed by the CRO</div>
     <div class="r"><b>LOW</b> upside, not committed</div>
   </div>
-  <p class="stamp">Chief Revenue Officer, Vorro &nbsp;·&nbsp; 31 Aug 2026 &nbsp;·&nbsp; live Zoho pull, calendar + email verified</p>
+  <p class="stamp">Chief Revenue Officer, Vorro &nbsp;·&nbsp; 5 Oct 2026 &nbsp;·&nbsp; live Zoho pull, reconciled to the Vorro MIS</p>
 </header>
 
 <div class="applybar">
@@ -348,6 +348,8 @@ restores the original figures.</p>
 
 <div id="months"></div>
 
+<div class="call" id="breakout"></div>
+
 <div class="call" id="summary"></div>
 
 <footer>
@@ -361,12 +363,19 @@ restores the original figures.</p>
   ($610K, no meetings, no customer email since July 2025). WISHIN and LifePoint were removed by hand. On 22 September, at the CRO&rsquo;s direction, every open Zoho
   deal in stages S3 to S6 was added back whether or not it passes that test: OnCare (one record; the duplicate S5 record was dropped), Wissenstil,
   XYgene and Proximity Labs sit in low confidence at the CRM probability and are labeled &ldquo;CRM only&rdquo;. Amounts are the
-  CRM value except Wayne, set to $225,620 by the CRO from the 23%-fee-plus-AWS-partner-cash calculation (the CRM
-  record says $360,000), TriageLogic, set to $27,000 by the CRO for three Cerner practices at $750 a month, the seven deals
+  CRM value except Wayne, set to $240,000 total contract value by the CRO and phased as nothing in October, $60,000 in November and
+  $60,000 in December (the CRM record says $360,000), TriageLogic, set by the CRO to $6,000 a month across October,
+  November and December, the seven deals
   approved from the email and calendar scan on 22 September (only UM AI&rsquo;s $10,000 is in writing; the other six are assumed), and six accounts priced by assumption because no figure exists anywhere: Avita,
-  DMEscripts, Koning, CareOne, VeeHealthTek, Open_C. The $7,970 monthly line is a <strong>placeholder</strong>, not a
-  contracted bill: MedRevIQ&rsquo;s $6,250 was a single invoice request in August, not a confirmed recurring charge,
-  and only Therap&rsquo;s $1,720 is explicitly recurring.</p>
+  DMEscripts, Koning, CareOne, VeeHealthTek, Open_C. The $7,970 monthly line is a <strong>placeholder</strong> for the base run rate, not a
+  contracted bill.</p>
+  <p style="margin-top:10px"><b>Reconciled to the MIS, 5 Oct.</b> Recurring revenue is real and named. MedREVIQ bills
+  <strong>$3,125 a month</strong> from August, with a step to $6,250 already modelled in the workbook, and 3PH Alliance bills
+  <strong>$3,750 a month</strong> for the whole of 2026 as a new logo won in January. The MRR base is $157,063 a month across 22
+  accounts, and <strong>340B Holdings is $73,216 of it, 46.6%</strong>; with QVC that is 59.5% in two accounts. Q3 2026 closed at
+  <strong>$665,764</strong>, being July $190,555 and August $190,688 actual plus September at $284,521, which is the $204,521 plan
+  plus the $80,000 Spencer Thomas booking committed on 30 September. The MIS Q3 cell reads $573,384 because it sums three
+  <em>projected</em> columns and September was never rolled forward in the sheet.</p>
 </footer>
 
 </div>
@@ -417,15 +426,45 @@ restores the original figures.</p>
     1012: "2 Sep one to one with Orton, 8 Sep NWN leadership call. 16 Sep Baker chasing the reseller signature. Catholic Health last touched 28 Aug."
   };
 
+  /* Segment and revenue type, keyed by deal id. Added 5 Oct 2026 from the MIS reconciliation.
+     seg: aes | rcm | hosp | integ | ai | base | part
+     typ: prod = recurring product revenue, cons = one-time consulting, part = channel, no direct revenue */
+  var TAG = {
+    0: ["integ", "prod"], 1: ["aes", "cons"], 2: ["integ", "cons"], 3: ["base", "prod"],
+    4: ["integ", "cons"], 5: ["integ", "cons"], 6: ["ai", "cons"], 7: ["hosp", "cons"],
+    8: ["integ", "cons"], 9: ["base", "prod"], 10: ["rcm", "cons"], 11: ["integ", "cons"],
+    12: ["integ", "cons"], 13: ["part", "part"], 14: ["integ", "prod"], 15: ["ai", "cons"],
+    16: ["base", "prod"], 17: ["integ", "cons"], 18: ["integ", "cons"], 19: ["base", "prod"],
+    20: ["integ", "prod"], 21: ["part", "part"],
+    1002: ["hosp", "cons"], 1003: ["integ", "cons"], 1004: ["part", "part"], 1005: ["ai", "cons"],
+    1006: ["ai", "cons"], 1007: ["integ", "cons"], 1008: ["rcm", "cons"], 1009: ["integ", "cons"],
+    1010: ["integ", "cons"], 1011: ["integ", "cons"], 1012: ["part", "part"],
+    1013: ["part", "part"], 1014: ["part", "part"],
+    1015: ["integ", "prod"], 1016: ["integ", "prod"], 1017: ["hosp", "cons"]
+  };
+  var SEGS = [
+    ["aes",   "Plastic surgery and aesthetics", "8 to 12 weeks",                       "Boyd, $100K across four engagements"],
+    ["rcm",   "RCM and billing",                "2 to 4 months small, 6 to 12 mid",     "MedREVIQ, $75K plus $3,125 a month"],
+    ["hosp",  "Hospitals and health systems",   "3 to 6 months, 9 to 18 at 500+ beds",  "Wayne Memorial, phased across Nov and Dec"],
+    ["integ", "Basic integration work",         "4 to 10 weeks",                        "Avita $6,500 POC, EHO $7,725 a block"],
+    ["ai",    "AI consulting and builds",       "4.7 months outpatient",                "Boyd phases 1 to 3, MedREVIQ asked"],
+    ["base",  "Existing base run rate",         "recurring",                            "MIS MRR block, $157,063 a month"],
+    ["part",  "Partnership and channel",        "no direct revenue",                    "Rashmi sourced, feeds the reseller motion"]
+  ];
+  var SEGLBL = {}, SEGCLOSE = {}, SEGPROOF = {};
+  SEGS.forEach(function (s) { SEGLBL[s[0]] = s[1]; SEGCLOSE[s[0]] = s[2]; SEGPROOF[s[0]] = s[3]; });
+  function segOf(d) { var t = TAG[d.id]; return t ? t[0] : "integ"; }
+  function typOf(d) { var t = TAG[d.id]; return t ? t[1] : "cons"; }
+
   var SEED = [
-    ["TriageLogic", "3 mtg · 3 em", 27000, 40, "lo", "September", "MSA and SOW sent 22 Sep at 3 Cerner practices, chase the signature"],
+    ["TriageLogic — October", "3 mtg · 3 em", 6000, 40, "lo", "October", "$6,000 a month across Oct, Nov and Dec. MSA and SOW sent 22 Sep, chase the signature"],
     ["Boyd Beauty — Phase 3", "2 mtg · 4 em", 50000, 50, "hi", "September", "Existing paying customer"],
     ["Avita Care Solutions Pilot", "4 mtg · 5 em", 25000, 60, "hi", "September", "POC signed and invoiced; eCW integration call 30 Sep"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "September", "Placeholder at the current run rate"],
     ["Spencer Thomas Group", "1 mtg · 0 em", 50000, 50, "lo", "September", "Scope and pricing still sitting inside Vorro, send it"],
     ["iPill", "4 mtg · 14 em", 20000, 50, "lo", "September", "No decision date; the November timeline is at risk"],
     ["ASRC / CUNY", "1 mtg · 5 em", 10000, 10, "lo", "September", "Small and early"],
-    ["Wayne Memorial", "6 mtg · 20 em", 225620, 70, "hi", "October", "MSA, SOW and proposal questions all unanswered"],
+    ["Wayne Memorial — November", "6 mtg · 20 em", 60000, 70, "hi", "November", "$240,000 total, phased. Nothing in October. MSA, SOW and proposal questions all unanswered"],
     ["Avita Care Solutions", "4 mtg · 5 em", 20000, 60, "hi", "October", "Follow-on to the pilot; eCW integration call 30 Sep"],
     ["Existing accounts — placeholder", "run rate", 7970, 100, "hi", "October", "Placeholder at the current run rate"],
     ["SunRx / MedImpact", "2 mtg · 3 em", 250000, 40, "lo", "October", "Get Kotaru's wider group on a date"],
@@ -450,7 +489,12 @@ restores the original figures.</p>
     ["Ognomy: CoverMyMeds + DMEscripts", "QBR 20 Aug", 25000, 60, "hi", "November", "New Zoho record, close 30 Nov. Amount assumed", 1009],
     ["Avesis: AWS migration + 11.x", "QBR 26 Aug", 30000, 60, "hi", "November", "New Zoho record, close 18 Nov. Amount assumed", 1010],
     ["ICE InsureTech / NIS", "2 mtg · 0 em", 30000, 30, "lo", "December", "NIS Integration Planning 15 Sep. Amount assumed", 1011],
-    ["IPEX / NWN: Catholic Health of LI", "1 mtg · 6 em", 50000, 25, "lo", "December", "Partner channel on a named account. Amount assumed", 1012]
+    ["IPEX / NWN: Catholic Health of LI", "1 mtg · 6 em", 50000, 25, "lo", "December", "Partner channel on a named account. Amount assumed", 1012],
+    ["Xela OS", "Rashmi sourced 11 Sep", 0, 10, "lo", "October", "Partnership. Rashmi booked the 17 Sep intro and owns the record in Zoho", 1013],
+    ["1upHealth", "Rashmi sourced 21 Sep", 0, 10, "lo", "October", "Partnership. Exploring a channel relationship, no direct revenue", 1014],
+    ["TriageLogic — November", "3 mtg · 3 em", 6000, 40, "lo", "November", "Second month of the $6,000 monthly run rate", 1015],
+    ["TriageLogic — December", "3 mtg · 3 em", 6000, 40, "lo", "December", "Third month of the $6,000 monthly run rate", 1016],
+    ["Wayne Memorial — December", "6 mtg · 20 em", 60000, 70, "hi", "December", "Second phase of the $240,000 contract", 1017]
   ].map(function (r, i) {
     var _id = r[7] != null ? r[7] : i;
     return { id: _id, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6], last: LAST[_id] || "", order: i };
@@ -459,7 +503,7 @@ restores the original figures.</p>
   var nextId = SEED.length;
   var removed = [];
   function clone(a) { return JSON.parse(JSON.stringify(a)); }
-  var DATA_V = 3;
+  var DATA_V = 4;
   function save() { try { localStorage.setItem(KEY, JSON.stringify({ v: DATA_V, n: nextId, d: deals, del: removed })); } catch (e) {} }
   function load() {
     try {
@@ -488,6 +532,13 @@ restores the original figures.</p>
         /* saved before deletions were tracked: any original row missing from it was deleted by hand */
         removed = SEED.filter(function (sd) { return sd.id < 1000 && !have[sd.id]; })
           .map(function (sd) { return sd.id; });
+      }
+      if (!(p.v >= 4)) {
+        /* 5 Oct: CRO reset Wayne to $240,000 phased over Nov and Dec, and TriageLogic to $6,000 a month */
+        out.forEach(function (d) {
+          if (d.id === 7) { d.amount = 60000; d.month = "November"; d.name = "Wayne Memorial \u2014 November"; }
+          if (d.id === 0) { d.amount = 6000; d.month = "October"; d.name = "TriageLogic \u2014 October"; }
+        });
       }
       if (!(p.v >= 3)) {
         /* 28 Sep: last-conversation notes, and next steps that the sweep proved stale */
@@ -518,8 +569,8 @@ restores the original figures.</p>
         out = out.filter(function (d) { return d.id !== 1001; });
         if (removed.indexOf(1001) < 0) removed.push(1001);
         out.forEach(function (d) {
-          if (d.id === 0) { d.amount = 27000; d.next = SEED[0].next; }
-          if (d.id === 7) d.amount = 225620;
+          if (d.id === 0) { d.amount = 6000; d.next = SEED[0].next; }
+          if (d.id === 7) d.amount = 60000;
           if (d.id === 1002) d.next = SEED.filter(function (x) { return x.id === 1002; })[0].next;
         });
       }
@@ -655,6 +706,72 @@ restores the original figures.</p>
     return "<h2>Where this lands</h2><p>" + p1 + "</p><p>" + p2 + "</p>" + (p3 ? "<p>" + p3 + "</p>" : "");
   }
 
+
+  var TYPLBL = { prod: "Product, recurring", cons: "Consulting, one time", part: "Partnership, no direct revenue" };
+
+  function breakoutHTML() {
+    var bySeg = {}, byTyp = { prod: 0, cons: 0, part: 0 }, cntTyp = { prod: 0, cons: 0, part: 0 };
+    deals.forEach(function (d) {
+      var s = segOf(d), ty = typOf(d), w = wt(d);
+      if (!bySeg[s]) bySeg[s] = { n: 0, amt: 0, w: 0 };
+      bySeg[s].n++; bySeg[s].amt += d.amount; bySeg[s].w += w;
+      byTyp[ty] += w; cntTyp[ty]++;
+    });
+    var revTotal = byTyp.prod + byTyp.cons;
+    var pp = revTotal ? byTyp.prod / revTotal * 100 : 0;
+    var pc = revTotal ? byTyp.cons / revTotal * 100 : 0;
+    var bd = "padding:7px 10px;border-bottom:1px solid rgba(128,128,128,.22)";
+
+    var rows = SEGS.filter(function (s) { return bySeg[s[0]]; }).sort(function (a, b) {
+      return bySeg[b[0]].w - bySeg[a[0]].w;
+    }).map(function (s) {
+      var k = s[0], g = bySeg[k], avg = g.n ? g.amt / g.n : 0, isPart = k === "part";
+      return '<tr' + (isPart ? ' style="opacity:.75"' : '') + '>' +
+        '<td style="' + bd + '"><b>' + esc(s[1]) + '</b></td>' +
+        '<td style="' + bd + ';text-align:right">' + g.n + '</td>' +
+        '<td style="' + bd + ';text-align:right">' + money(g.amt) + '</td>' +
+        '<td style="' + bd + ';text-align:right"><b>' + (isPart ? '&mdash;' : money(g.w)) + '</b></td>' +
+        '<td style="' + bd + ';text-align:right">' + money(avg) + '</td>' +
+        '<td style="' + bd + '">' + esc(s[2]) + '</td>' +
+        '<td style="' + bd + ';font-size:.86em;opacity:.8">' + esc(s[3]) + '</td></tr>';
+    }).join("");
+
+    var head = '<tr><th style="padding:7px 10px;text-align:left">Segment</th>' +
+      '<th style="padding:7px 10px;text-align:right">Deals</th>' +
+      '<th style="padding:7px 10px;text-align:right">Gross</th>' +
+      '<th style="padding:7px 10px;text-align:right">Weighted</th>' +
+      '<th style="padding:7px 10px;text-align:right">Avg deal</th>' +
+      '<th style="padding:7px 10px;text-align:left">Typical close</th>' +
+      '<th style="padding:7px 10px;text-align:left">Our proof</th></tr>';
+
+    var bar = '<div style="display:flex;height:22px;border-radius:4px;overflow:hidden;margin:10px 0 6px">' +
+      '<div style="width:' + pp.toFixed(2) + '%;background:#0B7D78"></div>' +
+      '<div style="width:' + pc.toFixed(2) + '%;background:#E8A317"></div></div>' +
+      '<div style="display:flex;gap:18px;font-size:.88em;flex-wrap:wrap">' +
+      '<span><i style="display:inline-block;width:10px;height:10px;background:#0B7D78;border-radius:2px"></i> ' +
+        'Product, recurring &mdash; <b>' + money(byTyp.prod) + '</b> (' + pp.toFixed(1) + '%, ' + cntTyp.prod + ' deals)</span>' +
+      '<span><i style="display:inline-block;width:10px;height:10px;background:#E8A317;border-radius:2px"></i> ' +
+        'Consulting, one time &mdash; <b>' + money(byTyp.cons) + '</b> (' + pc.toFixed(1) + '%, ' + cntTyp.cons + ' deals)</span></div>';
+
+    var partNote = cntTyp.part
+      ? '<p style="margin-top:12px"><b>Partnership and channel.</b> ' + cntTyp.part +
+        ' rows are partnerships rather than direct revenue: Xela OS, 1upHealth, Open_C, Koning Health and XYgene, all sourced by Rashmi, ' +
+        'plus the IPEX and NWN channel into Catholic Health. They sit on the board so the channel is visible, and they carry no weighted ' +
+        'revenue in the table above. This is the motion that feeds AI Associate reseller seats.</p>'
+      : "";
+
+    return '<h2>Where the money comes from</h2>' +
+      '<p>Every open row on this board, grouped by sub-industry and by whether it is recurring product revenue or one-time consulting. ' +
+      'Edit any amount above and this recalculates with it.</p>' +
+      '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.94em;min-width:720px">' +
+      '<thead>' + head + '</thead><tbody>' + rows + '</tbody></table></div>' +
+      '<h3 style="margin-top:16px">Product against consulting</h3>' + bar + partNote +
+      '<p style="margin-top:12px"><b>Reconciling to the MIS.</b> The MIS plan carries new monthly recurring revenue as a single placeholder ' +
+      'row, $24,000 in October rising to $36,000 in December. The names behind it are on this board: TriageLogic at $6,000 a month, the ' +
+      'CareOne expansion, the Arista licence, and the MedREVIQ step from $3,125 to $6,250 a month that the workbook already models. ' +
+      'The gap is not that the revenue is unnamed, it is that the plan row and this board have never been reconciled to each other.</p>';
+  }
+
   /* --------- paint numbers only, keeps input focus --------- */
   function paint() {
     var T = totals(), total = T.total;
@@ -685,6 +802,7 @@ restores the original figures.</p>
     document.getElementById("kpiLoD").textContent =
       deals.filter(function (d) { return d.band === "lo"; }).length + " rows. Forecast total " + money(T.total) + ".";
     document.getElementById("summary").innerHTML = summaryHTML(T);
+    document.getElementById("breakout").innerHTML = breakoutHTML();
     save();
   }
 
