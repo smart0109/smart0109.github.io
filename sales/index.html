@@ -307,7 +307,7 @@ td.next input.f-next{white-space:normal}
     <div class="r"><b>HIGH</b> committed by the CRO</div>
     <div class="r"><b>LOW</b> upside, not committed</div>
   </div>
-  <p class="stamp">Chief Revenue Officer, Vorro &nbsp;·&nbsp; 5 Oct 2026 &nbsp;·&nbsp; live Zoho pull, reconciled to the Vorro MIS</p>
+  <p class="stamp">Chief Revenue Officer, Vorro &nbsp;·&nbsp; 19 Oct 2026 &nbsp;·&nbsp; live Zoho pull, reconciled to the Vorro MIS</p>
 </header>
 
 <div class="applybar">
@@ -424,7 +424,9 @@ restores the original figures.</p>
     1009: "20 Aug quarterly review, all three accepted. 17 Sep Chandhok: full system refactor, only small pieces viable now.",
     1010: "26 Aug quarterly review. 17 Sep Waskiel pushed the next discussion to early November.",
     1011: "17 Sep NIS integration planning. Baker followed up on the GTM items 22 Sep and has had no reply.",
-    1012: "2 Sep one to one with Orton, 8 Sep NWN leadership call. 16 Sep Baker chasing the reseller signature. Catholic Health last touched 28 Aug."
+    1012: "2 Sep one to one with Orton, 8 Sep NWN leadership call. 16 Sep Baker chasing the reseller signature. Catholic Health last touched 28 Aug.",
+    1021: "15 Oct Swami sent the full Epic requirement set after the call. 16 Oct Shashank scoped it as FHIR plus HL7. 19 Oct Swami confirmed Tuesday and Manish asked who signs besides him and Dharam.",
+    1022: "1 Oct Dhaval: will sign the NDA and everything, pricing is the barrier because they want to test first. 14 Oct Jinoy and Gaurav joined. 19 Oct Preeti cleared the NDA and redlined the BAA; Jinoy chasing."
   };
 
   /* Segment and revenue type, keyed by deal id. Added 5 Oct 2026 from the MIS reconciliation.
@@ -442,7 +444,8 @@ restores the original figures.</p>
     1010: ["integ", "cons"], 1011: ["integ", "cons"], 1012: ["part", "part"],
     1013: ["part", "part"], 1014: ["part", "part"],
     1015: ["integ", "prod"], 1016: ["integ", "prod"], 1017: ["hosp", "cons"],
-    1018: ["integ", "prod"], 1019: ["integ", "prod"], 1020: ["integ", "prod"]
+    1018: ["integ", "prod"], 1019: ["integ", "prod"], 1020: ["integ", "prod"],
+    1021: ["integ", "cons"], 1022: ["rcm", "cons"]
   };
   var SEGS = [
     ["aes",   "Plastic surgery and aesthetics", "8 to 12 weeks",                       "Boyd, $100K across four engagements"],
@@ -499,7 +502,9 @@ restores the original figures.</p>
     ["Wayne Memorial — December", "6 mtg · 20 em", 60000, 70, "hi", "December", "Second phase of the $240,000 contract", 1017],
     ["Avita Care — October", "4 mtg · 5 em", 3000, 60, "hi", "October", "New MRR at $3,000 a month. Pilot signed and invoiced, eCW integration live", 1018],
     ["Avita Care — November", "4 mtg · 5 em", 3000, 60, "hi", "November", "Second month of the $3,000 monthly run rate", 1019],
-    ["Avita Care — December", "4 mtg · 5 em", 3000, 60, "hi", "December", "Third month of the $3,000 monthly run rate", 1020]
+    ["Avita Care — December", "4 mtg · 5 em", 3000, 60, "hi", "December", "Third month of the $3,000 monthly run rate", 1020],
+    ["AutomationEdge — Epic referral", "S5 negotiation", 30000, 50, "hi", "October", "Scope and agreement call Tue 21 Oct. Six Epic health systems for CareFlo. $30,000 is the pre-Epic figure and needs re-pricing", 1021],
+    ["MBS RCM — pilot", "S5 negotiation", 10000, 60, "hi", "October", "NDA and BAA in e-signature, BAA redlined 19 Oct. Pilot pricing still the open item", 1022]
   ].map(function (r, i) {
     var _id = r[7] != null ? r[7] : i;
     return { id: _id, name: r[0], ev: r[1], amount: r[2], pct: r[3], band: r[4], month: r[5], next: r[6], last: LAST[_id] || "", order: i };
