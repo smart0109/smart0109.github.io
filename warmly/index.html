@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Warmly visitors: who comes to vorro.net</title>
+<style>
+  :root{ --ink:#17171c; --mute:#6d6d79; --line:#e6e6ec; --bg:#f6f6f8; --pur:#99318B;
+         --pur-soft:#f4e9f2; --good:#1f6f4a; --warn:#b4401f; --flat:#8a8a95; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+  .wrap{max-width:1260px;margin:0 auto;padding:26px 18px 70px}
+  h1{font-size:25px;margin:0 0 3px}
+  .sub{color:var(--mute);margin:0 0 20px;font-size:14px}
+  .kpis{display:flex;flex-wrap:wrap;gap:10px}
+  .kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 16px;flex:1 1 135px}
+  .kpi b{display:block;font-size:22px;line-height:1.15}
+  .kpi span{color:var(--mute);font-size:11.5px}
+  .kpi.bad b{color:var(--warn)}.kpi.good b{color:var(--good)}.kpi.pur b{color:var(--pur)}
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:22px 0 14px}
+  .tabs button{background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:13px;cursor:pointer;color:var(--ink)}
+  .tabs button.on{background:var(--pur);border-color:var(--pur);color:#fff}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:14px}
+  .card h2{font-size:16px;margin:0 0 4px}
+  .card p.note{color:var(--mute);font-size:13px;margin:0 0 14px}
+  .bars{display:flex;flex-direction:column;gap:7px}
+  .bar{display:grid;grid-template-columns:250px 1fr 96px;gap:10px;align-items:center;font-size:13px}
+  .bar .lab{text-align:right}
+  .bar .track{background:#f0f0f4;border-radius:5px;height:19px;overflow:hidden}
+  .bar .fill{background:var(--pur);height:100%;border-radius:5px}
+  .bar .fill.alt{background:#c98fc0}.bar .fill.flat{background:var(--flat)}
+  .bar .fill.good{background:var(--good)}.bar .fill.warn{background:var(--warn)}
+  .bar .val{color:var(--mute);font-size:12px}
+  .split{display:flex;gap:14px;flex-wrap:wrap}.split .card{flex:1 1 430px}
+  .ctrl{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  .ctrl input,.ctrl select{border:1px solid var(--line);border-radius:7px;padding:7px 9px;font-size:13px;background:#fff;color:var(--ink)}
+  .ctrl input{flex:1 1 200px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mute);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px;position:sticky;top:0;background:#fff;white-space:nowrap}
+  td.co{font-weight:600;max-width:230px}
+  td.em{color:var(--mute);font-family:ui-monospace,Menlo,monospace;font-size:11.5px;max-width:180px;overflow-wrap:anywhere}
+  .pill{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:999px;white-space:nowrap}
+  .gHealthcareprovider{background:#e6f5ec;color:#1f6f4a}
+  .gHealthtech{background:#e7f1ff;color:#1a4f8a}
+  .gPayer{background:var(--pur-soft);color:var(--pur)}
+  .gNotICP{background:#f1f1f4;color:#5c5c66}
+  .gUnclassified{background:#fdf2e3;color:#8a5a12}
+  a.btn{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:3px 7px;font-size:11px;text-decoration:none;color:var(--ink);background:#fff;white-space:nowrap}
+  a.btn:hover{border-color:var(--pur);color:var(--pur)}
+  button.cp{border:1px solid var(--line);border-radius:6px;padding:3px 7px;font-size:11px;background:#fff;cursor:pointer}
+  button.cp:hover{border-color:var(--pur);color:var(--pur)}
+  .tblwrap{max-height:640px;overflow:auto;border:1px solid var(--line);border-radius:10px;background:#fff}
+  .gap{background:#fff;border:1px solid var(--line);border-left:3px solid var(--warn);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+  .gap h2{font-size:15px;margin:0 0 6px}.gap p{margin:0 0 8px;font-size:13.5px}.gap p:last-child{margin:0}
+  .hid{display:none}
+  .msgbox{margin-top:10px;border:1px solid var(--line);border-radius:8px;padding:12px;background:#fafafb;font-size:13px;white-space:pre-wrap}
+  .cnt{color:var(--mute);font-size:12px;margin:8px 0 0}
+  ol.rec,ul.rec{margin:0;padding-left:20px;font-size:13.5px}ol.rec li,ul.rec li{margin-bottom:9px}
+  .stamp{color:var(--mute);font-size:11.5px;margin-top:26px;border-top:1px solid var(--line);padding-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Warmly visitors: who comes to vorro.net</h1>
+  <p class="sub">Loading...</p>
+  <div class="kpis" id="kpis"></div>
+  <div class="tabs" id="tabs"></div>
+  <div id="views"></div>
+  <p class="stamp" id="stamp"></p>
+</div>
+<script>
+var D=null,V='who',F={q:'',g:'',s:'',r:'',n:'',p:''};
+function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function cls(g){return 'g'+String(g).replace(/[^A-Za-z]/g,'');}
+function firstName(e){
+  var lp=(e||'').split('@')[0].replace(/[0-9_]+/g,'.').split('.').filter(Boolean)[0]||'';
+  return (lp.length>2&&/^[a-z]+$/i.test(lp))?lp.charAt(0).toUpperCase()+lp.slice(1).toLowerCase():'there';
+}
+function liUrl(r){
+  var t=r[10]||'', hint=t?('"'+t+'"'):'CIO OR "revenue cycle" OR interoperability';
+  return 'https://www.linkedin.com/search/results/people/?keywords='+encodeURIComponent(((r[1]||'')+' '+hint).trim());
+}
+function gmUrl(r){return 'https://mail.google.com/mail/u/0/#search/'+encodeURIComponent('to:'+r[0]);}
+function note(r){
+  var fn=firstName(r[0]),co=r[1]||'your team',g=D.grp[r[2]],pg=D.pgs[r[6]],t=r[10];
+  var who=t?('As '+t+', ') : '';
+  var read = pg==='HL7 academy pages' ? 'was working through our HL7 message pages'
+           : pg==='EHR integration pages' ? 'was reading our Epic and Cerner integration pages'
+           : pg==='EDI, eligibility and claims' ? 'came through our eligibility and claims pages'
+           : pg==='Build vs buy and ROI' ? 'was on our build versus buy pages'
+           : 'spent time on our site';
+  if(g==='Healthcare provider') return 'Hi '+fn+', someone at '+co+' '+read+'. I am CRO at Vorro. '+who+'you will know the failures that quietly stop charges, orders and results landing between systems. We catch those, sitting on top of your EHR rather than replacing anything. Worth 20 minutes?';
+  if(g==='Payer') return 'Hi '+fn+', someone at '+co+' '+read+'. I am CRO at Vorro. We run real time 270/271 and 835 reconciliation so denials are caught at registration instead of 60 days later. Open to a short call?';
+  if(g==='Health tech') return 'Hi '+fn+', someone at '+co+' '+read+'. I am CRO at Vorro. Health IT teams embed BridgeGate instead of building EHR interfaces themselves, which usually turns a quarter of work into weeks. Worth a conversation?';
+  return 'Hi '+fn+', someone from '+co+' '+read+'. I am CRO at Vorro. If data is moving between systems by hand, that is what we solve, as configuration rather than code. Happy to share what we see if it is relevant.';
+}
+function bars(obj,total,c,max){
+  var k=Object.keys(obj); if(max)k=k.slice(0,max);
+  var top=Math.max.apply(null,k.map(function(x){return obj[x];}))||1;
+  return '<div class="bars">'+k.map(function(x){
+    var v=obj[x],pct=Math.round(v/top*100),sh=total?Math.round(v/total*100):0;
+    return '<div class="bar"><div class="lab">'+esc(x)+'</div><div class="track"><div class="fill '+(c||'')+
+      '" style="width:'+pct+'%"></div></div><div class="val">'+v+(total?'  ('+sh+'%)':'')+'</div></div>';}).join('')+'</div>';
+}
+function kpis(){
+  var s=D.summary,k=[['pur',s.rows,'visitors in Zoho'],
+    ['bad',s.never_processed,'never processed by the pipeline'],
+    ['',s.icp+' ('+Math.round(s.icp/s.rows*100)+'%)','in the ICP'],
+    ['',s.sent,'stage 1 emails sent'],
+    ['bad',s.icp_sent+' of '+s.sent,'of those reached the ICP'],
+    ['',s.titled,'have a job title in Zoho'],
+    ['good','1','genuine human reply']];
+  document.getElementById('kpis').innerHTML=k.map(function(x){
+    return '<div class="kpi '+x[0]+'"><b>'+x[1]+'</b><span>'+x[2]+'</span></div>';}).join('');
+}
+var TABS=[['who','Who visits'],['sub','Sub-industries'],['pers','Personas'],['size','Company size'],
+  ['read','What they read'],['cov','Coverage'],['time','Timeline'],['tbl','Every visitor'],['miss','Gaps']];
+function tabs(){
+  document.getElementById('tabs').innerHTML=TABS.map(function(t){
+    return '<button data-v="'+t[0]+'" class="'+(V===t[0]?'on':'')+'">'+t[1]+'</button>';}).join('');
+  Array.prototype.forEach.call(document.querySelectorAll('#tabs button'),function(b){
+    b.addEventListener('click',function(){V=b.getAttribute('data-v');tabs();render();});});
+}
+function rowsF(){
+  return D.rows.filter(function(r){
+    if(F.g!==''&&String(r[2])!==F.g)return false;
+    if(F.s!==''&&String(r[7])!==F.s)return false;
+    if(F.r!==''&&String(r[4])!==F.r)return false;
+    if(F.n!==''&&String(r[5])!==F.n)return false;
+    if(F.p!==''&&String(r[6])!==F.p)return false;
+    if(F.q){var q=F.q.toLowerCase();
+      if((r[1]||'').toLowerCase().indexOf(q)<0&&(r[0]||'').toLowerCase().indexOf(q)<0&&
+         (r[10]||'').toLowerCase().indexOf(q)<0&&(D.wis[r[3]]||'').toLowerCase().indexOf(q)<0)return false;}
+    return true;});
+}
+function sel(id,arr,cur){return '<select id="'+id+'"><option value="">any</option>'+arr.map(function(x,i){
+  return '<option value="'+i+'"'+(cur===String(i)?' selected':'')+'>'+esc(x)+'</option>';}).join('')+'</select>';}
+function table(){
+  var rs=rowsF();
+  var h='<div class="ctrl"><input id="q" placeholder="search company, address, title or industry" value="'+esc(F.q)+'">'+
+    sel('fg',D.grp,F.g)+sel('fs',D.st,F.s)+sel('fr',D.revs,F.r)+sel('fn',D.sens,F.n)+sel('fp',D.pgs,F.p)+'</div>';
+  h+='<div class="tblwrap"><table><thead><tr><th>Company</th><th>Contact</th><th>Title</th><th>ICP</th>'+
+     '<th>Warmly industry</th><th>Revenue</th><th>First page</th><th>Seen</th><th>Outreach</th>'+
+     '<th>Email</th><th>LinkedIn</th><th>Note</th></tr></thead><tbody>'+
+     rs.slice(0,900).map(function(r,i){
+       return '<tr><td class="co">'+esc(r[1]||'(no company)')+'</td><td class="em">'+esc(r[0])+'</td>'+
+       '<td>'+esc(r[10]||'')+'</td><td><span class="pill '+cls(D.grp[r[2]])+'">'+esc(D.grp[r[2]])+'</span></td>'+
+       '<td>'+esc(D.wis[r[3]])+'</td><td>'+esc(D.revs[r[4]])+'</td><td>'+esc(D.pgs[r[6]])+'</td>'+
+       '<td>'+esc(r[8]||'')+'</td><td>'+esc(D.st[r[7]])+'</td>'+
+       '<td><a class="btn" target="_blank" rel="noopener" href="'+gmUrl(r)+'">open</a></td>'+
+       '<td><a class="btn" target="_blank" rel="noopener" href="'+liUrl(r)+'">find</a></td>'+
+       '<td><button class="cp" data-i="'+i+'">copy</button></td></tr>';}).join('')+
+     '</tbody></table></div><p class="cnt">'+rs.length+' match'+(rs.length>900?', first 900 shown':'')+
+     ' of '+D.rows.length+'. LinkedIn searches the company plus the real job title where Zoho has one. '+
+     'Copy writes a note that uses their title and the page they actually read.</p><div class="msgbox hid" id="pv"></div>';
+  return h;
+}
+function wire(){
+  var q=document.getElementById('q');
+  if(q)q.addEventListener('input',function(){F.q=q.value;render();setTimeout(function(){
+    var e=document.getElementById('q');if(e){e.focus();e.setSelectionRange(e.value.length,e.value.length);}},0);});
+  [['fg','g'],['fs','s'],['fr','r'],['fn','n'],['fp','p']].forEach(function(p){
+    var el=document.getElementById(p[0]);
+    if(el)el.addEventListener('change',function(){F[p[1]]=el.value;render();});});
+  var rs=rowsF();
+  Array.prototype.forEach.call(document.querySelectorAll('button.cp'),function(b){
+    b.addEventListener('click',function(){
+      var r=rs[+b.getAttribute('data-i')],txt=note(r),pv=document.getElementById('pv');
+      try{navigator.clipboard.writeText(txt).then(function(){b.textContent='copied';},
+        function(){b.textContent='select below';});}catch(e){b.textContent='select below';}
+      if(pv){pv.className='msgbox';pv.textContent=txt;}});});
+}
+function render(){
+  var s=D.summary,el=document.getElementById('views'),h='';
+  if(V==='who'){
+    h='<div class="card"><h2>Who comes to the site</h2><p class="note">Grouped from Warmly\'s own industry label, '+
+      'with company name and address used only where Warmly left it blank. Healthcare provider, Health tech and Payer are the only groups BridgeGate is sold into.</p>'+
+      bars(s.by_group,s.rows)+'</div>'+
+      '<div class="card"><h2>The ICP, stated plainly</h2><ul class="rec">'+
+      '<li><b>'+s.icp+' of '+s.rows+' visitors can buy.</b> The rest are real people on the wrong site for us.</li>'+
+      '<li><b>They are large.</b> '+(s.icp_by_rev['$10B+']||0)+' of the ICP sit above $10B revenue and '+
+      (s.icp_by_rev['$1B-$10B']||0)+' between $1B and $10B. This is enterprise health, not the mid market.</li>'+
+      '<li><b>They arrive through the HL7 academy.</b> '+(s.icp_by_page['HL7 academy pages']||0)+' of the ICP landed on an HL7 message or data type page. '+
+      'That content is doing the work, and it tells you what they are trying to solve before anyone speaks to them.</li>'+
+      '<li><b>We have titles for '+s.titled+' visitors</b>, and among the ICP that includes '+
+      (s.icp_by_sen['C level or owner']||0)+' at C level and '+(s.icp_by_sen['Director']||0)+' directors.</li>'+
+      '<li><b>Only '+s.icp_sent+' of the '+s.icp+' ICP visitors have ever been emailed.</b></li></ul></div>';
+  } else if(V==='sub'){
+    h='<div class="card"><h2>Sub-industry, as Warmly classifies it</h2>'+
+      '<p class="note">Warmly populates this on most leads. This is measured, not inferred from the email domain.</p>'+
+      bars(s.by_industry,s.rows,'',22)+'</div>';
+  } else if(V==='pers'){
+    h='<div class="split"><div class="card"><h2>Seniority, every visitor</h2>'+
+      '<p class="note">From the Zoho Designation field, which is filled on '+s.titled+' of '+s.rows+' leads.</p>'+
+      bars(s.by_sen,s.rows,'flat')+'</div>'+
+      '<div class="card"><h2>Seniority inside the ICP</h2>'+
+      '<p class="note">The '+s.icp+' visitors who can actually buy.</p>'+bars(s.icp_by_sen,s.icp,'alt')+'</div></div>';
+  } else if(V==='size'){
+    h='<div class="split"><div class="card"><h2>Company revenue, every visitor</h2>'+
+      '<p class="note">Warmly\'s revenue band. Employee count is empty on every lead, so revenue is the size measure available.</p>'+
+      bars(s.by_rev,s.rows,'flat')+'</div>'+
+      '<div class="card"><h2>Company revenue inside the ICP</h2>'+bars(s.icp_by_rev,s.icp,'alt')+'</div></div>';
+  } else if(V==='read'){
+    h='<div class="split"><div class="card"><h2>First page viewed, every visitor</h2>'+
+      bars(s.by_page,s.rows,'flat')+'</div>'+
+      '<div class="card"><h2>First page viewed, ICP only</h2>'+
+      '<p class="note">What the buyers read. Use it to pick the opening line.</p>'+bars(s.icp_by_page,s.icp,'good')+'</div></div>';
+  } else if(V==='cov'){
+    h='<div class="card"><h2>What we did about each visitor</h2>'+
+      '<p class="note">The pipeline has only ever recorded '+s.in_ledger+' of the '+s.in_zoho+' Warmly leads in Zoho.</p>'+
+      bars(s.by_state,s.rows,'flat')+'</div>'+
+      '<div class="card"><h2>Where the outreach landed</h2>'+bars(s.sent_by_group,s.sent,'warn')+'</div>';
+  } else if(V==='time'){
+    h='<div class="card"><h2>Visitors by month, from the Warmly seen-at timestamp</h2>'+bars(s.by_month,s.rows)+'</div>';
+  } else if(V==='tbl'){
+    h='<div class="card"><h2>Every visitor, with the email thread and a LinkedIn route</h2>'+table()+'</div>';
+  } else if(V==='miss'){
+    h='<div class="gap"><h2>Return visits are not retained, and that is fixable</h2>'+
+      '<p>A return visit shows as a later timestamp, which is the right test. The problem is where it is stored: Zoho keeps '+
+      '<b>one lead row per visitor and overwrites it</b>, so only 2 of 2,387 rows have a Warmly_Last_Seen later than their Warmly_Seen_at.</p>'+
+      '<p>From this build the pipeline writes an append-only visit log of every timestamp it sees, so repeat visits accumulate from now on '+
+      'even though the history before today cannot be recovered from Zoho. The one place the full past does exist is the stream of lead '+
+      'notification emails, one per assignment, which can be replayed into the log as a backfill.</p></div>'+
+      '<div class="gap"><h2>Fields Warmly leaves empty</h2>'+
+      '<p>No. of Employees, Annual Revenue, Days Visited, Visitor Score, Average Time Spent, Active Session Time, First and Last Visited Time, '+
+      'and the landing page URL are all empty on every lead. Employee count is the one worth chasing with Warmly, since the field exists and simply is not mapped.</p>'+
+      '<p>Job title is present on '+s.titled+' leads, so personas are real but partial. Apollo would fill the rest.</p></div>';
+  }
+  el.innerHTML=h; if(V==='tbl') wire();
+}
+fetch('icp.json?v='+Date.now()).then(function(r){return r.json();}).then(function(j){
+  D=j;
+  document.querySelector('.sub').textContent='Every Warmly lead in Zoho, joined to the pipeline ledger and the Gmail sent folder. '+
+    D.summary.rows+' visitors, '+D.summary.icp+' in the ICP, '+D.summary.sent+' emailed.';
+  document.getElementById('stamp').textContent='Rebuilt by the Warmly pipeline at '+(D.summary.built_at||'unknown')+
+    '. Industry, revenue, job title and first page come from Zoho as Warmly populates them. ICP grouping is applied on top.';
+  kpis();tabs();render();
+}).catch(function(e){
+  document.getElementById('views').innerHTML='<div class="card">Could not load icp.json: '+esc(e.message||e)+'</div>';});
+</script>
+</body>
+</html>
